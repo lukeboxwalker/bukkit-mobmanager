@@ -1,0 +1,12 @@
+name: DiceMobManager
+main: de.dicecraft.dicemobmanager.DiceMobManager
+version: "1.0"
+author: Walkehorst Lukas
+authors: []
+website: http://dicecraft.de
+api-version: "1.16"
+commands:
+  spawnEntity:
+    description: spawning a mob
+    permission: dicemobmanager
+    usage: /<command> [command]

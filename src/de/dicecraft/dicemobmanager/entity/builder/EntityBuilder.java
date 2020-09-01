@@ -5,6 +5,7 @@ import de.dicecraft.dicemobmanager.adapter.CustomEntityFactory;
 import de.dicecraft.dicemobmanager.adapter.NMSHandler;
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalTarget;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
@@ -13,8 +14,10 @@ import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -32,6 +35,7 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     private final Map<Attribute, Double> attributes;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoal>>> pathfinderGoals;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoalTarget>>> pathfinderTargets;
+    private final Set<CustomDataWatcher> dataWatchers;
 
     private CustomType<T> customType;
     private World world;
@@ -40,6 +44,7 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     public EntityBuilder() {
         pathfinderGoals = new ArrayList<>();
         pathfinderTargets = new ArrayList<>();
+        dataWatchers = new HashSet<>();
         attributes = new HashMap<>();
     }
 
@@ -56,6 +61,23 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     @Override
     public CustomEntityBuilder<T> isAggressive(final boolean aggressive) {
         this.aggressive = aggressive;
+        return this;
+    }
+
+    /**
+     * Specifies a data watcher the entity should use.
+     * <p>
+     * The data watcher is needed to provide type specific data
+     * to the custom entity.
+     * <p>
+     * Manipulating {@link EntityBuilder#dataWatchers}
+     *
+     * @param dataWatcher to install in entity
+     * @return builder to continue
+     */
+    @Override
+    public CustomEntityBuilder<T> attachDataWatcher(final CustomDataWatcher dataWatcher) {
+        dataWatchers.add(dataWatcher);
         return this;
     }
 
@@ -283,5 +305,21 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     @Override
     public Map<Attribute, Double> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets all data watchers.
+     * <p>
+     * The data watchers need to be installed to
+     * provide type specific data see {@link CustomDataWatcher}
+     * <p>
+     * The set {@link EntityBuilder#dataWatchers} is manipulated
+     * by {@link EntityBuilder#attachDataWatcher(CustomDataWatcher)}
+     *
+     * @return set of data watchers
+     */
+    @Override
+    public Set<CustomDataWatcher> getDataWatchers() {
+        return dataWatchers;
     }
 }

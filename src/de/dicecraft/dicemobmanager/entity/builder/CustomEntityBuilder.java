@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import de.dicecraft.dicemobmanager.adapter.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
 import org.bukkit.World;
@@ -51,6 +52,17 @@ public interface CustomEntityBuilder<T extends CustomEntity> {
      * @return builder to continue
      */
     CustomEntityBuilder<T> inWorld(final World world);
+
+    /**
+     * Specifies a data watcher the entity should use.
+     * <p>
+     * The data watcher is needed to provide type specific data
+     * to the custom entity see {@link CustomDataWatcher}
+     *
+     * @param dataWatcher to install in entity
+     * @return builder to continue
+     */
+    CustomEntityBuilder<T> attachDataWatcher(final CustomDataWatcher dataWatcher);
 
     /**
      * Specifies a pathfinder goal.

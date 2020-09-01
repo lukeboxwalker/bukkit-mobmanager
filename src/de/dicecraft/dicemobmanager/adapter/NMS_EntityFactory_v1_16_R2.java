@@ -11,6 +11,7 @@ import de.dicecraft.dicemobmanager.entity.builder.PriorityEntry;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
+import de.dicecraft.dicemobmanager.utils.ReflectionHelper;
 import it.unimi.dsi.fastutil.Function;
 import net.minecraft.server.v1_16_R2.AttributeBase;
 import net.minecraft.server.v1_16_R2.AttributeMapBase;
@@ -89,7 +90,7 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
         final World world = ((CraftWorld) configuration.getWorld()).getHandle();
         final CustomType<T> customType = configuration.getEntityType();
         try {
-            EntityTypes<?> entityTypes = getEnumField(EntityTypes.class, EntityTypes.class, customType.getName().toUpperCase());
+            EntityTypes<?> entityTypes = ReflectionHelper.getEnumField(EntityTypes.class, EntityTypes.class, customType.getName().toUpperCase());
             Constructor<? extends T> constructor = customType.getEntityClass().getDeclaredConstructor(EntityTypes.class, World.class);
             constructor.setAccessible(true);
             T customEntity = constructor.newInstance(entityTypes, world);
@@ -97,10 +98,10 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
             // setting sound effects
             final SoundPalette<SoundEffect> soundPalette = new SoundPalette<>();
             final String name = nameFormatter.apply(customType.getName());
-            soundPalette.setAmbient(getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.AMBIENT));
-            soundPalette.setDeath(getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.DEATH));
-            soundPalette.setHurt(getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.HURT));
-            soundPalette.setStep(getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.STEP));
+            soundPalette.setAmbient(ReflectionHelper.getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.AMBIENT));
+            soundPalette.setDeath(ReflectionHelper.getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.DEATH));
+            soundPalette.setHurt(ReflectionHelper.getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.HURT));
+            soundPalette.setStep(ReflectionHelper.getEnumField(SoundEffects.class, SoundEffect.class, name + SoundPalette.STEP));
             customEntity.setSoundPalette(soundPalette);
 
             // setting goal selectors
@@ -118,9 +119,9 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
             AttributeProvider.Builder builder = new AttributeProvider.Builder();
             attributes.forEach(((attribute, value) -> {
                 if (value < 0) {
-                    builder.a(getEnumField(GenericAttributes.class, AttributeBase.class, attribute.name().toUpperCase()));
+                    builder.a(ReflectionHelper.getEnumField(GenericAttributes.class, AttributeBase.class, attribute.name().toUpperCase()));
                 } else {
-                    builder.a(getEnumField(GenericAttributes.class, AttributeBase.class, attribute.name().toUpperCase()), value);
+                    builder.a(ReflectionHelper.getEnumField(GenericAttributes.class, AttributeBase.class, attribute.name().toUpperCase()), value);
                 }
             }));
 
@@ -134,6 +135,10 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
 
             customEntity.setHealth(attributes.get(Attribute.MAX_HEALTH).floatValue());
             customEntity.setCustomNameVisible(true);
+
+            // data watchers
+            customEntity.registerDataWatchers(configuration.getDataWatchers());
+
             return customEntity;
         } catch (InstantiationException | NoSuchMethodException cause) {
             throw new EntityCreationException("Constructor of entity class did not match expected signature", cause);
@@ -168,29 +173,6 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
             throw new EntityCreationException("Could not access final field", cause);
         }
 
-    }
-
-    /**
-     * Reflecting static field of a given class.
-     * <p>
-     * Accesses a static field by name using java reflection api {@link Field}.
-     * Field need to be static, there is no object given to operate on.
-     *
-     * @param objectClass the class which contains the field variable
-     * @param tClass      the class of the field
-     * @param name        of the field
-     * @param <T>         the type of the field
-     * @return the static field
-     */
-    @Nullable
-    private <T> T getEnumField(final Class<?> objectClass, final Class<T> tClass, final String name) {
-        try {
-            Field field = objectClass.getDeclaredField(name);
-            field.setAccessible(true);
-            return tClass.cast(field.get(null));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            return null;
-        }
     }
 
     /**

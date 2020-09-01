@@ -3,15 +3,19 @@ package de.dicecraft.dicemobmanager.entity;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
 
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
 import net.minecraft.server.v1_16_R2.ChatComponentText;
 import net.minecraft.server.v1_16_R2.DamageSource;
+import net.minecraft.server.v1_16_R2.DataWatcher;
 import net.minecraft.server.v1_16_R2.EntityCreature;
 import net.minecraft.server.v1_16_R2.EntityTypes;
 import net.minecraft.server.v1_16_R2.GenericAttributes;
 import net.minecraft.server.v1_16_R2.SoundEffect;
 import net.minecraft.server.v1_16_R2.World;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
+import java.util.Set;
 
 public class CustomEntity extends CustomEntityMoving {
 
@@ -30,6 +34,18 @@ public class CustomEntity extends CustomEntityMoving {
         this.nameColor = CustomColor.LIGHT_RED;
         this.customNameTag = DEFAULT_NAME;
         this.customLevel = DEFAULT_LEVEL;
+    }
+
+    public void registerDataWatchers(final Set<CustomDataWatcher> dataWatchers) {
+//        try {
+//            final Field field = DataWatcher.class.getDeclaredField("registrationLocked");
+//            field.setAccessible(true);
+//            field.setBoolean(this.datawatcher, false);
+//            dataWatchers.forEach(dataWatcher -> dataWatcher.install(this.datawatcher));
+//            field.setBoolean(this.datawatcher, true);
+//        } catch (IllegalAccessException | NoSuchFieldException illegalAccessException) {
+//            illegalAccessException.printStackTrace();
+//        }
     }
 
     private void updateName() {

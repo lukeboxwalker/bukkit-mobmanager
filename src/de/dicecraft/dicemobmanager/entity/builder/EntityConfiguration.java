@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalTarget;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
@@ -9,6 +10,7 @@ import org.bukkit.World;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -22,6 +24,16 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public interface EntityConfiguration<T extends CustomEntity> {
+
+    /**
+     * Gets all data watchers.
+     * <p>
+     * The data watchers need to be installed to
+     * provide type specific data see {@link CustomDataWatcher}
+     *
+     * @return set of data watchers
+     */
+    Set<CustomDataWatcher> getDataWatchers();
 
     /**
      * Gets the {@link CustomType}.

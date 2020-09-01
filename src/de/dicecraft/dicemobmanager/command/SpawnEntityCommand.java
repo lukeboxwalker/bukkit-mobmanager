@@ -7,10 +7,12 @@ import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.builder.Attribute;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.CustomType;
+import de.dicecraft.dicemobmanager.entity.datawatcher.VillagerDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalProvider;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
@@ -30,10 +32,11 @@ public class SpawnEntityCommand extends AbstractCommand {
                     CustomEntityBuilder<CustomEntity> builder = CustomEntity.builder()
                             .fromType(customType)
                             .inWorld(((Player) sender).getWorld())
-                            .isAggressive(true)
-                            .attachGoalSelector(1, CustomGoalProvider.WALK_TO_LOCATION(goal))
-                            .attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
-                            .attachTargetSelector(1, CustomGoalProvider.HURT_BY_TARGET());
+                            .isAggressive(true);
+                            //.attachDataWatcher(new VillagerDataWatcher(Villager.Type.PLAINS, Villager.Profession.ARMORER))
+                            //.attachGoalSelector(1, CustomGoalProvider.WALK_TO_LOCATION(goal))
+                            //.attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
+                            //.attachTargetSelector(1, CustomGoalProvider.ATTACK_NEAREST_PLAYER());
 
                     int entities = 1;
                     if (args.length == 2) {

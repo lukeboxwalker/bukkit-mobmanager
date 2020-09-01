@@ -8,6 +8,7 @@ import de.dicecraft.dicemobmanager.entity.CustomType;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalTarget;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
+import org.bukkit.Color;
 import org.bukkit.World;
 
 import java.util.ArrayList;

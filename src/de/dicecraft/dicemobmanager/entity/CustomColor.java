@@ -1,5 +1,14 @@
 package de.dicecraft.dicemobmanager.entity;
 
+/**
+ * Providing minecraft color codes.
+ * <p>
+ * Basic colors 0-f can be used to color
+ * string text see {@link CustomColor#color(String)}.
+ *
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public enum CustomColor {
 
     BLACK("§0"),
@@ -25,11 +34,27 @@ public enum CustomColor {
         this.colorCode = colorCode;
     }
 
+    /**
+     * Gets the color code.
+     * <p>
+     * Color codes have a § prefix followed
+     * by a 4 bit color 0-f.
+     *
+     * @return the color code
+     */
     public String getColorCode() {
         return colorCode;
     }
 
-    public String color(Object string) {
-        return colorCode + string.toString();
+    public String color(String string) {
+        return colorCode + string;
+    }
+
+    public String color(int i) {
+        return colorCode + i;
+    }
+
+    public String color(double d) {
+        return colorCode + d;
     }
 }

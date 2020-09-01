@@ -2,7 +2,7 @@ package de.dicecraft.dicemobmanager.adapter;
 
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.NameBuilder;
+import de.dicecraft.dicemobmanager.entity.CustomNameBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.Attribute;
 import de.dicecraft.dicemobmanager.entity.builder.EntityConfiguration;
 import de.dicecraft.dicemobmanager.entity.SoundPalette;
@@ -77,7 +77,7 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
      * If the attribute is negative the default value specified in {@link AttributeBase} is used.
      * <p>
      * Custom name tag:
-     * The entity's custom name is set to visible and is provided by the specified {@link NameBuilder}
+     * The entity's custom name is set to visible and is provided by the specified {@link CustomNameBuilder}
      *
      * @param configuration to configure the entity
      * @param <T>           the specific type of the CustomEntity if needed (in most cases this is {@link CustomEntity})

@@ -11,9 +11,9 @@ import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.Location;
 
-public class CustomNavigation_v1_16_R2 extends Navigation implements CustomNavigation {
+public class Navigation_v1_16_R2 extends Navigation implements CustomNavigation {
 
-    public CustomNavigation_v1_16_R2(final CustomEntityMoving customEntity, final World world) {
+    public Navigation_v1_16_R2(final CustomEntityMoving customEntity, final World world) {
         super(customEntity, world);
     }
 

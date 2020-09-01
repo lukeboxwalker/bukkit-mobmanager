@@ -18,15 +18,15 @@ public class CustomEntity extends CustomEntityMoving {
     private static final String DEFAULT_NAME = "CustomEntity";
     private static final int DEFAULT_LEVEL = 1;
 
-    private NameBuilder nameBuilder;
+    private CustomNameBuilder nameBuilder;
     private CustomColor nameColor;
     private SoundPalette<SoundEffect> soundPalette;
     private String customNameTag;
     private int customLevel;
 
-    protected CustomEntity(EntityTypes<? extends EntityCreature> entityTypes, World world) {
+    protected CustomEntity(final EntityTypes<? extends EntityCreature> entityTypes, final World world) {
         super(entityTypes, world);
-        this.nameBuilder = new CustomNameBuilder();
+        this.nameBuilder = new NameBuilder();
         this.nameColor = CustomColor.LIGHT_RED;
         this.customNameTag = DEFAULT_NAME;
         this.customLevel = DEFAULT_LEVEL;
@@ -47,8 +47,8 @@ public class CustomEntity extends CustomEntityMoving {
         this.nameColor = nameColor;
     }
 
-    public void setNameBuilder(NameBuilder nameBuilder) {
-        this.nameBuilder = nameBuilder;
+    public void setNameBuilder(CustomNameBuilder customNameBuilder) {
+        this.nameBuilder = customNameBuilder;
     }
 
     public void setCustomNameTag(String customNameTag) {

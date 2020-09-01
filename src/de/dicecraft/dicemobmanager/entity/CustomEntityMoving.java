@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
 import de.dicecraft.dicemobmanager.entity.pathfinder.navigation.CustomNavigation;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.PathFinderGoalFactory_v1_16_R2;
-import de.dicecraft.dicemobmanager.entity.pathfinder.navigation.CustomNavigation_v1_16_R2;
+import de.dicecraft.dicemobmanager.entity.pathfinder.navigation.Navigation_v1_16_R2;
 
 import net.minecraft.server.v1_16_R2.BlockPosition;
 import net.minecraft.server.v1_16_R2.EntityCreature;
@@ -62,7 +62,7 @@ public class CustomEntityMoving extends EntityCreature {
 
     @Override
     protected NavigationAbstract b(final World world) {
-        return new CustomNavigation_v1_16_R2(this, world);
+        return new Navigation_v1_16_R2(this, world);
     }
 
     public CustomNavigation getCustomNavigation() {

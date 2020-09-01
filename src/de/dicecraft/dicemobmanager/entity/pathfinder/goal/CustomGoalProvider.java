@@ -59,4 +59,17 @@ public final class CustomGoalProvider {
         return () -> new GoalAttackNearestPlayer(10, true);
     }
 
+    /**
+     * Provides a goal target selector.
+     * <p>
+     * The entity's goal is to select the entity which damage it currently.
+     * Also see {@link GoalHurtByTarget} which then sets the correct target
+     * that can be used by a goal selection {@link CustomPathfinderGoal}
+     *
+     * @return supplier of the pathfinder goal target
+     */
+    public static Supplier<CustomPathfinderGoalTarget> HURT_BY_TARGET() {
+        return GoalHurtByTarget::new;
+    }
+
 }

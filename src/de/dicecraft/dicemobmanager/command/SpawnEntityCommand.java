@@ -32,8 +32,8 @@ public class SpawnEntityCommand extends AbstractCommand {
                             .inWorld(((Player) sender).getWorld())
                             .isAggressive(true)
                             .attachGoalSelector(1, CustomGoalProvider.WALK_TO_LOCATION(goal))
-                            .attachGoalSelector(1, CustomGoalProvider.MELEE_ATTACK())
-                            .attachTargetSelector(1, CustomGoalProvider.ATTACK_NEAREST_PLAYER());
+                            .attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
+                            .attachTargetSelector(1, CustomGoalProvider.HURT_BY_TARGET());
 
                     int entities = 1;
                     if (args.length == 2) {

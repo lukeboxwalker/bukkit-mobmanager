@@ -4,9 +4,12 @@ import de.dicecraft.dicemobmanager.entity.CustomEntityMoving;
 import net.minecraft.server.v1_16_R2.EntityHuman;
 import net.minecraft.server.v1_16_R2.EntityLiving;
 import net.minecraft.server.v1_16_R2.GenericAttributes;
+import net.minecraft.server.v1_16_R2.PathfinderTargetCondition;
 import net.minecraft.server.v1_16_R2.ScoreboardTeamBase;
 
 import org.bukkit.event.entity.EntityTargetEvent;
+
+import javax.annotation.Nullable;
 
 public abstract class CustomGoalTarget implements CustomPathfinderGoalTarget {
     protected final boolean f;
@@ -57,6 +60,16 @@ public abstract class CustomGoalTarget implements CustomPathfinderGoalTarget {
                 }
             }
         }
+    }
+
+    protected boolean checkLastDamageSource(final CustomEntityMoving customEntity,
+                                            final @Nullable EntityLiving entityliving,
+                                            final PathfinderTargetCondition pathfindertargetcondition) {
+        if (entityliving == null) {
+            return false;
+        } else if (!pathfindertargetcondition.a(customEntity, entityliving)) {
+            return false;
+        } else return customEntity.a(entityliving.getChunkCoordinates());
     }
 
     public double getFollowRange(final CustomEntityMoving customEntity) {

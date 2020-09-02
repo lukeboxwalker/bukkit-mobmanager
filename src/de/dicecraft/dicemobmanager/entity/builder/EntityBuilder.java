@@ -5,11 +5,9 @@ import de.dicecraft.dicemobmanager.adapter.CustomEntityFactory;
 import de.dicecraft.dicemobmanager.adapter.NMSHandler;
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
-import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalTarget;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataObject;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
-import org.bukkit.Color;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -35,33 +33,16 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     private final Map<Attribute, Double> attributes;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoal>>> pathfinderGoals;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoalTarget>>> pathfinderTargets;
-    private final Set<CustomDataWatcher> dataWatchers;
+    private final Set<CustomDataObject> dataWatchers;
 
     private CustomType<T> customType;
     private World world;
-    private boolean aggressive;
 
     public EntityBuilder() {
         pathfinderGoals = new ArrayList<>();
         pathfinderTargets = new ArrayList<>();
         dataWatchers = new HashSet<>();
         attributes = new HashMap<>();
-    }
-
-    /**
-     * Specifies if entity should be aggressive.
-     * <p>
-     * Aggression state is take on entity when building.
-     * <p>
-     * Manipulating {@link EntityBuilder#aggressive}
-     *
-     * @param aggressive indicates if entity is aggressive
-     * @return builder to continue
-     */
-    @Override
-    public CustomEntityBuilder<T> isAggressive(final boolean aggressive) {
-        this.aggressive = aggressive;
-        return this;
     }
 
     /**
@@ -76,7 +57,7 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder<T> attachDataWatcher(final CustomDataWatcher dataWatcher) {
+    public CustomEntityBuilder<T> attachDataWatcher(final CustomDataObject dataWatcher) {
         dataWatchers.add(dataWatcher);
         return this;
     }
@@ -207,22 +188,6 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     }
 
     /**
-     * Gets the aggression state.
-     * <p>
-     * When entity is aggressive the {@link CustomGoalTarget} can
-     * be selected by the entity's target selection.
-     * <p>
-     * The aggression {@link EntityBuilder#aggressive} is manipulated
-     * by {@link EntityBuilder#isAggressive(boolean)}
-     *
-     * @return if the entity should be aggressive
-     */
-    @Override
-    public boolean isAggressive() {
-        return aggressive;
-    }
-
-    /**
      * Gets the {@link CustomType}.
      * <p>
      * The type is needed to specify the entity
@@ -311,15 +276,15 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
      * Gets all data watchers.
      * <p>
      * The data watchers need to be installed to
-     * provide type specific data see {@link CustomDataWatcher}
+     * provide type specific data see {@link CustomDataObject}
      * <p>
      * The set {@link EntityBuilder#dataWatchers} is manipulated
-     * by {@link EntityBuilder#attachDataWatcher(CustomDataWatcher)}
+     * by {@link EntityBuilder#attachDataWatcher(CustomDataObject)}
      *
      * @return set of data watchers
      */
     @Override
-    public Set<CustomDataWatcher> getDataWatchers() {
+    public Set<CustomDataObject> getDataWatchers() {
         return dataWatchers;
     }
 }

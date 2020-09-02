@@ -112,7 +112,6 @@ public class NMS_EntityFactory_v1_16_R2 implements CustomEntityFactory {
             for (PriorityEntry<Supplier<CustomPathfinderGoalTarget>> priorityEntry : configuration.getPathfinderTargets()) {
                 customEntity.addPathfinderTarget(priorityEntry.getPriority(), priorityEntry.getEntry().get());
             }
-            customEntity.setAggressive(configuration.isAggressive());
 
             // setting attributes
             Map<Attribute, Double> attributes = configuration.getAttributes();

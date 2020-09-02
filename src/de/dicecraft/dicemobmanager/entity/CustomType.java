@@ -20,6 +20,8 @@ public class CustomType<T extends CustomEntity> {
     public static final CustomType<CustomEntity> WITCH = new CustomType<>("WITCH");
     public static final CustomType<CustomEntity> PIG = new CustomType<>("PIG");
     public static final CustomType<CustomEntity> SHEEP = new CustomType<>("SHEEP");
+    public static final CustomType<CustomEntity> PANDA = new CustomType<>("PANDA");
+    public static final CustomType<CustomEntity> FOX = new CustomType<>("FOX");
     public static final CustomType<CustomEntity> COW = new CustomType<>("COW");
     public static final CustomType<CustomEntity> RABBIT = new CustomType<>("RABBIT");
     public static final CustomType<CustomEntity> LLAMA = new CustomType<>("LLAMA");
@@ -35,6 +37,12 @@ public class CustomType<T extends CustomEntity> {
     public static final CustomType<CustomEntity> VEX = new CustomType<>("VEX");
     public static final CustomType<CustomEntity> WOLF = new CustomType<>("WOLF");
     public static final CustomType<CustomEntity> CREEPER = new CustomType<>("CREEPER");
+    public static final CustomType<CustomEntity> PIGLIN = new CustomType<>("PIGLIN");
+    public static final CustomType<CustomEntity> ZOMBIFIED_PIGLIN = new CustomType<>("ZOMBIFIED_PIGLIN");
+    public static final CustomType<CustomEntity> HOGLIN = new CustomType<>("HOGLIN");
+    public static final CustomType<CustomEntity> ZOGLIN = new CustomType<>("ZOGLIN");
+    public static final CustomType<CustomEntity> PIGLIN_BRUTE = new CustomType<>("PIGLIN_BRUTE");
+    public static final CustomType<CustomEntity> WANDERING_TRADER = new CustomType<>("WANDERING_TRADER");
 
     private final String name;
     private final Class<T> entityClass;

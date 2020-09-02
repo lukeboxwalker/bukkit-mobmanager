@@ -2,8 +2,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
-import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalTarget;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataObject;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
 import org.bukkit.World;
@@ -29,11 +28,11 @@ public interface EntityConfiguration<T extends CustomEntity> {
      * Gets all data watchers.
      * <p>
      * The data watchers need to be installed to
-     * provide type specific data see {@link CustomDataWatcher}
+     * provide type specific data see {@link CustomDataObject}
      *
      * @return set of data watchers
      */
-    Set<CustomDataWatcher> getDataWatchers();
+    Set<CustomDataObject> getDataWatchers();
 
     /**
      * Gets the {@link CustomType}.
@@ -54,16 +53,6 @@ public interface EntityConfiguration<T extends CustomEntity> {
      * @return custom type for an entity
      */
     World getWorld();
-
-    /**
-     * Gets the aggression state.
-     * <p>
-     * When entity is aggressive the {@link CustomGoalTarget} can
-     * be selected by the entity's target selection.
-     *
-     * @return if the entity should be aggressive
-     */
-    boolean isAggressive();
 
     /**
      * Gets all pathfinder goals.

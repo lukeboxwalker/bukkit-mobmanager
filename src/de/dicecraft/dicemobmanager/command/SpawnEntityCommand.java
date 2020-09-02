@@ -7,9 +7,8 @@ import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.builder.Attribute;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.datawatcher.VillagerDataWatcher;
+import de.dicecraft.dicemobmanager.entity.datawatcher.ZombieVillagerDataObject;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalProvider;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -27,19 +26,15 @@ public class SpawnEntityCommand extends AbstractCommand {
             if (args.length >= 1) {
                 try {
                     final CustomType<CustomEntity> customType = CustomType.getByName(args[0]);
-                    final Location start = ((Player) sender).getLocation();
-                    final Location goal = new Location(start.getWorld(), start.getX() + 10, start.getY(), start.getZ());
                     CustomEntityBuilder<CustomEntity> builder = CustomEntity.builder()
                             .fromType(customType)
                             .inWorld(((Player) sender).getWorld())
-                            .isAggressive(true);
-                            //.attachDataWatcher(new VillagerDataWatcher(Villager.Type.PLAINS, Villager.Profession.ARMORER))
-                            //.attachGoalSelector(1, CustomGoalProvider.WALK_TO_LOCATION(goal))
-                            //.attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
-                            //.attachTargetSelector(1, CustomGoalProvider.ATTACK_NEAREST_PLAYER());
+                            .attachDataWatcher(new ZombieVillagerDataObject(Villager.Type.PLAINS, Villager.Profession.ARMORER))
+                            .attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
+                            .attachTargetSelector(1, CustomGoalProvider.HURT_BY_TARGET());
 
                     int entities = 1;
-                    if (args.length == 2) {
+                    if (args.length >= 2) {
                         try {
                             entities = Integer.parseInt(args[1]);
                         } catch (NumberFormatException e) {

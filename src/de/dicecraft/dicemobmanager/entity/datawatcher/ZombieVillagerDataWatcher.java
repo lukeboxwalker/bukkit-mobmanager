@@ -10,18 +10,18 @@ import net.minecraft.server.v1_16_R2.VillagerProfession;
 import net.minecraft.server.v1_16_R2.VillagerType;
 import org.bukkit.entity.Villager;
 
-public class ZombieVillagerDataObject implements CustomDataObject {
+public class ZombieVillagerDataWatcher implements CustomDataWatcher {
 
     private static final DataWatcherObject<Boolean> BABY_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> INTEGER_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Boolean> DROWN_CONVERTING_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.i);
-    private static final DataWatcherObject<Boolean> CONVERTING_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.i);
+    private static final DataWatcherObject<Boolean> VILLAGER_CONVERTING_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<VillagerData> VILLAGER_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.q);
 
     private final Villager.Type type;
     private final Villager.Profession profession;
 
-    public ZombieVillagerDataObject(final Villager.Type type, final Villager.Profession profession) {
+    public ZombieVillagerDataWatcher(final Villager.Type type, final Villager.Profession profession) {
         this.type = type;
         this.profession = profession;
     }
@@ -34,7 +34,7 @@ public class ZombieVillagerDataObject implements CustomDataObject {
         dataWatcher.register(BABY_DATA, false);
         dataWatcher.register(INTEGER_DATA, 0);
         dataWatcher.register(DROWN_CONVERTING_DATA, false);
-        dataWatcher.register(CONVERTING_DATA, false);
+        dataWatcher.register(VILLAGER_CONVERTING_DATA, false);
         dataWatcher.register(VILLAGER_DATA, new VillagerData(type, profession, 1));
     }
 }

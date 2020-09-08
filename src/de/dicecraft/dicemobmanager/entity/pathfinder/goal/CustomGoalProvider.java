@@ -26,7 +26,7 @@ public final class CustomGoalProvider {
      * @param location the entity should walk to
      * @return supplier of the pathfinder goal
      */
-    public static Supplier<CustomPathfinderGoal> WALK_TO_LOCATION(final Location location) {
+    public static Supplier<CustomPathfinderGoal> walkToLocation(final Location location) {
         return () -> new GoalWalkToLocation(location, 1);
     }
 
@@ -42,7 +42,7 @@ public final class CustomGoalProvider {
      *
      * @return supplier of the pathfinder goal
      */
-    public static Supplier<CustomPathfinderGoal> MELEE_ATTACK() {
+    public static Supplier<CustomPathfinderGoal> meleeAttack() {
         return () -> new GoalMeleeAttack(1.2D, true);
     }
 
@@ -55,7 +55,7 @@ public final class CustomGoalProvider {
      *
      * @return supplier of the pathfinder goal target
      */
-    public static Supplier<CustomPathfinderGoalTarget> ATTACK_NEAREST_PLAYER() {
+    public static Supplier<CustomPathfinderGoalTarget> attackNearestPlayer() {
         return () -> new GoalAttackNearestPlayer(10, true);
     }
 
@@ -68,7 +68,7 @@ public final class CustomGoalProvider {
      *
      * @return supplier of the pathfinder goal target
      */
-    public static Supplier<CustomPathfinderGoalTarget> HURT_BY_TARGET() {
+    public static Supplier<CustomPathfinderGoalTarget> hurtByTarget() {
         return GoalHurtByTarget::new;
     }
 

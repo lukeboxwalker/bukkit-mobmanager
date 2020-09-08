@@ -5,7 +5,7 @@ import de.dicecraft.dicemobmanager.adapter.CustomEntityFactory;
 import de.dicecraft.dicemobmanager.adapter.NMSHandler;
 import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataObject;
+import de.dicecraft.dicemobmanager.entity.datawatcher.CustomDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoal;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomPathfinderGoalTarget;
 import org.bukkit.World;
@@ -33,7 +33,7 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
     private final Map<Attribute, Double> attributes;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoal>>> pathfinderGoals;
     private final List<PriorityEntry<Supplier<CustomPathfinderGoalTarget>>> pathfinderTargets;
-    private final Set<CustomDataObject> dataWatchers;
+    private final Set<CustomDataWatcher> dataWatchers;
 
     private CustomType<T> customType;
     private World world;
@@ -57,7 +57,7 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder<T> attachDataWatcher(final CustomDataObject dataWatcher) {
+    public CustomEntityBuilder<T> attachDataWatcher(final CustomDataWatcher dataWatcher) {
         dataWatchers.add(dataWatcher);
         return this;
     }
@@ -276,15 +276,15 @@ public class EntityBuilder<T extends CustomEntity> implements CustomEntityBuilde
      * Gets all data watchers.
      * <p>
      * The data watchers need to be installed to
-     * provide type specific data see {@link CustomDataObject}
+     * provide type specific data see {@link CustomDataWatcher}
      * <p>
      * The set {@link EntityBuilder#dataWatchers} is manipulated
-     * by {@link EntityBuilder#attachDataWatcher(CustomDataObject)}
+     * by {@link EntityBuilder#attachDataWatcher(CustomDataWatcher)}
      *
      * @return set of data watchers
      */
     @Override
-    public Set<CustomDataObject> getDataWatchers() {
+    public Set<CustomDataWatcher> getDataWatchers() {
         return dataWatchers;
     }
 }

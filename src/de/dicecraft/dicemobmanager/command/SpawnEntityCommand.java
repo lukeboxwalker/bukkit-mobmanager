@@ -7,7 +7,7 @@ import de.dicecraft.dicemobmanager.entity.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.builder.Attribute;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.datawatcher.ZombieVillagerDataObject;
+import de.dicecraft.dicemobmanager.entity.datawatcher.ZombieVillagerDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalProvider;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,9 +29,9 @@ public class SpawnEntityCommand extends AbstractCommand {
                     CustomEntityBuilder<CustomEntity> builder = CustomEntity.builder()
                             .fromType(customType)
                             .inWorld(((Player) sender).getWorld())
-                            .attachDataWatcher(new ZombieVillagerDataObject(Villager.Type.PLAINS, Villager.Profession.ARMORER))
-                            .attachGoalSelector(2, CustomGoalProvider.MELEE_ATTACK())
-                            .attachTargetSelector(1, CustomGoalProvider.HURT_BY_TARGET());
+                            .attachDataWatcher(new ZombieVillagerDataWatcher(Villager.Type.PLAINS, Villager.Profession.ARMORER))
+                            .attachGoalSelector(2, CustomGoalProvider.meleeAttack())
+                            .attachTargetSelector(1, CustomGoalProvider.hurtByTarget());
 
                     int entities = 1;
                     if (args.length >= 2) {
@@ -74,7 +74,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         }
                     }.runTaskTimer(DiceMobManager.getInstance(), 0, 3);
 
-                }catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     sender.sendMessage("entityType unknown");
                     return true;
                 }
@@ -93,7 +93,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                     .filter(name -> name.startsWith(args[0].toUpperCase()))
                     .collect(Collectors.toList());
         } else if (args.length == 2) {
-            return Arrays.asList("1" ,"5", "10", "20");
+            return Arrays.asList("1", "5", "10", "20");
         } else {
             return Arrays.stream(Attribute.values())
                     .map(attribute -> attribute.name() + "=")

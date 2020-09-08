@@ -11,7 +11,7 @@ import net.minecraft.server.v1_16_R2.VillagerData;
 import net.minecraft.server.v1_16_R2.VillagerProfession;
 import net.minecraft.server.v1_16_R2.VillagerType;
 
-public class VillagerDataObject implements CustomDataObject {
+public class VillagerDataWatcher implements CustomDataWatcher {
 
     private static final DataWatcherObject<Boolean> AGE_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> TRADE_DATA = DataWatcher.a(CustomEntity.class, DataWatcherRegistry.b);
@@ -20,7 +20,7 @@ public class VillagerDataObject implements CustomDataObject {
     private final Villager.Type type;
     private final Villager.Profession profession;
 
-    public VillagerDataObject(final Villager.Type type, final Villager.Profession profession) {
+    public VillagerDataWatcher(final Villager.Type type, final Villager.Profession profession) {
         this.type = type;
         this.profession = profession;
     }

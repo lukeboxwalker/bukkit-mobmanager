@@ -18,7 +18,7 @@ public class SpawnEntityCommand extends AbstractCommand {
 
     @Override
     public boolean execute(final CommandSender sender, final String[] args) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && args.length == 1) {
             Player player = (Player) sender;
 
             LinkedList<Location> locations = new LinkedList<>();
@@ -30,11 +30,11 @@ public class SpawnEntityCommand extends AbstractCommand {
             try {
                 CustomEntities.builder(DiceMobManager.getInstance())
                         .atLocation(player.getLocation())
-                        .fromType(EntityType.ZOMBIE)
+                        .fromType(EntityType.valueOf(args[0].toUpperCase()))
                         .attachGoalSelector(1, mob -> new GoalWalkToLocation(mob, locations))
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .build();
-            } catch (EntityCreationException e) {
+            } catch (EntityCreationException | IllegalArgumentException e) {
                 e.printStackTrace();
             }
 

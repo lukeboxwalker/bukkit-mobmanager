@@ -4,6 +4,7 @@ import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
 import de.dicecraft.dicemobmanager.entity.name.NameChangeListener;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,9 +18,11 @@ public class CustomEntities {
 
     private static final Map<Plugin, Map<Entity, EntityInformation>> ENTITIES = new HashMap<>();
     private static final NameChangeListener NAME_CHANGE_LISTENER = new NameChangeListener();
+    private static final EntityEventListener EVENT_LISTENER = new EntityEventListener();
 
     static {
         Bukkit.getPluginManager().registerEvents(NAME_CHANGE_LISTENER, DiceMobManager.getInstance());
+        Bukkit.getPluginManager().registerEvents(EVENT_LISTENER, DiceMobManager.getInstance());
     }
 
     public static CustomEntityBuilder builder(Plugin plugin) {
@@ -27,10 +30,10 @@ public class CustomEntities {
 
     }
 
-    public static Optional<EntityInformation> getInformation(Entity entity) {
+    public static Optional<Pair<Plugin, EntityInformation>> getInformation(Entity entity) {
         for (Map.Entry<Plugin, Map<Entity, EntityInformation>> entry : ENTITIES.entrySet()) {
             if (entry.getValue().containsKey(entity)) {
-                return Optional.ofNullable(entry.getValue().get(entity));
+                return Optional.of(new Pair<>(entry.getKey(), entry.getValue().get(entity)));
             }
         }
         return Optional.empty();
@@ -47,9 +50,8 @@ public class CustomEntities {
         }
     }
 
-    public static void removeEntity(LivingEntity entity, Plugin plugin) {
-        if (ENTITIES.containsKey(plugin)) {
-            ENTITIES.get(plugin).remove(entity);
-        }
+    public static void removeEntity(LivingEntity entity,  Plugin plugin) {
+        ENTITIES.get(plugin).remove(entity);
+
     }
 }

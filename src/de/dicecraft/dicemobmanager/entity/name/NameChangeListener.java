@@ -1,17 +1,14 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.CustomEntities;
 import de.dicecraft.dicemobmanager.entity.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.event.CustomEntityDamageEvent;
+import de.dicecraft.dicemobmanager.entity.event.CustomEntityDeathEvent;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-
-import java.util.Optional;
 
 public class NameChangeListener implements Listener {
 
@@ -30,17 +27,12 @@ public class NameChangeListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onDamageNameChange(EntityDamageEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            Optional<EntityInformation> optional = CustomEntities.getInformation(event.getEntity());
-            optional.ifPresent(entityInformation -> setName((LivingEntity) event.getEntity(), entityInformation));
-        }
+    public void onDamageNameChange(CustomEntityDamageEvent event) {
+        setName((LivingEntity) event.getEntityDamageEvent().getEntity(), event.getEntityInformation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onDeathNameChange(EntityDeathEvent event) {
-        Optional<EntityInformation> optional = CustomEntities.getInformation(event.getEntity());
-        optional.ifPresent(entityInformation -> setName(event.getEntity(), entityInformation));
-
+    public void onDeathNameChange(CustomEntityDeathEvent event) {
+        setName(event.getEntityDeathEvent().getEntity(), event.getEntityInformation());
     }
 }

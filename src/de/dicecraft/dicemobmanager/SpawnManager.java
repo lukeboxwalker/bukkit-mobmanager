@@ -32,40 +32,4 @@ public class SpawnManager implements Listener {
 
         ENTITIES.add(spawnedEntity.getUniqueId());
     }
-
-    @EventHandler
-    public void damageEvent(EntityDamageByEntityEvent damageEvent) {
-//        Entity entity = damageEvent.getEntity();
-//        Entity attacker = damageEvent.getDamager();
-//        if (ENTITIES.contains(entity.getUniqueId()) && attacker instanceof LivingEntity) {
-//            LAST_ATTACKER.put(entity.getUniqueId(), new LastAttacker((LivingEntity) attacker));
-//        }
-    }
-
-
-    @EventHandler
-    public void combustEvent(EntityCombustEvent combustEvent) {
-//        Entity entity = combustEvent.getEntity();
-//        if (entity.getLastDamageCause() != null) {
-//            System.out.println(entity.getLastDamageCause().getCause());
-//        }
-//        if (ENTITIES.contains(entity.getUniqueId())) {
-//            if (entity.getLastDamageCause() != null && !entity.getLastDamageCause().getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
-//                combustEvent.setCancelled(true);
-//                entity.setFireTicks(-1);
-//            }
-//            if (LAST_ATTACKER.containsKey(entity.getUniqueId())) {
-//                if (!LAST_ATTACKER.get(entity.getUniqueId()).getEnchantments().containsKey(Enchantment.FIRE_ASPECT)) {
-//                    combustEvent.setCancelled(true);
-//                    entity.setFireTicks(-1);
-//                }
-//            } else {
-//                combustEvent.setCancelled(true);
-//                entity.setFireTicks(-1);
-//            }
-//
-//        }
-
-
-    }
 }

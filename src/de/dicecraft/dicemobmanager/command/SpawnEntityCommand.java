@@ -10,8 +10,11 @@ import de.dicecraft.dicemobmanager.entity.CustomType;
 import de.dicecraft.dicemobmanager.entity.datawatcher.ZombieVillagerDataWatcher;
 import de.dicecraft.dicemobmanager.entity.pathfinder.goal.CustomGoalProvider;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftZombie;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
@@ -78,6 +81,8 @@ public class SpawnEntityCommand extends AbstractCommand {
                     sender.sendMessage("entityType unknown");
                     return true;
                 }
+            } else {
+                DiceMobManager.getInstance().getSpawnManager().spawn(((Player) sender).getLocation());
             }
             return true;
         } else {

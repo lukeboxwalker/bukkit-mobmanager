@@ -8,16 +8,22 @@ import de.dicecraft.dicemobmanager.entity.EntityInformation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.PriorityEntry;
 import de.dicecraft.dicemobmanager.entity.builder.EntityConfiguration;
+import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
+import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import net.minecraft.server.v1_16_R2.World;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.craftbukkit.v1_16_R2.attribute.CraftAttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -56,6 +62,7 @@ public class EntityFactory implements CustomEntityFactory {
                         instance.setBaseValue(value);
                     }
                 });
+                mob.setHealth(configuration.getAttributes().get(Attribute.GENERIC_MAX_HEALTH));
                 entity.setCustomNameVisible(true);
                 for (PriorityEntry<Function<Mob, Goal<Mob>>> entry : configuration.getPathfinderGoals()) {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().apply((Mob) entity));
@@ -63,10 +70,12 @@ public class EntityFactory implements CustomEntityFactory {
                 if (entity instanceof Zombie) {
                     ((Zombie) entity).setShouldBurnInDay(false);
                 }
+                DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
 
                 EntityInformation entityInformation = new EntityInformation();
-                CustomEntities.addEntity(mob, entityInformation, plugin);
+                entityInformation.setDeathDrops(Collections.singletonList(deathDrop));
 
+                CustomEntities.addEntity(mob, entityInformation, plugin);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");

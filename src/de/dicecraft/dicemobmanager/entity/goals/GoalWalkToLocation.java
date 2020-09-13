@@ -63,7 +63,7 @@ public class GoalWalkToLocation implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (pathResult.getPoints().size() == pathResult.getNextPointIndex() && !locationQueue.isEmpty()) {
+        if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex() && !locationQueue.isEmpty()) {
             this.nextGoal = null;
             if (this.shouldActivate()) {
                 this.start();

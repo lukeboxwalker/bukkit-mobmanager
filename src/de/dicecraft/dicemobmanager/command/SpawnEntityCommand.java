@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SpawnEntityCommand extends AbstractCommand {
@@ -38,12 +37,6 @@ public class SpawnEntityCommand extends AbstractCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            LinkedList<Location> locations = new LinkedList<>();
-            locations.add(new Location(player.getWorld(), 317, 90, 55));
-            locations.add(new Location(player.getWorld(), 322, 90, 57));
-            locations.add(new Location(player.getWorld(), 324, 90, 61));
-            locations.add(new Location(player.getWorld(), 324, 90, 65));
-
             try {
                 EntityType type = args.length == 1 ? EntityType.valueOf(args[0].toUpperCase()) : EntityType.ZOMBIE;
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
@@ -58,7 +51,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                 CustomEntities.builder(DiceMobManager.getInstance())
                         .atLocation(player.getLocation())
                         .fromType(type)
-                        .attachGoalSelector(1, mob -> new GoalWalkToLocation(mob, locations))
+                        .attachGoalSelector(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .useInformation(entityInformation)
                         .setEquipment(equipment)

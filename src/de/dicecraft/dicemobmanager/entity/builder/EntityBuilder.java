@@ -1,80 +1,57 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.Goal;
-import com.destroystokyo.paper.entity.ai.MobGoals;
-import com.destroystokyo.paper.entity.ai.PaperMobGoals;
-import de.dicecraft.dicemobmanager.entity.CustomEntities;
-import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
-
 /**
- * Builds a Entity.
- *
- * Represents a custom configuration of which
- * an entity can be constructed.
+ * Builds an Entity.
  *
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public class EntityBuilder implements CustomEntityBuilder {
-
-    private final Plugin plugin;
-    private final Map<Attribute, Double> attributes;
-    private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderGoals;
-    private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderTargets;
-    private final MobGoals mobGoals;
-
-    private EntityType entityType;
-    private Location location;
-    private EntityInformation information;
-    private Equipment equipment;
-
-    public EntityBuilder(@Nonnull final Plugin plugin) {
-        mobGoals = new PaperMobGoals();
-        this.plugin = plugin;
-        this.pathfinderGoals = new ArrayList<>();
-        this.pathfinderTargets = new ArrayList<>();
-        this.attributes = new HashMap<>();
-        this.equipment = new CustomEquipment();
-    }
+public interface EntityBuilder {
 
     /**
      * Specifies an attribute for the entity.
      * <p>
-     * All attributes, see {@link Attribute} are collected and take on entity
+     * All attributes are collected, see {@link Attribute} and take on entity
      * when building. Value should be positive to set custom attribute value.
      * If the value is negative the attribute is considered to use the default
      * value.
-     * <p>
-     * Manipulating {@link EntityBuilder#attributes}
      *
      * @param attribute attribute type to set value for
      * @param value     the value for the given attribute
      * @return builder to continue
      */
-    @Override
-    public CustomEntityBuilder setAttribute(@Nonnull Attribute attribute, double value) {
-        attributes.put(attribute, value);
-        return this;
-    }
+    EntityBuilder setAttribute(@Nonnull Attribute attribute, double value);
+
+    /**
+     * Specifies the type for the entity.
+     * <p>
+     * The entity type determines the entity model, as
+     * well as the specific class to instantiate when building.
+     * See also {@link EntityType}
+     *
+     * @param entityType type of the entity
+     * @return builder to continue
+     */
+    EntityBuilder fromType(@Nonnull EntityType entityType);
+
+    /**
+     * Specifies the location for the entity.
+     *
+     * @param location the location for the entity
+     * @return builder to continue
+     */
+    EntityBuilder atLocation(@Nonnull Location location);
 
     /**
      * Specifies a pathfinder goal.
@@ -84,18 +61,12 @@ public class EntityBuilder implements CustomEntityBuilder {
      * Each goal has a priority to determine the order to use them.
      * The goal selection always prefers lower prioritised pathfinder goals.
      * The highest priority that is possible is 1.
-     * <p>
-     * Manipulating {@link EntityBuilder#pathfinderGoals}
      *
      * @param priority the priority of the goal should be non negative
      * @param supplier to supply pathfinder goals
      * @return builder to continue
      */
-    @Override
-    public CustomEntityBuilder attachGoalSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
-        pathfinderGoals.add(new PriorityEntry<>(priority, supplier));
-        return this;
-    }
+    EntityBuilder attachGoal(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
 
     /**
      * Specifies a pathfinder goal target.
@@ -105,120 +76,37 @@ public class EntityBuilder implements CustomEntityBuilder {
      * Each goal target has a priority to determine the order to use them.
      * The target selection always prefers lower prioritised pathfinder goal targets.
      * The highest priority that is possible is 1.
-     * <p>
-     * Manipulating {@link EntityBuilder#pathfinderTargets}
      *
      * @param priority the priority of the goal target should be non negative
      * @param supplier to supply pathfinder goal targets
      * @return builder to continue
      */
-    @Override
-    public CustomEntityBuilder attachTargetSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
-        pathfinderTargets.add(new PriorityEntry<>(priority, supplier));
-        return this;
-    }
-
-    /**
-     * Specifies the type for the entity.
-     * <p>
-     * The entity type determines the entity model, as
-     * well as the specific class to instantiate when building.
-     * See also {@link EntityType}
-     * <p>
-     * Manipulating {@link EntityBuilder#entityType}
-     *
-     * @param entityType type of the entity
-     * @return builder to continue
-     */
-    @Override
-    public CustomEntityBuilder fromType(@Nonnull EntityType entityType) {
-        this.entityType = entityType;
-        return this;
-    }
-
-    /**
-     * Specifies the location for the entity.
-     * <p>
-     * Manipulating {@link EntityBuilder#location}
-     *
-     * @param location the world for the entity
-     * @return builder to continue
-     */
-    @Override
-    public CustomEntityBuilder atLocation(@Nonnull Location location) {
-        this.location = location;
-        return this;
-    }
+    EntityBuilder attachTarget(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
 
     /**
      * Specifies the custom information for the entity.
-     * <p>
-     * Manipulating {@link EntityBuilder#information}
      *
-     * @param information the information for the entity
+     * @param information the world for the entity
      * @return builder to continue
      */
-    @Override
-    public CustomEntityBuilder useInformation(@Nonnull EntityInformation information) {
-        this.information = information;
-        return this;
-    }
+    EntityBuilder useInformation(@Nonnull EntityInformation information);
 
     /**
      * Specifies the equipment for the entity.
-     * <p>
-     * Manipulating {@link EntityBuilder#equipment}
      *
      * @param equipment the equipment for the entity
      * @return builder to continue
      */
-    @Override
-    public CustomEntityBuilder setEquipment(@Nonnull Equipment equipment) {
-        this.equipment = equipment;
-        return this;
-    }
+    EntityBuilder setEquipment(@Nonnull Equipment equipment);
 
     /**
      * Builds the Entity.
      * <p>
      * Using all information given to the builder, it
-     * creates a new Entity. Setting default attributes
-     * when no custom attribute is set yet.
+     * creates a new CustomEntity.
      *
      * @return new CustomEntity
-     * @throws EntityCreationException when custom type or world is not set yet or
-     *                                 the EntityFactory fails to create the custom entity.
+     * @throws EntityCreationException when creation fails
      */
-    @Override
-    public Entity buildAndSpawn() throws EntityCreationException {
-        if (entityType == null) throw new EntityCreationException("Type is not specified");
-        if (location == null) throw new EntityCreationException("Location is not specified");
-        if (information == null) throw new EntityCreationException("Entity information is not specified");
-
-        attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
-
-        if (Mob.class.isAssignableFrom(Objects.requireNonNull(entityType.getEntityClass()))) {
-            return location.getWorld().spawnEntity(location, entityType, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
-                Mob mob = (Mob) entity;
-                attributes.forEach((attribute, value) -> {
-                    AttributeInstance instance = mob.getAttribute(attribute);
-                    if (instance != null) {
-                        instance.setBaseValue(value);
-                    }
-                });
-                mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
-                entity.setCustomNameVisible(true);
-                for (PriorityEntry<Function<Mob, Goal<Mob>>> entry : pathfinderGoals) {
-                    mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().apply((Mob) entity));
-                }
-                if (entity instanceof Zombie) {
-                    ((Zombie) entity).setShouldBurnInDay(false);
-                }
-                equipment.equip(mob);
-                CustomEntities.addEntity(mob, information, plugin);
-            });
-        } else {
-            throw new EntityCreationException("Entity type is not a mob");
-        }
-    }
+    Entity buildAndSpawn() throws EntityCreationException;
 }

@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.drops;
 
-import de.dicecraft.dicemobmanager.entity.CustomEntities;
+import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.entity.EntityManager;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -76,7 +77,16 @@ public class CustomDeathDrop implements DeathDrop {
     @Override
     public boolean shouldDrop(int lootBonus) {
         int dropChance = (int) (getDropChance() * 10000 + lootBonus * 1000 * getDropChance());
-        return (CustomEntities.randomIntBetween(0, 10000) < dropChance);
+        return (DiceMobManager.randomIntBetween(0, 10000) < dropChance);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomDeathDrop{" +
+                "dropChance=" + dropChance +
+                ", rarity=" + rarity +
+                ", itemStack=" + itemStack +
+                '}';
     }
 }
 

@@ -1,7 +1,6 @@
 package de.dicecraft.dicemobmanager.command;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import de.dicecraft.dicemobmanager.entity.CustomEntities;
 import de.dicecraft.dicemobmanager.entity.SkullFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
@@ -10,7 +9,6 @@ import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -48,10 +46,10 @@ public class SpawnEntityCommand extends AbstractCommand {
                 equipment.setChestPlate(new ItemStack(Material.DIAMOND_CHESTPLATE));
                 equipment.setHelmet(heads.get(0));
 
-                CustomEntities.builder(DiceMobManager.getInstance())
+                DiceMobManager.builder(DiceMobManager.getInstance())
                         .atLocation(player.getLocation())
                         .fromType(type)
-                        .attachGoalSelector(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
+                        .attachGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .useInformation(entityInformation)
                         .setEquipment(equipment)

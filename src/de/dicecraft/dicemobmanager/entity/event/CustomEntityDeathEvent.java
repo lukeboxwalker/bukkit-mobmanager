@@ -1,13 +1,10 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
-import de.dicecraft.dicemobmanager.entity.Component;
+import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
-
-import javax.annotation.Nonnull;
 
 public class CustomEntityDeathEvent extends CustomEntityEvent {
 

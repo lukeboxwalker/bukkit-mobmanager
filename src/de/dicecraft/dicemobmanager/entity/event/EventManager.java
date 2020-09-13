@@ -9,5 +9,5 @@ public interface EventManager {
 
     void callEvent(@Nonnull CustomEntityEvent event);
 
-    void registerListeners(@Nonnull Listener listener, @Nonnull Plugin plugin);
+    void registerListener(@Nonnull Listener listener, @Nonnull Plugin plugin);
 }

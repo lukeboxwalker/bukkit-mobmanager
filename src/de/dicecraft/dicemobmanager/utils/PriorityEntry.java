@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity.builder;
+package de.dicecraft.dicemobmanager.utils;
 
 /**
  * Entry to pair object to a priority.
@@ -30,5 +30,13 @@ public class PriorityEntry<T> {
 
     public T getEntry() {
         return entry;
+    }
+
+    @Override
+    public String toString() {
+        return "PriorityEntry{" +
+                "priority=" + priority +
+                ", entry=" + entry +
+                '}';
     }
 }

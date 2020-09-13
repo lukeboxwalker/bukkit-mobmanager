@@ -72,4 +72,14 @@ public class EntityInformation {
     public void setDeathDrops(@Nonnull List<DeathDrop> customDeathDrops) {
         this.customDeathDrops = customDeathDrops;
     }
+
+    @Override
+    public String toString() {
+        return "EntityInformation{" +
+                "level=" + level +
+                ", name='" + name + '\'' +
+                ", nameSupplier=" + nameSupplier +
+                ", customDeathDrops=" + customDeathDrops +
+                '}';
+    }
 }

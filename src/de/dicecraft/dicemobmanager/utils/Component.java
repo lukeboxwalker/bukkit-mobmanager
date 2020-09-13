@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity;
+package de.dicecraft.dicemobmanager.utils;
 
 /**
  * Pares to objects.
@@ -13,6 +13,12 @@ public class Component<F, S> {
     private final F first;
     private final S second;
 
+    /**
+     * Creates a new component containing two objects.
+     *
+     * @param first  the first object
+     * @param second the second object
+     */
     public Component(final F first, final S second) {
         this.first = first;
         this.second = second;

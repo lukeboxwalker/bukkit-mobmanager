@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -29,7 +30,7 @@ public interface CustomEntityBuilder{
      * @param value     the value for the given attribute
      * @return builder to continue
      */
-    CustomEntityBuilder setAttribute(final Attribute attribute, final double value);
+    CustomEntityBuilder setAttribute(@Nonnull final Attribute attribute, final double value);
 
     /**
      * Specifies the type for the entity.
@@ -41,7 +42,7 @@ public interface CustomEntityBuilder{
      * @param entityType type of the entity
      * @return builder to continue
      */
-    CustomEntityBuilder fromType(final EntityType entityType);
+    CustomEntityBuilder fromType(@Nonnull final EntityType entityType);
 
     /**
      * Specifies the location for the entity.
@@ -49,7 +50,7 @@ public interface CustomEntityBuilder{
      * @param location the location for the entity
      * @return builder to continue
      */
-    CustomEntityBuilder atLocation(final Location location);
+    CustomEntityBuilder atLocation(@Nonnull final Location location);
 
     /**
      * Specifies a pathfinder goal.
@@ -64,7 +65,7 @@ public interface CustomEntityBuilder{
      * @param supplier to supply pathfinder goals
      * @return builder to continue
      */
-    CustomEntityBuilder attachGoalSelector(final int priority, Function<Mob, Goal<Mob>> supplier);
+    CustomEntityBuilder attachGoalSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
 
     /**
      * Specifies a pathfinder goal target.
@@ -79,7 +80,15 @@ public interface CustomEntityBuilder{
      * @param supplier to supply pathfinder goal targets
      * @return builder to continue
      */
-    CustomEntityBuilder attachTargetSelector(final int priority, Function<Mob, Goal<Mob>> supplier);
+    CustomEntityBuilder attachTargetSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
+
+    /**
+     * Specifies the custom information for the entity.
+     *
+     * @param information the world for the entity
+     * @return builder to continue
+     */
+    CustomEntityBuilder useInformation(@Nonnull final EntityInformation information);
 
     /**
      * Builds the Entity.
@@ -90,5 +99,5 @@ public interface CustomEntityBuilder{
      * @return new CustomEntity
      * @throws EntityCreationException when creation fails
      */
-    Entity build() throws EntityCreationException;
+    Entity buildAndSpawn() throws EntityCreationException;
 }

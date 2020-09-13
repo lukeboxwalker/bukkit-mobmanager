@@ -1,11 +1,11 @@
 package de.dicecraft.dicemobmanager.entity;
 
-public class Pair<F, S> {
+public class Component<F, S> {
 
     private final F first;
     private final S second;
 
-    public Pair(final F first, final S second) {
+    public Component(final F first, final S second) {
         this.first = first;
         this.second = second;
     }

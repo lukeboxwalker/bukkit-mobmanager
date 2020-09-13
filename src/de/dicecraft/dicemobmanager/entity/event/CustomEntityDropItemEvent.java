@@ -1,7 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.EntityInformation;
-import de.dicecraft.dicemobmanager.entity.Pair;
+import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -16,8 +16,8 @@ public class CustomEntityDropItemEvent extends CustomEntityEvent {
 
     private boolean cancelled;
 
-    public CustomEntityDropItemEvent(LivingEntity livingEntity, Pair<Plugin, EntityInformation> pair){
-        super(pair);
+    public CustomEntityDropItemEvent(LivingEntity livingEntity, Component<Plugin, EntityInformation> component){
+        super(component);
         this.livingEntity = livingEntity;
     }
 

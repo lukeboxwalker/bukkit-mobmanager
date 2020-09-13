@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
 import de.dicecraft.dicemobmanager.entity.event.CustomEntityDamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.CustomEntityDeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.CustomEntityDropItemEvent;
@@ -26,7 +27,7 @@ public class EntityEventListener implements EventListener {
     @Override
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        Optional<Pair<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
+        Optional<Component<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
         optional.ifPresent(pair -> {
             CustomEntityDeathEvent spawnEvent = new CustomEntityDeathEvent(event, pair);
             DiceMobManager.getEventManager().callEvent(spawnEvent);
@@ -58,7 +59,7 @@ public class EntityEventListener implements EventListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
-            Optional<Pair<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
+            Optional<Component<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
             optional.ifPresent(pair -> {
                 CustomEntitySpawnEvent spawnEvent = new CustomEntitySpawnEvent(event, pair);
                 DiceMobManager.getEventManager().callEvent(spawnEvent);
@@ -70,7 +71,7 @@ public class EntityEventListener implements EventListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
-            Optional<Pair<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
+            Optional<Component<Plugin, EntityInformation>> optional = CustomEntities.getInformation(event.getEntity());
             optional.ifPresent(pair -> {
                 CustomEntityDamageEvent spawnEvent = new CustomEntityDamageEvent(event, pair);
                 DiceMobManager.getEventManager().callEvent(spawnEvent);

@@ -1,7 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.EntityInformation;
-import de.dicecraft.dicemobmanager.entity.Pair;
+import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.Component;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.HandlerList;
@@ -16,8 +16,8 @@ public class CustomEntityDamageEvent extends CustomEntityEvent {
 
     private final EntityDamageEvent entityDamageEvent;
 
-    public CustomEntityDamageEvent(EntityDamageEvent entityDamageEvent, Pair<Plugin, EntityInformation> pair) {
-        super(pair);
+    public CustomEntityDamageEvent(EntityDamageEvent entityDamageEvent, Component<Plugin, EntityInformation> component) {
+        super(component);
         this.entityDamageEvent = entityDamageEvent;
     }
 

@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
+import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
 import de.dicecraft.dicemobmanager.entity.name.NameChangeListener;
 
 import org.bukkit.entity.Entity;
@@ -28,10 +29,10 @@ public class CustomEntities {
 
     }
 
-    public static Optional<Pair<Plugin, EntityInformation>> getInformation(Entity entity) {
+    public static Optional<Component<Plugin, EntityInformation>> getInformation(Entity entity) {
         for (Map.Entry<Plugin, Map<Entity, EntityInformation>> entry : ENTITIES.entrySet()) {
             if (entry.getValue().containsKey(entity)) {
-                return Optional.of(new Pair<>(entry.getKey(), entry.getValue().get(entity)));
+                return Optional.of(new Component<>(entry.getKey(), entry.getValue().get(entity)));
             }
         }
         return Optional.empty();

@@ -11,17 +11,17 @@ import org.bukkit.event.Listener;
 public class NameChangeListener implements Listener {
 
     public void setName(LivingEntity entity, EntityInformation entityInformation) {
-        setName(entity, (int) entity.getHealth(), entityInformation);
+        setName(entity, entity.getHealth(), entityInformation);
     }
 
-    public void setName(LivingEntity entity, int currentHealth, EntityInformation entityInformation) {
+    public void setName(LivingEntity entity, double currentHealth, EntityInformation entityInformation) {
         String name = entityInformation.getNameSupplier().supply(entity, currentHealth, entityInformation);
         entity.setCustomName(name);
     }
 
     @CustomEventHandler(priority = EventPriority.HIGHEST)
     public void onDamageNameChange(CustomEntityDamageEvent event) {
-        int finalHealth = (int) (event.getEntity().getHealth() - event.getEntityDamageEvent().getFinalDamage());
+        double finalHealth = (event.getEntity().getHealth() - event.getEntityDamageEvent().getFinalDamage());
         setName((LivingEntity) event.getEntityDamageEvent().getEntity(), Math.max(finalHealth, 0), event.getEntityInformation());
     }
 

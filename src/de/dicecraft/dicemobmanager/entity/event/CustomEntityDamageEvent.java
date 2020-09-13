@@ -12,8 +12,6 @@ import javax.annotation.Nonnull;
 
 public class CustomEntityDamageEvent extends CustomEntityEvent {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-
     private final EntityDamageEvent entityDamageEvent;
 
     public CustomEntityDamageEvent(EntityDamageEvent entityDamageEvent, Component<Plugin, EntityInformation> component) {
@@ -23,16 +21,6 @@ public class CustomEntityDamageEvent extends CustomEntityEvent {
 
     public EntityDamageEvent getEntityDamageEvent() {
         return entityDamageEvent;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
-
-    @Override
-    @Nonnull
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
     }
 
     @Override

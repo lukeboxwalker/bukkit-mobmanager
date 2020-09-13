@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.Goal;
+import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -30,7 +31,7 @@ public interface CustomEntityBuilder{
      * @param value     the value for the given attribute
      * @return builder to continue
      */
-    CustomEntityBuilder setAttribute(@Nonnull final Attribute attribute, final double value);
+    CustomEntityBuilder setAttribute(@Nonnull Attribute attribute, double value);
 
     /**
      * Specifies the type for the entity.
@@ -42,7 +43,7 @@ public interface CustomEntityBuilder{
      * @param entityType type of the entity
      * @return builder to continue
      */
-    CustomEntityBuilder fromType(@Nonnull final EntityType entityType);
+    CustomEntityBuilder fromType(@Nonnull EntityType entityType);
 
     /**
      * Specifies the location for the entity.
@@ -50,7 +51,7 @@ public interface CustomEntityBuilder{
      * @param location the location for the entity
      * @return builder to continue
      */
-    CustomEntityBuilder atLocation(@Nonnull final Location location);
+    CustomEntityBuilder atLocation(@Nonnull Location location);
 
     /**
      * Specifies a pathfinder goal.
@@ -65,7 +66,7 @@ public interface CustomEntityBuilder{
      * @param supplier to supply pathfinder goals
      * @return builder to continue
      */
-    CustomEntityBuilder attachGoalSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
+    CustomEntityBuilder attachGoalSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
 
     /**
      * Specifies a pathfinder goal target.
@@ -80,7 +81,7 @@ public interface CustomEntityBuilder{
      * @param supplier to supply pathfinder goal targets
      * @return builder to continue
      */
-    CustomEntityBuilder attachTargetSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
+    CustomEntityBuilder attachTargetSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
 
     /**
      * Specifies the custom information for the entity.
@@ -88,7 +89,15 @@ public interface CustomEntityBuilder{
      * @param information the world for the entity
      * @return builder to continue
      */
-    CustomEntityBuilder useInformation(@Nonnull final EntityInformation information);
+    CustomEntityBuilder useInformation(@Nonnull EntityInformation information);
+
+    /**
+     * Specifies the equipment for the entity.
+     *
+     * @param equipment the equipment for the entity
+     * @return builder to continue
+     */
+    CustomEntityBuilder setEquipment(@Nonnull Equipment equipment);
 
     /**
      * Builds the Entity.

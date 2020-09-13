@@ -10,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Mob;
 
-
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.EnumSet;

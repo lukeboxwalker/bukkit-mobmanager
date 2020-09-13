@@ -2,33 +2,21 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
 import de.dicecraft.dicemobmanager.entity.Component;
+import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
-
-import javax.annotation.Nonnull;
 
 public class CustomEntityDropItemEvent extends CustomEntityEvent {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-
     private final LivingEntity livingEntity;
+    private final DeathDrop deathDrop;
 
     private boolean cancelled;
 
-    public CustomEntityDropItemEvent(LivingEntity livingEntity, Component<Plugin, EntityInformation> component){
+    public CustomEntityDropItemEvent(LivingEntity livingEntity, DeathDrop deathDrop, Component<Plugin, EntityInformation> component){
         super(component);
         this.livingEntity = livingEntity;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
-
-    @Override
-    @Nonnull
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
+        this.deathDrop = deathDrop;
     }
 
     @Override
@@ -44,5 +32,9 @@ public class CustomEntityDropItemEvent extends CustomEntityEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public DeathDrop getDeathDrop() {
+        return deathDrop;
     }
 }

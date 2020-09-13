@@ -13,7 +13,7 @@ import java.util.Queue;
 
 public final class CustomEventManager implements EventManager {
 
-    private final HashMap<Class<? extends CustomEntityEvent>, Queue<EventExecutor>> eventExecutors;
+    private final HashMap<Class<? extends Event>, Queue<EventExecutor>> eventExecutors;
     private final Comparator<EventExecutor> comparator = Comparator.comparingInt(eventExecutor -> eventExecutor.getPriority().getSlot());
     private final Plugin plugin;
 
@@ -40,8 +40,8 @@ public final class CustomEventManager implements EventManager {
             if (method.isAnnotationPresent(CustomEventHandler.class)) {
                 CustomEventHandler annotation = method.getAnnotation(CustomEventHandler.class);
                 Class<?> paramClass = method.getParameterTypes()[0];
-                if (method.getParameterCount() == 1 && CustomEntityEvent.class.isAssignableFrom(paramClass)) {
-                    Class<? extends CustomEntityEvent> eventClass = paramClass.asSubclass(CustomEntityEvent.class);
+                if (method.getParameterCount() == 1 && Event.class.isAssignableFrom(paramClass)) {
+                    Class<? extends Event> eventClass = paramClass.asSubclass(Event.class);
                     method.setAccessible(true);
                     if (!eventExecutors.containsKey(eventClass)) {
                         eventExecutors.put(eventClass, new PriorityQueue<>(comparator));

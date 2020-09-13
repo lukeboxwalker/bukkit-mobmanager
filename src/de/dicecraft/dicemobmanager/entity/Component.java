@@ -1,5 +1,13 @@
 package de.dicecraft.dicemobmanager.entity;
 
+/**
+ * Pares to objects.
+ *
+ * @param <F> first object type
+ * @param <S> second object type
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public class Component<F, S> {
 
     private final F first;

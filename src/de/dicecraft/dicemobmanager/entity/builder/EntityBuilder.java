@@ -4,6 +4,8 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.entity.CustomEntities;
+import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
+import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -43,6 +45,7 @@ public class EntityBuilder implements CustomEntityBuilder {
     private EntityType entityType;
     private Location location;
     private EntityInformation information;
+    private Equipment equipment;
 
     public EntityBuilder(@Nonnull final Plugin plugin) {
         mobGoals = new PaperMobGoals();
@@ -50,6 +53,7 @@ public class EntityBuilder implements CustomEntityBuilder {
         this.pathfinderGoals = new ArrayList<>();
         this.pathfinderTargets = new ArrayList<>();
         this.attributes = new HashMap<>();
+        this.equipment = new CustomEquipment();
     }
 
     /**
@@ -67,7 +71,7 @@ public class EntityBuilder implements CustomEntityBuilder {
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder setAttribute(@Nonnull final Attribute attribute, final double value) {
+    public CustomEntityBuilder setAttribute(@Nonnull Attribute attribute, double value) {
         attributes.put(attribute, value);
         return this;
     }
@@ -88,7 +92,7 @@ public class EntityBuilder implements CustomEntityBuilder {
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder attachGoalSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
+    public CustomEntityBuilder attachGoalSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, supplier));
         return this;
     }
@@ -109,7 +113,7 @@ public class EntityBuilder implements CustomEntityBuilder {
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder attachTargetSelector(final int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
+    public CustomEntityBuilder attachTargetSelector(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
         pathfinderTargets.add(new PriorityEntry<>(priority, supplier));
         return this;
     }
@@ -127,7 +131,7 @@ public class EntityBuilder implements CustomEntityBuilder {
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder fromType(@Nonnull final EntityType entityType) {
+    public CustomEntityBuilder fromType(@Nonnull EntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -141,7 +145,7 @@ public class EntityBuilder implements CustomEntityBuilder {
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder atLocation(@Nonnull final Location location) {
+    public CustomEntityBuilder atLocation(@Nonnull Location location) {
         this.location = location;
         return this;
     }
@@ -151,12 +155,26 @@ public class EntityBuilder implements CustomEntityBuilder {
      * <p>
      * Manipulating {@link EntityBuilder#information}
      *
-     * @param information the world for the entity
+     * @param information the information for the entity
      * @return builder to continue
      */
     @Override
-    public CustomEntityBuilder useInformation(@Nonnull final EntityInformation information) {
+    public CustomEntityBuilder useInformation(@Nonnull EntityInformation information) {
         this.information = information;
+        return this;
+    }
+
+    /**
+     * Specifies the equipment for the entity.
+     * <p>
+     * Manipulating {@link EntityBuilder#equipment}
+     *
+     * @param equipment the equipment for the entity
+     * @return builder to continue
+     */
+    @Override
+    public CustomEntityBuilder setEquipment(@Nonnull Equipment equipment) {
+        this.equipment = equipment;
         return this;
     }
 
@@ -178,13 +196,6 @@ public class EntityBuilder implements CustomEntityBuilder {
         if (information == null) throw new EntityCreationException("Entity information is not specified");
 
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
-        attributes.putIfAbsent(Attribute.GENERIC_KNOCKBACK_RESISTANCE, -1D);
-        attributes.putIfAbsent(Attribute.GENERIC_ARMOR_TOUGHNESS, -1D);
-        attributes.putIfAbsent(Attribute.GENERIC_FOLLOW_RANGE, 15D);
-        attributes.putIfAbsent(Attribute.GENERIC_ATTACK_KNOCKBACK, -1D);
-        attributes.putIfAbsent(Attribute.GENERIC_MOVEMENT_SPEED, 0.23D);
-        attributes.putIfAbsent(Attribute.GENERIC_ATTACK_DAMAGE, 3.0D);
-        attributes.putIfAbsent(Attribute.GENERIC_ARMOR, 0D);
 
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(entityType.getEntityClass()))) {
             return location.getWorld().spawnEntity(location, entityType, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
@@ -203,6 +214,7 @@ public class EntityBuilder implements CustomEntityBuilder {
                 if (entity instanceof Zombie) {
                     ((Zombie) entity).setShouldBurnInDay(false);
                 }
+                equipment.equip(mob);
                 CustomEntities.addEntity(mob, information, plugin);
             });
         } else {

@@ -1,12 +1,9 @@
-package de.dicecraft.dicemobmanager.entity;
+package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.entity.Component;
+import de.dicecraft.dicemobmanager.entity.CustomEntities;
 import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
-import de.dicecraft.dicemobmanager.entity.event.CustomEntityDamageEvent;
-import de.dicecraft.dicemobmanager.entity.event.CustomEntityDeathEvent;
-import de.dicecraft.dicemobmanager.entity.event.CustomEntityDropItemEvent;
-import de.dicecraft.dicemobmanager.entity.event.CustomEntitySpawnEvent;
-import de.dicecraft.dicemobmanager.entity.event.EventListener;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -43,7 +40,7 @@ public class EntityEventListener implements EventListener {
                     information.getCustomDeathDrops().forEach(deathDrop -> {
                         int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                         if (deathDrop.shouldDrop(lootBonus)) {
-                            CustomEntityDropItemEvent dropItemEvent = new CustomEntityDropItemEvent(entity, pair);
+                            CustomEntityDropItemEvent dropItemEvent = new CustomEntityDropItemEvent(entity, deathDrop, pair);
                             DiceMobManager.getEventManager().callEvent(dropItemEvent);
                             if (!dropItemEvent.isCancelled()) {
                                 drops.add(deathDrop.getItemStack());

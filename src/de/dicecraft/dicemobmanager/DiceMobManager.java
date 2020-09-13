@@ -2,7 +2,7 @@ package de.dicecraft.dicemobmanager;
 
 import de.dicecraft.dicemobmanager.command.CommandManager;
 
-import de.dicecraft.dicemobmanager.entity.EntityEventListener;
+import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.event.CustomEventManager;
 import de.dicecraft.dicemobmanager.entity.event.EventManager;
 import org.bukkit.Bukkit;

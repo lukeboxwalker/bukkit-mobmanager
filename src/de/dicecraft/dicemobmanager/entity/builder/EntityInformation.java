@@ -24,6 +24,7 @@ public class EntityInformation {
     private String name;
     private NameSupplier nameSupplier;
     private List<DeathDrop> customDeathDrops;
+    private boolean aggressive;
 
     /**
      * Creating new EntityInformation.
@@ -39,6 +40,7 @@ public class EntityInformation {
         this.nameSupplier = new CustomNameSupplier();
         this.name = "CustomEntity";
         this.level = 1;
+        this.aggressive = true;
     }
 
     public NameSupplier getNameSupplier() {
@@ -71,6 +73,18 @@ public class EntityInformation {
 
     public void setDeathDrops(@Nonnull List<DeathDrop> customDeathDrops) {
         this.customDeathDrops = customDeathDrops;
+    }
+
+    public void setCustomDeathDrops(List<DeathDrop> customDeathDrops) {
+        this.customDeathDrops = customDeathDrops;
+    }
+
+    public boolean isAggressive() {
+        return aggressive;
+    }
+
+    public void setAggressive(boolean aggressive) {
+        this.aggressive = aggressive;
     }
 
     @Override

@@ -3,6 +3,8 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
+import com.destroystokyo.paper.entity.ai.PaperVanillaGoal;
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
@@ -19,6 +21,7 @@ import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,6 +212,11 @@ public class CustomEntityBuilder implements EntityBuilder {
                 });
                 mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
                 entity.setCustomNameVisible(true);
+
+                if (!information.isAggressive()) {
+                    mobGoals.removeGoal(mob, VanillaGoal.NEAREST_ATTACKABLE_TARGET);
+                }
+
                 for (PriorityEntry<Function<Mob, Goal<Mob>>> entry : pathfinderGoals) {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().apply((Mob) entity));
                 }

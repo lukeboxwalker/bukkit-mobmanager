@@ -40,6 +40,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
                 EntityInformation entityInformation = new EntityInformation();
                 entityInformation.setDeathDrops(Collections.singletonList(deathDrop));
+                entityInformation.setAggressive(false);
 
                 Equipment equipment = new CustomEquipment();
                 equipment.setItemInMainHand(new ItemStack(Material.IRON_SWORD));

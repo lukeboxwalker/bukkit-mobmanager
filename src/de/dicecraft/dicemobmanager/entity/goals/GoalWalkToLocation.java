@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -58,7 +59,7 @@ public class GoalWalkToLocation implements Goal<Mob> {
      * @param mob   the entity for the goal
      * @param goals to walk to one by one
      */
-    public GoalWalkToLocation(final Mob mob, final Queue<Location> goals) {
+    public GoalWalkToLocation(final Mob mob, final List<Location> goals) {
         this(mob, goals, DEFAULT_SPEED);
     }
 
@@ -82,8 +83,8 @@ public class GoalWalkToLocation implements Goal<Mob> {
      * @param speed the speed of which the entity is walking
      * @param goals to walk to one by one
      */
-    public GoalWalkToLocation(final Mob mob, final Queue<Location> goals, float speed) {
-        this.locationQueue = goals == null ? new LinkedList<>() : goals;
+    public GoalWalkToLocation(final Mob mob, final List<Location> goals, float speed) {
+        this.locationQueue = goals == null ? new LinkedList<>() : new LinkedList<>(goals);
         this.mob = mob;
         this.speed = speed;
     }

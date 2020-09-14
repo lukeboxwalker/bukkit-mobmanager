@@ -18,6 +18,7 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class CustomEntityBuilder implements EntityBuilder {
     private final Map<Attribute, Double> attributes;
     private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderGoals;
     private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderTargets;
+    private final List<PotionEffect> potionEffects;
     private final MobGoals mobGoals;
 
     private EntityType entityType;
@@ -54,6 +56,7 @@ public class CustomEntityBuilder implements EntityBuilder {
     public CustomEntityBuilder(@Nonnull final Plugin plugin) {
         mobGoals = new PaperMobGoals();
         this.plugin = plugin;
+        this.potionEffects = new ArrayList<>();
         this.pathfinderGoals = new ArrayList<>();
         this.pathfinderTargets = new ArrayList<>();
         this.attributes = new HashMap<>();
@@ -183,6 +186,20 @@ public class CustomEntityBuilder implements EntityBuilder {
     }
 
     /**
+     * Specifies an potion effect for the entity.
+     * <p>
+     * Add a given potion effect to the entity
+     *
+     * @param potionEffect the potion effect to add
+     * @return builder to continue
+     */
+    @Override
+    public EntityBuilder addEffect(@Nonnull PotionEffect potionEffect) {
+        this.potionEffects.add(potionEffect);
+        return this;
+    }
+
+    /**
      * Builds the Entity.
      * <p>
      * Using all information given to the builder, it
@@ -220,6 +237,11 @@ public class CustomEntityBuilder implements EntityBuilder {
                 for (PriorityEntry<Function<Mob, Goal<Mob>>> entry : pathfinderGoals) {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().apply((Mob) entity));
                 }
+
+                for (PotionEffect potionEffect : potionEffects) {
+                    mob.addPotionEffect(potionEffect);
+                }
+
                 if (entity instanceof Zombie) {
                     ((Zombie) entity).setShouldBurnInDay(false);
                 }

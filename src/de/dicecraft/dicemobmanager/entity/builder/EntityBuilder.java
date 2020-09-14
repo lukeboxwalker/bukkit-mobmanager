@@ -2,11 +2,13 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.Goal;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
+import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
@@ -32,6 +34,16 @@ public interface EntityBuilder {
      * @return builder to continue
      */
     EntityBuilder setAttribute(@Nonnull Attribute attribute, double value);
+
+    /**
+     * Specifies an potion effect for the entity.
+     * <p>
+     * Add a given potion effect to the entity
+     *
+     * @param potionEffect the potion effect to add
+     * @return builder to continue
+     */
+    EntityBuilder addEffect(@Nonnull PotionEffect potionEffect);
 
     /**
      * Specifies the type for the entity.

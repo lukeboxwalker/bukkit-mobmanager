@@ -57,7 +57,7 @@ public class NameChangeListener implements Listener {
      *
      * @param event the {@link CustomEntityDamageEvent} to listen to
      */
-    @CustomEventHandler(priority = EventPriority.MONITOR)
+    @CustomEventHandler(priority = EventPriority.LOWEST)
     public void onDamageNameChange(CustomEntityDamageEvent event) {
         double finalHealth = (event.getEntity().getHealth() - event.getEntityDamageEvent().getFinalDamage());
         setName((LivingEntity) event.getEntityDamageEvent().getEntity(), Math.max(finalHealth, 0), event.getEntityInformation());
@@ -71,7 +71,7 @@ public class NameChangeListener implements Listener {
      *
      * @param event the {@link CustomEntityDeathEvent} to listen to
      */
-    @CustomEventHandler(priority = EventPriority.MONITOR)
+    @CustomEventHandler(priority = EventPriority.LOWEST)
     public void onDeathNameChange(CustomEntityDeathEvent event) {
         setName(event.getEntityDeathEvent().getEntity(), event.getEntityInformation());
     }

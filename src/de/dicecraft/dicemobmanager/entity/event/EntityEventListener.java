@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class EntityEventListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         Optional<Component<Plugin, EntityInformation>> optional = DiceMobManager.getEntityManager().getInformation(event.getEntity());
         optional.ifPresent(pair -> {
@@ -51,7 +51,7 @@ public class EntityEventListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             Optional<Component<Plugin, EntityInformation>> optional = DiceMobManager.getEntityManager().getInformation(event.getEntity());
@@ -62,7 +62,7 @@ public class EntityEventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             Optional<Component<Plugin, EntityInformation>> optional = DiceMobManager.getEntityManager().getInformation(event.getEntity());

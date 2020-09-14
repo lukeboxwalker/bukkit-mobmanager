@@ -7,10 +7,29 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Event to wrap the bukkit EntityDamageEvent.
+ * <p>
+ * Called when ever a custom entity was damaged
+ * in a world.
+ *
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public class CustomEntityDamageEvent extends CustomEntityEvent {
 
     private final EntityDamageEvent entityDamageEvent;
 
+    /**
+     * Creates a new CustomEntityDamageEvent.
+     * <p>
+     * Using the plugin which is responsible for this
+     * entity. Holding the original damage event to get
+     * further information.
+     *
+     * @param entityDamageEvent the original damage event
+     * @param component        containing the plugin as well as the entity information
+     */
     public CustomEntityDamageEvent(EntityDamageEvent entityDamageEvent, Component<Plugin, EntityInformation> component) {
         super(component);
         this.entityDamageEvent = entityDamageEvent;

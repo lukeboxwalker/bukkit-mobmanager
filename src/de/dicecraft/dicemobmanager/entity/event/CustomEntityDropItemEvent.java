@@ -6,6 +6,15 @@ import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Event to broadcast a item drop.
+ * <p>
+ * Called when ever a custom entity drops
+ * an item.
+ *
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public class CustomEntityDropItemEvent extends CustomEntityEvent {
 
     private final LivingEntity livingEntity;
@@ -13,7 +22,18 @@ public class CustomEntityDropItemEvent extends CustomEntityEvent {
 
     private boolean cancelled;
 
-    public CustomEntityDropItemEvent(LivingEntity livingEntity, DeathDrop deathDrop, Component<Plugin, EntityInformation> component){
+    /**
+     * Creates a new CustomEntityDropItemEvent.
+     * <p>
+     * Using the plugin which is responsible for this
+     * entity. Holding the death drop to get
+     * further information.
+     *
+     * @param livingEntity the entity which will drop an item
+     * @param deathDrop    the loot drop
+     * @param component    containing the plugin as well as the entity information
+     */
+    public CustomEntityDropItemEvent(LivingEntity livingEntity, DeathDrop deathDrop, Component<Plugin, EntityInformation> component) {
         super(component);
         this.livingEntity = livingEntity;
         this.deathDrop = deathDrop;

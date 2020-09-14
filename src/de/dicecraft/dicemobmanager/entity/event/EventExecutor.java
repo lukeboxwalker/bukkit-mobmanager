@@ -7,6 +7,15 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Executor for an event handler method.
+ * <p>
+ * Responsible for executing the handler method
+ * when the event was called.
+ *
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public class EventExecutor {
 
     private final Plugin plugin;
@@ -21,6 +30,11 @@ public class EventExecutor {
         this.priority = priority;
     }
 
+    /**
+     * Executes the handler method
+     *
+     * @param event the custom event that was called.
+     */
     public void execute(CustomEntityEvent event) {
         try {
             method.invoke(listener, event);

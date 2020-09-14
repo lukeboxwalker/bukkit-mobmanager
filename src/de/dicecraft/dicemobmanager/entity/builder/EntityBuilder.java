@@ -2,7 +2,6 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.Goal;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -101,7 +100,7 @@ public interface EntityBuilder {
      * @param information the world for the entity
      * @return builder to continue
      */
-    EntityBuilder useInformation(@Nonnull EntityInformation information);
+    EntityBuilder useInformation(@Nonnull CustomEntity information);
 
     /**
      * Specifies the equipment for the entity.

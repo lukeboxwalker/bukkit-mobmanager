@@ -8,26 +8,16 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Custom information of an entity.
- * <p>
- * Contains all important information for an entity.
- * For example the level, the custom name, the name
- * supplier and the death loot.
- *
- * @author Walkehorst Lukas
- * @since 1.0
- */
-public class EntityInformation {
+public class CustomMobEntity implements CustomEntity {
 
     private int level;
     private String name;
     private NameSupplier nameSupplier;
-    private List<DeathDrop> customDeathDrops;
+    private List<DeathDrop> deathDrops;
     private boolean aggressive;
 
     /**
-     * Creating new EntityInformation.
+     * Creating new CustomMobEntity.
      * <p>
      * Initialize all fields with there default value
      * the entities name is set to "CustomEntity" with
@@ -35,14 +25,15 @@ public class EntityInformation {
      * The default name supplier {@link CustomNameSupplier}
      * is used.
      */
-    public EntityInformation() {
-        this.customDeathDrops = new ArrayList<>();
+    public CustomMobEntity() {
+        this.deathDrops = new ArrayList<>();
         this.nameSupplier = new CustomNameSupplier();
         this.name = "CustomEntity";
         this.level = 1;
         this.aggressive = true;
     }
 
+    @Override
     public NameSupplier getNameSupplier() {
         return nameSupplier;
     }
@@ -51,6 +42,7 @@ public class EntityInformation {
         this.nameSupplier = nameSupplier;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -59,6 +51,7 @@ public class EntityInformation {
         this.name = name;
     }
 
+    @Override
     public int getLevel() {
         return level;
     }
@@ -67,18 +60,16 @@ public class EntityInformation {
         this.level = level;
     }
 
-    public List<DeathDrop> getCustomDeathDrops() {
-        return customDeathDrops;
+    @Override
+    public List<DeathDrop> getDeathDrops() {
+        return deathDrops;
     }
 
-    public void setDeathDrops(@Nonnull List<DeathDrop> customDeathDrops) {
-        this.customDeathDrops = customDeathDrops;
+    public void setDeathDrops(@Nonnull List<DeathDrop> deathDrops) {
+        this.deathDrops = deathDrops;
     }
 
-    public void setCustomDeathDrops(List<DeathDrop> customDeathDrops) {
-        this.customDeathDrops = customDeathDrops;
-    }
-
+    @Override
     public boolean isAggressive() {
         return aggressive;
     }
@@ -93,7 +84,7 @@ public class EntityInformation {
                 "level=" + level +
                 ", name='" + name + '\'' +
                 ", nameSupplier=" + nameSupplier +
-                ", customDeathDrops=" + customDeathDrops +
+                ", customDeathDrops=" + deathDrops +
                 '}';
     }
 }

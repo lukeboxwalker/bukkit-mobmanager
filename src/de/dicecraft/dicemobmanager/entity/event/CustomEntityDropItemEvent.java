@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.utils.Component;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import org.bukkit.entity.LivingEntity;
@@ -33,7 +33,7 @@ public class CustomEntityDropItemEvent extends CustomEntityEvent {
      * @param deathDrop    the loot drop
      * @param component    containing the plugin as well as the entity information
      */
-    public CustomEntityDropItemEvent(LivingEntity livingEntity, DeathDrop deathDrop, Component<Plugin, EntityInformation> component) {
+    public CustomEntityDropItemEvent(LivingEntity livingEntity, DeathDrop deathDrop, Component<Plugin, CustomEntity> component) {
         super(component);
         this.livingEntity = livingEntity;
         this.deathDrop = deathDrop;

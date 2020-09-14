@@ -3,7 +3,6 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
-import com.destroystokyo.paper.entity.ai.PaperVanillaGoal;
 import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
@@ -22,7 +21,6 @@ import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +48,7 @@ public class CustomEntityBuilder implements EntityBuilder {
 
     private EntityType entityType;
     private Location location;
-    private EntityInformation information;
+    private CustomEntity information;
     private Equipment equipment;
 
     public CustomEntityBuilder(@Nonnull final Plugin plugin) {
@@ -166,7 +164,7 @@ public class CustomEntityBuilder implements EntityBuilder {
      * @return builder to continue
      */
     @Override
-    public EntityBuilder useInformation(@Nonnull EntityInformation information) {
+    public EntityBuilder useInformation(@Nonnull CustomEntity information) {
         this.information = information;
         return this;
     }

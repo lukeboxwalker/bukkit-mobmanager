@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.utils.Component;
 
 import org.bukkit.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class CustomEntitySpawnEvent extends CustomEntityEvent {
      * @param entitySpawnEvent the original spawn event
      * @param component        containing the plugin as well as the entity information
      */
-    public CustomEntitySpawnEvent(EntitySpawnEvent entitySpawnEvent, Component<Plugin, EntityInformation> component) {
+    public CustomEntitySpawnEvent(EntitySpawnEvent entitySpawnEvent, Component<Plugin, CustomEntity> component) {
         super(component);
         this.entitySpawnEvent = entitySpawnEvent;
     }

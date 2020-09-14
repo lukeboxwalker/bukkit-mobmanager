@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
@@ -18,7 +18,7 @@ import org.bukkit.plugin.Plugin;
 public abstract class CustomEntityEvent implements Cancellable {
 
     private final Plugin plugin;
-    private final EntityInformation entityInformation;
+    private final CustomEntity customEntity;
 
     /**
      * Creates a new CustomEntityEvent.
@@ -28,15 +28,15 @@ public abstract class CustomEntityEvent implements Cancellable {
      *
      * @param component containing the plugin as well as the entity information
      */
-    public CustomEntityEvent(Component<Plugin, EntityInformation> component) {
+    public CustomEntityEvent(Component<Plugin, CustomEntity> component) {
         this.plugin = component.getFirst();
-        this.entityInformation = component.getSecond();
+        this.customEntity = component.getSecond();
     }
 
     public abstract LivingEntity getEntity();
 
-    public EntityInformation getEntityInformation() {
-        return entityInformation;
+    public CustomEntity getCustomEntity() {
+        return customEntity;
     }
 
     public Plugin getPlugin() {

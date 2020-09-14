@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -29,7 +29,7 @@ public class CustomEntityDeathEvent extends CustomEntityEvent {
      * @param entityDeathEvent the original death event
      * @param component        containing the plugin as well as the entity information
      */
-    public CustomEntityDeathEvent(EntityDeathEvent entityDeathEvent, Component<Plugin, EntityInformation> component){
+    public CustomEntityDeathEvent(EntityDeathEvent entityDeathEvent, Component<Plugin, CustomEntity> component){
         super(component);
         this.entityDeathEvent = entityDeathEvent;
     }

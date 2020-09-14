@@ -2,7 +2,8 @@ package de.dicecraft.dicemobmanager.command;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.SkullFactory;
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
+import de.dicecraft.dicemobmanager.entity.builder.CustomMobEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
@@ -38,9 +39,9 @@ public class SpawnEntityCommand extends AbstractCommand {
             try {
                 EntityType type = args.length == 1 ? EntityType.valueOf(args[0].toUpperCase()) : EntityType.ZOMBIE;
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
-                EntityInformation entityInformation = new EntityInformation();
-                entityInformation.setDeathDrops(Collections.singletonList(deathDrop));
-                entityInformation.setAggressive(false);
+                CustomMobEntity customEntity = new CustomMobEntity();
+                customEntity.setDeathDrops(Collections.singletonList(deathDrop));
+                customEntity.setAggressive(false);
 
                 Equipment equipment = new CustomEquipment();
                 equipment.setItemInMainHand(new ItemStack(Material.IRON_SWORD));
@@ -52,7 +53,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .fromType(type)
                         .attachGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
-                        .useInformation(entityInformation)
+                        .useInformation(customEntity)
                         .setEquipment(equipment)
                         .buildAndSpawn();
             } catch (EntityCreationException | IllegalArgumentException e) {

@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
@@ -19,7 +19,7 @@ public class CustomNameSupplier implements NameSupplier {
      * Supplying the new name string.
      * <p>
      * Creates new name from given information using
-     * the entity, the currentHealth as well as the {@link EntityInformation}
+     * the entity, the currentHealth as well as the {@link CustomEntity}
      * <p>
      * Coloring the current health green
      * when its above 50% of the maximum heath, otherwise
@@ -31,7 +31,7 @@ public class CustomNameSupplier implements NameSupplier {
      * @return new custom name for the given entity
      */
     @Override
-    public String supply(final LivingEntity entity, final double currentHealth, final EntityInformation information) {
+    public String supply(final LivingEntity entity, final double currentHealth, final CustomEntity information) {
         AttributeInstance instance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (instance != null) {
             final double maxHealth = instance.getBaseValue();

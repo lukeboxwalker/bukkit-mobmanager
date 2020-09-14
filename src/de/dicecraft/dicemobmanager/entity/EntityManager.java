@@ -1,7 +1,7 @@
 package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.name.NameChangeListener;
 
 import de.dicecraft.dicemobmanager.utils.Component;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class EntityManager {
 
-    private final Map<Plugin, Map<Entity, EntityInformation>> entities = new HashMap<>();
+    private final Map<Plugin, Map<Entity, CustomEntity>> entities = new HashMap<>();
     private final NameChangeListener nameChangeListener = new NameChangeListener();
 
 
@@ -28,8 +28,8 @@ public class EntityManager {
         entities.values().stream().map(Map::keySet).flatMap(Collection::stream).forEach(Entity::remove);
     }
 
-    public Optional<Component<Plugin, EntityInformation>> getInformation(Entity entity) {
-        for (Map.Entry<Plugin, Map<Entity, EntityInformation>> entry : entities.entrySet()) {
+    public Optional<Component<Plugin, CustomEntity>> getInformation(Entity entity) {
+        for (Map.Entry<Plugin, Map<Entity, CustomEntity>> entry : entities.entrySet()) {
             if (entry.getValue().containsKey(entity)) {
                 return Optional.of(new Component<>(entry.getKey(), entry.getValue().get(entity)));
             }
@@ -37,13 +37,13 @@ public class EntityManager {
         return Optional.empty();
     }
 
-    public void addEntity(LivingEntity entity, EntityInformation entityInformation, Plugin plugin) {
-        nameChangeListener.setName(entity, entityInformation);
+    public void addEntity(LivingEntity entity, CustomEntity customEntity, Plugin plugin) {
+        nameChangeListener.setName(entity, customEntity);
         if (entities.containsKey(plugin)) {
-            entities.get(plugin).put(entity, entityInformation);
+            entities.get(plugin).put(entity, customEntity);
         } else {
-            Map<Entity, EntityInformation> map = new HashMap<>();
-            map.put(entity, entityInformation);
+            Map<Entity, CustomEntity> map = new HashMap<>();
+            map.put(entity, customEntity);
             entities.put(plugin, map);
         }
     }

@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.event.CustomEntityDamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.CustomEntityDeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.CustomEventHandler;
@@ -24,13 +24,13 @@ public class NameChangeListener implements Listener {
      * <p>
      * Using the entities health as the current health
      * as well as the given entity information to set the name via
-     * {@link NameChangeListener#setName(LivingEntity, double, EntityInformation)}
+     * {@link NameChangeListener#setName(LivingEntity, double, CustomEntity)}
      *
      * @param entity            the entity to update the name for
-     * @param entityInformation the information of the entity
+     * @param customEntity the information of the entity
      */
-    public void setName(LivingEntity entity, EntityInformation entityInformation) {
-        setName(entity, entity.getHealth(), entityInformation);
+    public void setName(LivingEntity entity, CustomEntity customEntity) {
+        setName(entity, entity.getHealth(), customEntity);
     }
 
     /**
@@ -41,10 +41,10 @@ public class NameChangeListener implements Listener {
      *
      * @param entity            the entity to update the name for
      * @param currentHealth     the current health
-     * @param entityInformation the information of the entity
+     * @param customEntity the information of the entity
      */
-    public void setName(LivingEntity entity, double currentHealth, EntityInformation entityInformation) {
-        String name = entityInformation.getNameSupplier().supply(entity, currentHealth, entityInformation);
+    public void setName(LivingEntity entity, double currentHealth, CustomEntity customEntity) {
+        String name = customEntity.getNameSupplier().supply(entity, currentHealth, customEntity);
         entity.setCustomName(name);
     }
 
@@ -52,7 +52,7 @@ public class NameChangeListener implements Listener {
      * Event handler when custom entity takes damage.
      * <p>
      * Calculates the final health the entity has after it was damaged.
-     * Sets the name by using {@link NameChangeListener#setName(LivingEntity, double, EntityInformation)}
+     * Sets the name by using {@link NameChangeListener#setName(LivingEntity, double, CustomEntity)}
      * Using highest priority (monitor) to be the last event handler to act on the damage event.
      *
      * @param event the {@link CustomEntityDamageEvent} to listen to
@@ -60,19 +60,19 @@ public class NameChangeListener implements Listener {
     @CustomEventHandler(priority = EventPriority.LOWEST)
     public void onDamageNameChange(CustomEntityDamageEvent event) {
         double finalHealth = (event.getEntity().getHealth() - event.getEntityDamageEvent().getFinalDamage());
-        setName((LivingEntity) event.getEntityDamageEvent().getEntity(), Math.max(finalHealth, 0), event.getEntityInformation());
+        setName((LivingEntity) event.getEntityDamageEvent().getEntity(), Math.max(finalHealth, 0), event.getCustomEntity());
     }
 
     /**
      * Event handler when custom entity takes damage.
      * <p>
-     * Sets the name by using {@link NameChangeListener#setName(LivingEntity, EntityInformation)}
+     * Sets the name by using {@link NameChangeListener#setName(LivingEntity, CustomEntity)}
      * Using highest priority (monitor) to be the last event handler to act on the death event.
      *
      * @param event the {@link CustomEntityDeathEvent} to listen to
      */
     @CustomEventHandler(priority = EventPriority.LOWEST)
     public void onDeathNameChange(CustomEntityDeathEvent event) {
-        setName(event.getEntityDeathEvent().getEntity(), event.getEntityInformation());
+        setName(event.getEntityDeathEvent().getEntity(), event.getCustomEntity());
     }
 }

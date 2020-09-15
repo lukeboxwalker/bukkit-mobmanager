@@ -2,7 +2,6 @@ package de.dicecraft.dicemobmanager.command;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.SkullFactory;
-import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
 import de.dicecraft.dicemobmanager.entity.builder.CustomMobEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
@@ -49,11 +48,11 @@ public class SpawnEntityCommand extends AbstractCommand {
                 equipment.setHelmet(heads.get(0));
 
                 DiceMobManager.builder(DiceMobManager.getInstance())
-                        .atLocation(player.getLocation())
-                        .fromType(type)
-                        .attachGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
+                        .setLocation(player.getLocation())
+                        .setType(type)
+                        .addGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
-                        .useInformation(customEntity)
+                        .setCustomEntity(customEntity)
                         .setEquipment(equipment)
                         .buildAndSpawn();
             } catch (EntityCreationException | IllegalArgumentException e) {

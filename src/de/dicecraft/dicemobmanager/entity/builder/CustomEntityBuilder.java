@@ -7,6 +7,7 @@ import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -41,22 +42,21 @@ public class CustomEntityBuilder implements EntityBuilder {
 
     private final Plugin plugin;
     private final Map<Attribute, Double> attributes;
-    private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderGoals;
-    private final List<PriorityEntry<Function<Mob, Goal<Mob>>>> pathfinderTargets;
+    private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private final List<PotionEffect> potionEffects;
     private final MobGoals mobGoals;
 
     private EntityType entityType;
     private Location location;
-    private CustomEntity information;
+    private CustomEntity customEntity;
     private Equipment equipment;
 
     public CustomEntityBuilder(@Nonnull final Plugin plugin) {
         mobGoals = new PaperMobGoals();
         this.plugin = plugin;
+        this.customEntity = new CustomMobEntity();
         this.potionEffects = new ArrayList<>();
         this.pathfinderGoals = new ArrayList<>();
-        this.pathfinderTargets = new ArrayList<>();
         this.attributes = new HashMap<>();
         this.equipment = new CustomEquipment();
     }
@@ -97,29 +97,8 @@ public class CustomEntityBuilder implements EntityBuilder {
      * @return builder to continue
      */
     @Override
-    public EntityBuilder attachGoal(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
+    public EntityBuilder addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, supplier));
-        return this;
-    }
-
-    /**
-     * Specifies a pathfinder goal target.
-     * <p>
-     * Using a supplier of {@link Goal} to ensure
-     * to provide a unique object for each entity when building.
-     * Each goal target has a priority to determine the order to use them.
-     * The target selection always prefers lower prioritised pathfinder goal targets.
-     * The highest priority that is possible is 1.
-     * <p>
-     * Manipulating {@link CustomEntityBuilder#pathfinderTargets}
-     *
-     * @param priority the priority of the goal target should be non negative
-     * @param supplier to supply pathfinder goal targets
-     * @return builder to continue
-     */
-    @Override
-    public EntityBuilder attachTarget(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier) {
-        pathfinderTargets.add(new PriorityEntry<>(priority, supplier));
         return this;
     }
 
@@ -136,7 +115,7 @@ public class CustomEntityBuilder implements EntityBuilder {
      * @return builder to continue
      */
     @Override
-    public EntityBuilder fromType(@Nonnull EntityType entityType) {
+    public EntityBuilder setType(@Nonnull EntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -150,22 +129,22 @@ public class CustomEntityBuilder implements EntityBuilder {
      * @return builder to continue
      */
     @Override
-    public EntityBuilder atLocation(@Nonnull Location location) {
+    public EntityBuilder setLocation(@Nonnull Location location) {
         this.location = location;
         return this;
     }
 
     /**
-     * Specifies the custom information for the entity.
+     * Specifies the custom entity information for the entity.
      * <p>
-     * Manipulating {@link CustomEntityBuilder#information}
+     * Manipulating {@link CustomEntityBuilder#customEntity}
      *
-     * @param information the information for the entity
+     * @param customEntity the information for the entity
      * @return builder to continue
      */
     @Override
-    public EntityBuilder useInformation(@Nonnull CustomEntity information) {
-        this.information = information;
+    public EntityBuilder setCustomEntity(@Nonnull CustomEntity customEntity) {
+        this.customEntity = customEntity;
         return this;
     }
 
@@ -212,7 +191,7 @@ public class CustomEntityBuilder implements EntityBuilder {
     public Entity buildAndSpawn() throws EntityCreationException {
         if (entityType == null) throw new EntityCreationException("Type is not specified");
         if (location == null) throw new EntityCreationException("Location is not specified");
-        if (information == null) throw new EntityCreationException("Entity information is not specified");
+        if (customEntity == null) throw new EntityCreationException("Entity information is not specified");
 
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
 
@@ -228,12 +207,12 @@ public class CustomEntityBuilder implements EntityBuilder {
                 mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
                 entity.setCustomNameVisible(true);
 
-                if (!information.isAggressive()) {
+                if (!customEntity.isAggressive()) {
                     mobGoals.removeGoal(mob, VanillaGoal.NEAREST_ATTACKABLE_TARGET);
                 }
 
-                for (PriorityEntry<Function<Mob, Goal<Mob>>> entry : pathfinderGoals) {
-                    mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().apply((Mob) entity));
+                for (PriorityEntry<GoalSupplier<Mob>> entry : pathfinderGoals) {
+                    mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().supply((Mob) entity));
                 }
 
                 for (PotionEffect potionEffect : potionEffects) {
@@ -245,7 +224,7 @@ public class CustomEntityBuilder implements EntityBuilder {
                 }
 
                 equipment.equip(mob);
-                DiceMobManager.getEntityManager().addEntity(mob, information, plugin);
+                DiceMobManager.getEntityManager().addEntity(mob, customEntity, plugin);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");

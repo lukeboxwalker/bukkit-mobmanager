@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.Goal;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -10,7 +11,6 @@ import org.bukkit.entity.Mob;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
 
 /**
  * Builds an Entity.
@@ -54,7 +54,7 @@ public interface EntityBuilder {
      * @param entityType type of the entity
      * @return builder to continue
      */
-    EntityBuilder fromType(@Nonnull EntityType entityType);
+    EntityBuilder setType(@Nonnull EntityType entityType);
 
     /**
      * Specifies the location for the entity.
@@ -62,7 +62,7 @@ public interface EntityBuilder {
      * @param location the location for the entity
      * @return builder to continue
      */
-    EntityBuilder atLocation(@Nonnull Location location);
+    EntityBuilder setLocation(@Nonnull Location location);
 
     /**
      * Specifies a pathfinder goal.
@@ -77,30 +77,15 @@ public interface EntityBuilder {
      * @param supplier to supply pathfinder goals
      * @return builder to continue
      */
-    EntityBuilder attachGoal(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
+    EntityBuilder addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier);
 
     /**
-     * Specifies a pathfinder goal target.
-     * <p>
-     * Using a supplier of {@link Goal} to ensure
-     * to provide a unique object for each entity when building.
-     * Each goal target has a priority to determine the order to use them.
-     * The target selection always prefers lower prioritised pathfinder goal targets.
-     * The highest priority that is possible is 1.
+     * Specifies the custom entity information for the entity.
      *
-     * @param priority the priority of the goal target should be non negative
-     * @param supplier to supply pathfinder goal targets
+     * @param customEntity the world for the entity
      * @return builder to continue
      */
-    EntityBuilder attachTarget(int priority, @Nonnull Function<Mob, Goal<Mob>> supplier);
-
-    /**
-     * Specifies the custom information for the entity.
-     *
-     * @param information the world for the entity
-     * @return builder to continue
-     */
-    EntityBuilder useInformation(@Nonnull CustomEntity information);
+    EntityBuilder setCustomEntity(@Nonnull CustomEntity customEntity);
 
     /**
      * Specifies the equipment for the entity.

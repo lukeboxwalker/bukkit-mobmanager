@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import org.bukkit.entity.Entity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -76,6 +77,11 @@ public class CustomMobEntity implements CustomEntity {
 
     public void setAggressive(boolean aggressive) {
         this.aggressive = aggressive;
+    }
+
+    @Override
+    public void onEntityTick(Entity entity) {
+        
     }
 
     @Override

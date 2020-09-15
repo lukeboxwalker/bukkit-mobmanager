@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -26,4 +27,7 @@ public interface CustomEntity {
     List<DeathDrop> getDeathDrops();
 
     boolean isAggressive();
+
+    default void onEntityTick(Entity entity) {
+    }
 }

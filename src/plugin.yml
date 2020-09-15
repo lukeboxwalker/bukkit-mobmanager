@@ -10,3 +10,7 @@ commands:
     description: spawning a mob
     permission: dicemobmanager
     usage: /<command> [command]
+  changeEntityTick:
+    description: changes the number of gameticks needed to tick the entity
+    permission: dicemobmanager
+    usage: /<command> <integer>

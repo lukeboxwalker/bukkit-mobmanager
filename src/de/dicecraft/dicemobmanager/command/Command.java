@@ -13,7 +13,8 @@ package de.dicecraft.dicemobmanager.command;
  */
 public enum Command {
 
-    SPAWN_MOB("spawnEntity", new SpawnEntityCommand());
+    SPAWN_MOB("spawnEntity", new SpawnEntityCommand()),
+    CHANGE_TICK("changeEntityTick", new ChangeEntityTickCommand());
 
     private final String name;
     private final AbstractCommand command;

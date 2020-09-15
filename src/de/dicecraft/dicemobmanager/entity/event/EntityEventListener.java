@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.event;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.utils.Component;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,7 +31,7 @@ public class EntityEventListener implements Listener {
             if (!spawnEvent.isCancelled()) {
                 LivingEntity entity = event.getEntity();
                 CustomEntity information = pair.getSecond();
-                DiceMobManager.getEntityManager().removeEntity(entity, pair.getFirst());
+                DiceMobManager.getEntityManager().removeEntity(entity);
                 Player player = event.getEntity().getKiller();
                 List<ItemStack> drops = event.getDrops();
                 drops.clear();
@@ -53,7 +54,7 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
+        if (event.getEntity() instanceof LivingEntity && DiceMobManager.getEntityManager().activateEntity(event.getEntity())) {
             Optional<Component<Plugin, CustomEntity>> optional = DiceMobManager.getEntityManager().getInformation(event.getEntity());
             optional.ifPresent(pair -> {
                 CustomEntitySpawnEvent spawnEvent = new CustomEntitySpawnEvent(event, pair);

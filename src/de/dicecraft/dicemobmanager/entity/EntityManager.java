@@ -10,8 +10,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collection;
 import java.util.HashMap;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,9 +19,9 @@ public class EntityManager {
 
     private final Map<Entity, Component<Plugin, CustomEntity>> registeredEntities = new HashMap<>();
     private final Map<Entity, Component<Plugin, CustomEntity>> activeEntities = new HashMap<>();
+    private Map<Entity, Component<Plugin, CustomEntity>> tempoActiveEntities = new HashMap<>();
 
     private final NameChangeListener nameChangeListener = new NameChangeListener();
-
 
     public EntityManager(DiceMobManager plugin) {
         DiceMobManager.getEventManager().registerListener(nameChangeListener, plugin);
@@ -43,12 +43,14 @@ public class EntityManager {
 
     public void tickEntities() {
         activeEntities.forEach((entity, component) -> component.getSecond().onEntityTick(entity));
+        activeEntities.putAll(tempoActiveEntities);
+        tempoActiveEntities = new HashMap<>();
     }
 
     public boolean activateEntity(Entity entity) {
         Component<Plugin, CustomEntity> component = registeredEntities.remove(entity);
         if (component != null) {
-            activeEntities.put(entity, component);
+            tempoActiveEntities.put(entity, component);
             return true;
         } else {
             return false;
@@ -63,5 +65,7 @@ public class EntityManager {
     public void removeEntity(LivingEntity entity) {
         registeredEntities.remove(entity);
         activeEntities.remove(entity);
+        tempoActiveEntities.remove(entity);
+
     }
 }

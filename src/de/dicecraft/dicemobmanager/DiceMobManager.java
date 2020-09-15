@@ -40,6 +40,7 @@ public class DiceMobManager extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        SCHEDULER.cancel();
         getEntityManager().destroyAll();
     }
 

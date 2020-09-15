@@ -28,6 +28,12 @@ public interface CustomEntity {
 
     boolean isAggressive();
 
+    /**
+     * Called when the entity is ticked
+     * by the mob manager.
+     *
+     * @param entity the bukkit entity.
+     */
     default void onEntityTick(Entity entity) {
     }
 }

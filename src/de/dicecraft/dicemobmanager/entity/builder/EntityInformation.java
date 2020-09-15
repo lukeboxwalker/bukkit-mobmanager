@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityInformation implements CustomEntity {
+public class EntityInformation extends AbstractCustomEntity {
 
     private int level;
     private String name;
@@ -33,6 +33,7 @@ public class EntityInformation implements CustomEntity {
         this.aggressive = true;
     }
 
+    @Nonnull
     @Override
     public NameSupplier getNameSupplier() {
         return nameSupplier;
@@ -60,6 +61,7 @@ public class EntityInformation implements CustomEntity {
         this.level = level;
     }
 
+    @Nonnull
     @Override
     public List<DeathDrop> getDeathDrops() {
         return deathDrops;

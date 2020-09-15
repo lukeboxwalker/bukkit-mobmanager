@@ -40,7 +40,6 @@ import java.util.function.Function;
  */
 public class CustomEntityBuilder implements EntityBuilder {
 
-    private final Plugin plugin;
     private final Map<Attribute, Double> attributes;
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private final List<PotionEffect> potionEffects;
@@ -51,9 +50,10 @@ public class CustomEntityBuilder implements EntityBuilder {
     private CustomEntity customEntity;
     private Equipment equipment;
 
-    public CustomEntityBuilder(@Nonnull final Plugin plugin) {
+
+
+    public CustomEntityBuilder() {
         mobGoals = new PaperMobGoals();
-        this.plugin = plugin;
         this.customEntity = new CustomMobEntity();
         this.potionEffects = new ArrayList<>();
         this.pathfinderGoals = new ArrayList<>();
@@ -224,7 +224,7 @@ public class CustomEntityBuilder implements EntityBuilder {
                 }
 
                 equipment.equip(mob);
-                DiceMobManager.getEntityManager().addEntity(mob, customEntity, plugin);
+                DiceMobManager.getEntityManager().addEntity(mob, customEntity);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");

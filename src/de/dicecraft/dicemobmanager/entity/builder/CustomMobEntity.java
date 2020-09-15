@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CustomMobEntity implements CustomEntity {
+public class CustomMobEntity extends AbstractCustomEntity {
 
     private static final int HIT_RANGE = 20;
     private static final int TICKS = 3;
@@ -54,6 +54,7 @@ public class CustomMobEntity implements CustomEntity {
         this.aggressive = true;
     }
 
+    @Nonnull
     @Override
     public NameSupplier getNameSupplier() {
         return nameSupplier;
@@ -81,6 +82,7 @@ public class CustomMobEntity implements CustomEntity {
         this.level = level;
     }
 
+    @Nonnull
     @Override
     public List<DeathDrop> getDeathDrops() {
         return deathDrops;
@@ -142,7 +144,8 @@ public class CustomMobEntity implements CustomEntity {
                 }
 
 
-                CustomEntity customEntity = new CustomEntity() {
+                CustomEntity customEntity = new AbstractCustomEntity() {
+                    @Nonnull
                     @Override
                     public NameSupplier getNameSupplier() {
                         return CustomMobEntity.this.nameSupplier;
@@ -158,6 +161,7 @@ public class CustomMobEntity implements CustomEntity {
                         return 1;
                     }
 
+                    @Nonnull
                     @Override
                     public List<DeathDrop> getDeathDrops() {
                         return new ArrayList<>();
@@ -169,7 +173,7 @@ public class CustomMobEntity implements CustomEntity {
                     }
                 };
 
-                EntityBuilder builder = DiceMobManager.builder(DiceMobManager.getInstance())
+                EntityBuilder builder = DiceMobManager.builder()
                         .setType(EntityType.CAVE_SPIDER)
                         .setCustomEntity(customEntity)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1);

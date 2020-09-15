@@ -6,14 +6,11 @@ import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
-import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
-import de.dicecraft.dicemobmanager.entity.event.CustomEventManager;
-import de.dicecraft.dicemobmanager.entity.event.EventManager;
+import de.dicecraft.dicemobmanager.entity.EntityEventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
@@ -22,7 +19,6 @@ public class DiceMobManager extends JavaPlugin {
     private static final Random RANDOM = new Random();
 
     private static DiceMobManager INSTANCE;
-    private static EventManager EVENT_MANAGER;
     private static EntityManager ENTITY_MANAGER;
     private static TickScheduler SCHEDULER;
 
@@ -30,8 +26,7 @@ public class DiceMobManager extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         INSTANCE = this;
-        EVENT_MANAGER = new CustomEventManager(this);
-        ENTITY_MANAGER = new EntityManager(this);
+        ENTITY_MANAGER = new EntityManager();
         Bukkit.getPluginManager().registerEvents(new EntityEventListener(), this);
         CommandManager.registerCommands(this);
         restartScheduler(10);
@@ -54,16 +49,17 @@ public class DiceMobManager extends JavaPlugin {
         return INSTANCE;
     }
 
-    public static EventManager getEventManager() {
-        return EVENT_MANAGER;
-    }
-
     public static EntityManager getEntityManager() {
         return ENTITY_MANAGER;
     }
 
+    @Deprecated
     public static EntityBuilder builder(Plugin plugin) {
-        return new CustomEntityBuilder(plugin);
+        return new CustomEntityBuilder();
+    }
+
+    public static EntityBuilder builder() {
+        return new CustomEntityBuilder();
     }
 
     public static NamespacedKey createNameSpacedKey(String key) {

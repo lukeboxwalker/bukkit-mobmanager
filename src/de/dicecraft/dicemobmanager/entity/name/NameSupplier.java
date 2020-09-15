@@ -22,8 +22,8 @@ public interface NameSupplier {
      *
      * @param entity to create name for
      * @param currentHealth of the entity
-     * @param information of the entity
+     * @param customEntity the custom entity information
      * @return new custom name for the given entity
      */
-    String supply(final LivingEntity entity, final double currentHealth, final CustomEntity information);
+    String supply(final LivingEntity entity, final double currentHealth, final CustomEntity customEntity);
 }

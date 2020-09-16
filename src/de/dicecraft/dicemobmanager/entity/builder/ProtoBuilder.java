@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Set;
 
 public interface ProtoBuilder {
 
@@ -111,7 +112,7 @@ public interface ProtoBuilder {
      * @param deathDrops the death loot
      * @return builder to continue
      */
-    ProtoBuilder setDeathDrops(@Nonnull List<DeathDrop> deathDrops);
+    ProtoBuilder setDeathDrops(@Nonnull Set<DeathDrop> deathDrops);
 
     /**
      * Sets the name supplier.

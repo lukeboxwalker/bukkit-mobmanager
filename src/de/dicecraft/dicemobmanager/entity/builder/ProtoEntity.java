@@ -44,14 +44,10 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      * @return a list of death drops.
      */
     @Nonnull
-    default List<DeathDrop> getDeathDrops() {
-        return new ArrayList<>();
-    }
+    Set<DeathDrop> getDeathDrops();
 
     @Nonnull
-    default Equipment getEquipment() {
-        return new CustomEquipment();
-    }
+    Equipment getEquipment();
 
     @Nonnull
     EntityType getEntityType();

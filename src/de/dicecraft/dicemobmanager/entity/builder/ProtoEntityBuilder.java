@@ -43,7 +43,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private Strategy<EntityDeathEvent> onDeathStrategy = deathEvent -> {};
     private Strategy<EntitySpawnEvent> onSpawnStrategy = spawnEvent -> {};
     private Strategy<DeathDrop> onItemDropStrategy = deathDrops -> {};
-    private List<DeathDrop> deathDrops = new ArrayList<>();
+    private Set<DeathDrop> deathDrops = new HashSet<>();
     private NameSupplier nameSupplier = new CustomNameSupplier();
     private EntityType entityType = EntityType.ZOMBIE;
     private int level;
@@ -187,7 +187,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     }
 
     @Override
-    public ProtoBuilder setDeathDrops(@Nonnull List<DeathDrop> deathDrops) {
+    public ProtoBuilder setDeathDrops(@Nonnull Set<DeathDrop> deathDrops) {
         this.deathDrops = deathDrops;
         return this;
     }

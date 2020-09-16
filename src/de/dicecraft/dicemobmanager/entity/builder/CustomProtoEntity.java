@@ -33,7 +33,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Strategy<EntityDeathEvent> onDeathStrategy;
     private Strategy<DeathDrop> onItemDropStrategy;
     private Strategy<EntitySpawnEvent> onSpawnStrategy;
-    private List<DeathDrop> deathDrops;
+    private Set<DeathDrop> deathDrops;
     private NameSupplier nameSupplier;
     private EntityType entityType;
     private int level;
@@ -51,11 +51,11 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Nonnull
     @Override
-    public List<DeathDrop> getDeathDrops() {
+    public Set<DeathDrop> getDeathDrops() {
         return deathDrops;
     }
 
-    public void setDeathDrops(List<DeathDrop> deathDrops) {
+    public void setDeathDrops(Set<DeathDrop> deathDrops) {
         this.deathDrops = deathDrops;
     }
 

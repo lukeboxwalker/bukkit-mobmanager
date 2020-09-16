@@ -39,11 +39,11 @@ public class SpawnEntityCommand extends AbstractCommand {
             Player player = (Player) sender;
 
             try {
-                DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
+                DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 0.5, DeathDrop.Rarity.LEGENDARY);
 
                 ProtoEntity entity = DiceMobManager.builder()
                         .setType(EntityType.SPIDER)
-                        .setDeathDrops(Collections.singletonList(deathDrop))
+                        .setDeathDrops(Collections.singleton(deathDrop))
                         .addEquipment(EquipmentSlot.HAND, new ItemStack(Material.IRON_SWORD))
                         .addEquipment(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE))
                         .addEquipment(EquipmentSlot.HEAD, heads.get(0))
@@ -51,7 +51,6 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .removeGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .setName("Mutter Spinne")
-                        .setStrategy(StrategyType.ON_TICK, new SpiderBossTickStrategy())
                         .build();
 
                 SpawnFactory factory = new SpawnFactory();

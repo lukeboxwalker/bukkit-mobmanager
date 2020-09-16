@@ -1,19 +1,25 @@
 package de.dicecraft.dicemobmanager.command;
 
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.SkullFactory;
-import de.dicecraft.dicemobmanager.entity.builder.CustomMobEntity;
+import de.dicecraft.dicemobmanager.entity.builder.EntityInformation;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.factory.Factory;
 import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.strategy.SpiderBossTickStrategy;
+import de.dicecraft.dicemobmanager.entity.strategy.StrategyType;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -36,25 +42,24 @@ public class SpawnEntityCommand extends AbstractCommand {
             Player player = (Player) sender;
 
             try {
-                EntityType type = args.length == 1 ? EntityType.valueOf(args[0].toUpperCase()) : EntityType.ZOMBIE;
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 1, DeathDrop.Rarity.LEGENDARY);
-                CustomMobEntity customEntity = new CustomMobEntity();
-                customEntity.setDeathDrops(Collections.singletonList(deathDrop));
-                customEntity.setAggressive(false);
 
-                Equipment equipment = new CustomEquipment();
-                equipment.setItemInMainHand(new ItemStack(Material.IRON_SWORD));
-                equipment.setChestPlate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-                equipment.setHelmet(heads.get(0));
-
-                DiceMobManager.builder(DiceMobManager.getInstance())
-                        .setLocation(player.getLocation())
-                        .setType(type)
+                ProtoEntity entity = DiceMobManager.builder()
+                        .setType(EntityType.SPIDER)
+                        .setDeathDrops(Collections.singletonList(deathDrop))
+                        .addEquipment(EquipmentSlot.HAND, new ItemStack(Material.IRON_SWORD))
+                        .addEquipment(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE))
+                        .addEquipment(EquipmentSlot.HEAD, heads.get(0))
                         .addGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
+                        .removeGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
-                        .setCustomEntity(customEntity)
-                        .setEquipment(equipment)
-                        .buildAndSpawn();
+                        .setName("Mutter Spinne")
+                        .setStrategy(StrategyType.ON_TICK, new SpiderBossTickStrategy())
+                        .build();
+
+                Factory factory = new Factory();
+                factory.spawnEntity(entity, player.getLocation());
+
             } catch (EntityCreationException | IllegalArgumentException e) {
                 e.printStackTrace();
             }

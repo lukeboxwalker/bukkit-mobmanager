@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity;
 
-import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -12,19 +12,19 @@ import java.util.Optional;
 
 public class EntityManager {
 
-    private final Map<Entity, CustomEntity> registeredEntities = new HashMap<>();
-    private final Map<Entity, CustomEntity> activeEntities = new HashMap<>();
-    private Map<Entity, CustomEntity> tempoActiveEntities = new HashMap<>();
+    private final Map<Entity, ProtoEntity> registeredEntities = new HashMap<>();
+    private final Map<Entity, ProtoEntity> activeEntities = new HashMap<>();
+    private Map<Entity, ProtoEntity> tempoActiveEntities = new HashMap<>();
 
     public void destroyAll() {
         registeredEntities.keySet().forEach(Entity::remove);
         activeEntities.keySet().forEach(Entity::remove);
     }
 
-    public Optional<CustomEntity> getCustomEntity(Entity entity) {
-        CustomEntity customEntity = activeEntities.getOrDefault(entity, tempoActiveEntities.get(entity));
-        if (customEntity != null) {
-            return Optional.of(customEntity);
+    public Optional<ProtoEntity> getCustomEntity(Entity entity) {
+        ProtoEntity protoEntity = activeEntities.getOrDefault(entity, tempoActiveEntities.get(entity));
+        if (protoEntity != null) {
+            return Optional.of(protoEntity);
         } else {
             return Optional.empty();
         }
@@ -37,17 +37,17 @@ public class EntityManager {
     }
 
     public boolean activateEntity(Entity entity) {
-        CustomEntity customEntity = registeredEntities.remove(entity);
-        if (customEntity != null) {
-            tempoActiveEntities.put(entity, customEntity);
+        ProtoEntity protoEntity = registeredEntities.remove(entity);
+        if (protoEntity != null) {
+            tempoActiveEntities.put(entity, protoEntity);
             return true;
         } else {
             return false;
         }
     }
 
-    public void addEntity(LivingEntity entity, CustomEntity customEntity) {
-        registeredEntities.put(entity, customEntity);
+    public void addEntity(LivingEntity entity, ProtoEntity protoEntity) {
+        registeredEntities.put(entity, protoEntity);
     }
 
     public void removeEntity(LivingEntity entity) {

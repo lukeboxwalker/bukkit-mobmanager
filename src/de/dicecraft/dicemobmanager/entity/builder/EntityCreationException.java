@@ -6,7 +6,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public class EntityCreationException extends Exception {
+public class EntityCreationException extends RuntimeException {
 
     static final long serialVersionUID = -3387516993124229948L;
 

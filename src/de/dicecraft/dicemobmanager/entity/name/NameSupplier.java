@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
 
 /**
@@ -18,12 +18,12 @@ public interface NameSupplier {
      * Supplying the new name string.
      * <p>
      * Creates new name from given information using
-     * the entity, the currentHealth as well as the {@link CustomEntity}
+     * the entity, the currentHealth as well as the {@link ProtoEntity}
      *
      * @param entity to create name for
      * @param currentHealth of the entity
-     * @param customEntity the custom entity information
+     * @param protoEntity the custom entity information
      * @return new custom name for the given entity
      */
-    String supply(final LivingEntity entity, final double currentHealth, final CustomEntity customEntity);
+    String supply(final LivingEntity entity, final double currentHealth, final ProtoEntity protoEntity);
 }

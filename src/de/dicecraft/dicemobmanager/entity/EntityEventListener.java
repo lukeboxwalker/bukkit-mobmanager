@@ -1,8 +1,7 @@
 package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import de.dicecraft.dicemobmanager.utils.Component;
-import de.dicecraft.dicemobmanager.entity.builder.CustomEntity;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        Optional<CustomEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
+        Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
         optional.ifPresent(customEntity -> {
             LivingEntity entity = event.getEntity();
             customEntity.onEntityDeath(event);
@@ -47,7 +46,7 @@ public class EntityEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (DiceMobManager.getEntityManager().activateEntity(event.getEntity())) {
-            Optional<CustomEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
+            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
             optional.ifPresent(customEntity -> {
                 customEntity.onEntitySpawn(event);
             });
@@ -57,8 +56,13 @@ public class EntityEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
-            Optional<CustomEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
-            optional.ifPresent(customEntity -> customEntity.onEntityDamage(event));
+            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
+            optional.ifPresent(customEntity -> {
+                final LivingEntity entity = (LivingEntity) event.getEntity();
+                double finalHealth = (entity.getHealth() - event.getFinalDamage());
+                entity.setCustomName(customEntity.getNameSupplier().supply(entity, finalHealth, customEntity));
+                customEntity.onEntityDamage(event);
+            });
         }
     }
 }

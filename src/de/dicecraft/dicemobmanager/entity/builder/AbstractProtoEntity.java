@@ -8,9 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-
 /**
  * Custom information of an entity.
  * <p>
@@ -21,19 +18,7 @@ import java.util.List;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public interface CustomEntity {
-
-    @Nonnull
-    NameSupplier getNameSupplier();
-
-    @Nonnull
-    List<DeathDrop> getDeathDrops();
-
-    String getName();
-
-    int getLevel();
-
-    boolean isAggressive();
+public abstract class AbstractProtoEntity implements ProtoEntity {
 
     /**
      * Called when the entity is ticked
@@ -41,14 +26,18 @@ public interface CustomEntity {
      *
      * @param entity the bukkit entity.
      */
-    void onEntityTick(Entity entity);
+    @Override
+    public void onEntityTick(Entity entity) {
+    }
 
     /**
      * Called when the entity is damaged.
      *
      * @param event the bukkit event.
      */
-    void onEntityDamage(EntityDamageEvent event);
+    @Override
+    public void onEntityDamage(EntityDamageEvent event) {
+    }
 
     /**
      * Called when the entity dies
@@ -56,7 +45,9 @@ public interface CustomEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntityDeath(EntityDeathEvent event);
+    @Override
+    public void onEntityDeath(EntityDeathEvent event) {
+    }
 
     /**
      * Called when the entity dies
@@ -64,12 +55,16 @@ public interface CustomEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntitySpawn(EntitySpawnEvent event);
+    @Override
+    public void onEntitySpawn(EntitySpawnEvent event) {
+    }
 
     /**
      * Called when the entity drops an item.
      *
      * @param deathDrop the loot drop.
      */
-    void onItemDrop(DeathDrop deathDrop);
+    @Override
+    public void onItemDrop(DeathDrop deathDrop) {
+    }
 }

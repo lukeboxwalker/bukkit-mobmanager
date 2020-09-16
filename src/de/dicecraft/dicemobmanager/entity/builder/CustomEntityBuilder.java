@@ -17,7 +17,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 
 
 /**
@@ -47,14 +45,12 @@ public class CustomEntityBuilder implements EntityBuilder {
 
     private EntityType entityType;
     private Location location;
-    private CustomEntity customEntity;
+    private ProtoEntity protoEntity;
     private Equipment equipment;
-
-
 
     public CustomEntityBuilder() {
         mobGoals = new PaperMobGoals();
-        this.customEntity = new CustomMobEntity();
+        this.protoEntity = new ProtoMobEntity();
         this.potionEffects = new ArrayList<>();
         this.pathfinderGoals = new ArrayList<>();
         this.attributes = new HashMap<>();
@@ -137,14 +133,14 @@ public class CustomEntityBuilder implements EntityBuilder {
     /**
      * Specifies the custom entity information for the entity.
      * <p>
-     * Manipulating {@link CustomEntityBuilder#customEntity}
+     * Manipulating {@link CustomEntityBuilder#protoEntity}
      *
-     * @param customEntity the information for the entity
+     * @param protoEntity the information for the entity
      * @return builder to continue
      */
     @Override
-    public EntityBuilder setCustomEntity(@Nonnull CustomEntity customEntity) {
-        this.customEntity = customEntity;
+    public EntityBuilder setCustomEntity(@Nonnull ProtoEntity protoEntity) {
+        this.protoEntity = protoEntity;
         return this;
     }
 
@@ -191,7 +187,7 @@ public class CustomEntityBuilder implements EntityBuilder {
     public Entity buildAndSpawn() throws EntityCreationException {
         if (entityType == null) throw new EntityCreationException("Type is not specified");
         if (location == null) throw new EntityCreationException("Location is not specified");
-        if (customEntity == null) throw new EntityCreationException("Entity information is not specified");
+        if (protoEntity == null) throw new EntityCreationException("Entity information is not specified");
 
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
 
@@ -207,9 +203,6 @@ public class CustomEntityBuilder implements EntityBuilder {
                 mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
                 entity.setCustomNameVisible(true);
 
-                if (!customEntity.isAggressive()) {
-                    mobGoals.removeGoal(mob, VanillaGoal.NEAREST_ATTACKABLE_TARGET);
-                }
 
                 for (PriorityEntry<GoalSupplier<Mob>> entry : pathfinderGoals) {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().supply((Mob) entity));
@@ -224,7 +217,7 @@ public class CustomEntityBuilder implements EntityBuilder {
                 }
 
                 equipment.equip(mob);
-                DiceMobManager.getEntityManager().addEntity(mob, customEntity);
+                DiceMobManager.getEntityManager().addEntity(mob, protoEntity);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");

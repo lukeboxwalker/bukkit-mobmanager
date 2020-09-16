@@ -82,10 +82,10 @@ public interface EntityBuilder {
     /**
      * Specifies the custom entity information for the entity.
      *
-     * @param customEntity the world for the entity
+     * @param protoEntity the world for the entity
      * @return builder to continue
      */
-    EntityBuilder setCustomEntity(@Nonnull CustomEntity customEntity);
+    EntityBuilder setCustomEntity(@Nonnull ProtoEntity protoEntity);
 
     /**
      * Specifies the equipment for the entity.

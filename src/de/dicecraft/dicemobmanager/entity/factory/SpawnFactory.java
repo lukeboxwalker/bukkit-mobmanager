@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class Factory implements EntityFactory {
+public class SpawnFactory implements EntitySpawnFactory {
 
     private final MobGoals mobGoals = new PaperMobGoals();
 

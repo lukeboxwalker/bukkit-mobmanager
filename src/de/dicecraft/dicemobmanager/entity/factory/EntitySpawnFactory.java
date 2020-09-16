@@ -7,7 +7,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.function.Consumer;
 
-public interface EntityFactory {
+public interface EntitySpawnFactory {
 
     LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation);
 

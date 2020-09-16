@@ -6,7 +6,7 @@ import de.dicecraft.dicemobmanager.entity.SkullFactory;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.factory.Factory;
+import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.strategy.SpiderBossTickStrategy;
@@ -54,7 +54,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .setStrategy(StrategyType.ON_TICK, new SpiderBossTickStrategy())
                         .build();
 
-                Factory factory = new Factory();
+                SpawnFactory factory = new SpawnFactory();
                 factory.spawnEntity(entity, player.getLocation());
 
             } catch (EntityCreationException | IllegalArgumentException e) {

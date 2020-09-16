@@ -9,7 +9,7 @@ import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
 import de.dicecraft.dicemobmanager.entity.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;
-import de.dicecraft.dicemobmanager.entity.factory.Factory;
+import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
@@ -61,8 +61,8 @@ public class DiceMobManager extends JavaPlugin {
         return new CustomEntityBuilder();
     }
 
-    public static Factory createEntityFactory() {
-        return new Factory();
+    public static SpawnFactory createEntityFactory() {
+        return new SpawnFactory();
     }
 
     public static ProtoBuilder builder() {

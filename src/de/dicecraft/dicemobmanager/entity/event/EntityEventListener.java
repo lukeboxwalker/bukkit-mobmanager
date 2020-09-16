@@ -1,8 +1,10 @@
-package de.dicecraft.dicemobmanager.entity;
+package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,15 +35,16 @@ public class EntityEventListener implements Listener {
                 customEntity.getDeathDrops().forEach(deathDrop -> {
                     int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                     if (deathDrop.shouldDrop(lootBonus)) {
-                        customEntity.onItemDrop(deathDrop);
-                        drops.add(deathDrop.getItemStack().clone());
-
+                        Location location = entity.getLocation();
+                        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+                        customEntity.onItemDrop(new EntityDropItemEvent(deathDrop, item));
                     }
                 });
             }
             DiceMobManager.getEntityManager().removeEntity(entity);
         });
     }
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {

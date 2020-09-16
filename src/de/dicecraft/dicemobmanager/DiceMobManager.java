@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.command.CommandManager;
 
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.EntityEventListener;
+import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;

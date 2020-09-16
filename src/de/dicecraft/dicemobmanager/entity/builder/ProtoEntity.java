@@ -1,8 +1,8 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,9 +12,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -96,7 +94,7 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
     /**
      * Called when the entity drops an item.
      *
-     * @param deathDrop the loot drop.
+     * @param event the loot drop event.
      */
-    void onItemDrop(DeathDrop deathDrop);
+    void onItemDrop(EntityDropItemEvent event);
 }

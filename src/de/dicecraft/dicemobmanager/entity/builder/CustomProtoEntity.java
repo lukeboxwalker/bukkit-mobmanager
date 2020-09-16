@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
@@ -31,7 +32,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Strategy<Entity> onTickStrategy;
     private Strategy<EntityDamageEvent> onDamageStrategy;
     private Strategy<EntityDeathEvent> onDeathStrategy;
-    private Strategy<DeathDrop> onItemDropStrategy;
+    private Strategy<EntityDropItemEvent> onItemDropStrategy;
     private Strategy<EntitySpawnEvent> onSpawnStrategy;
     private Set<DeathDrop> deathDrops;
     private NameSupplier nameSupplier;
@@ -104,7 +105,7 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
 
-    public void setOnItemDropStrategy(Strategy<DeathDrop> onItemDropStrategy) {
+    public void setOnItemDropStrategy(Strategy<EntityDropItemEvent> onItemDropStrategy) {
         this.onItemDropStrategy = onItemDropStrategy;
     }
 
@@ -160,8 +161,8 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
     @Override
-    public void onItemDrop(DeathDrop deathDrop) {
-        this.onItemDropStrategy.play(deathDrop);
+    public void onItemDrop(EntityDropItemEvent event) {
+        this.onItemDropStrategy.play(event);
     }
 
     public void setEntityType(EntityType entityType) {

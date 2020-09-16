@@ -5,6 +5,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
+import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
@@ -42,7 +43,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private Strategy<EntityDamageEvent> onDamageStrategy = damageEvent -> {};
     private Strategy<EntityDeathEvent> onDeathStrategy = deathEvent -> {};
     private Strategy<EntitySpawnEvent> onSpawnStrategy = spawnEvent -> {};
-    private Strategy<DeathDrop> onItemDropStrategy = deathDrops -> {};
+    private Strategy<EntityDropItemEvent> onItemDropStrategy = deathDrops -> {};
     private Set<DeathDrop> deathDrops = new HashSet<>();
     private NameSupplier nameSupplier = new CustomNameSupplier();
     private EntityType entityType = EntityType.ZOMBIE;
@@ -227,7 +228,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         } else if (type.equals(StrategyType.ON_TICK)) {
             onTickStrategy = (Strategy<Entity>) strategy;
         } else if (type.equals(StrategyType.ON_ITEM_DROP)) {
-            onItemDropStrategy = (Strategy<DeathDrop>) strategy;
+            onItemDropStrategy = (Strategy<EntityDropItemEvent>) strategy;
         } else if (type.equals(StrategyType.ON_SPAWN)) {
             onSpawnStrategy = (Strategy<EntitySpawnEvent>) strategy;
         }

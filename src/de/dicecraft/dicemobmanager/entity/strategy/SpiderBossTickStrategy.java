@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.strategy;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,7 +73,7 @@ public class SpiderBossTickStrategy implements Strategy<Entity> {
                     }
                 }
 
-                SpawnFactory factory = DiceMobManager.createEntityFactory();
+                EntitySpawnFactory factory = DiceMobManager.createSpawnFactory();
                 ProtoEntity protoEntity = DiceMobManager.builder()
                         .setType(EntityType.CAVE_SPIDER)
                         .setName("Babyspinne")

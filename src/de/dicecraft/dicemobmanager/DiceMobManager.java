@@ -3,9 +3,7 @@ package de.dicecraft.dicemobmanager;
 import de.dicecraft.dicemobmanager.command.CommandManager;
 
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
-import de.dicecraft.dicemobmanager.entity.builder.CustomEntityBuilder;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.builder.EntityBuilder;
 import de.dicecraft.dicemobmanager.entity.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;
@@ -13,7 +11,6 @@ import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
@@ -55,11 +52,6 @@ public class DiceMobManager extends JavaPlugin {
 
     public static EntityManager getEntityManager() {
         return ENTITY_MANAGER;
-    }
-
-    @Deprecated
-    public static EntityBuilder builder(Plugin plugin) {
-        return new CustomEntityBuilder();
     }
 
     public static EntitySpawnFactory createSpawnFactory() {

@@ -14,7 +14,7 @@ public class ChangeEntityTickCommand extends AbstractCommand {
             try {
                 int ticks = Integer.parseInt(args[0]);
                 DiceMobManager.restartScheduler(ticks);
-                sender.sendMessage("Scheduler restarted, entities will now gets a mob tick every " + ticks + " game tick(s).");
+                sender.sendMessage("Scheduler restarted, entities will now get a mob tick every " + ticks + " game tick(s).");
                 return true;
             } catch (NumberFormatException e) {
                 sender.sendMessage("Argument '" + args[0] + "' is not numeric!");

@@ -13,6 +13,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -27,17 +28,17 @@ public class Factory implements EntityFactory {
     private final MobGoals mobGoals = new PaperMobGoals();
 
     @Override
-    public Entity spawnEntity(ProtoEntity protoEntity, Location spawnLocation) {
+    public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation) {
         return spawnEntity(protoEntity, spawnLocation, (entity) -> {});
     }
 
     @Override
-    public Entity spawnEntity(ProtoEntity protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
+    public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
         final Map<Attribute, Double> attributes = protoEntity.getAttributeMap();
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
         final EntityType type = protoEntity.getEntityType();
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
-            return spawnLocation.getWorld().spawnEntity(spawnLocation, type, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+            return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
                 Mob mob = (Mob) entity;
                 protoEntity.getAttributeMap().forEach((attribute, value) -> {
                     AttributeInstance instance = mob.getAttribute(attribute);

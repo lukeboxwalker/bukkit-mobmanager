@@ -6,6 +6,8 @@ import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
+import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.Location;
@@ -13,6 +15,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
@@ -74,5 +77,12 @@ public class SpawnFactory implements EntitySpawnFactory {
         } else {
             throw new EntityCreationException("Entity type is not a mob");
         }
+    }
+
+    @Override
+    public Item spawnDeathDrop(DeathDrop deathDrop, ProtoEntity protoEntity, Location location) {
+        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+        protoEntity.onItemDrop(new EntityDropItemEvent(deathDrop, item));
+        return item;
     }
 }

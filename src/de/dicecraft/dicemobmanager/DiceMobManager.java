@@ -28,7 +28,7 @@ public class DiceMobManager extends JavaPlugin {
         super.onEnable();
         INSTANCE = this;
         ENTITY_MANAGER = new EntityManager();
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(createSpawnFactory()), this);
         CommandManager.registerCommands(this);
         restartScheduler(10);
     }

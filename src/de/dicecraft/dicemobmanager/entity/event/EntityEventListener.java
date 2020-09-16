@@ -2,9 +2,9 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,23 +21,28 @@ import java.util.Optional;
 
 public class EntityEventListener implements Listener {
 
+    private final EntitySpawnFactory factory;
+
+    public EntityEventListener(final EntitySpawnFactory factory) {
+        this.factory = factory;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
-        optional.ifPresent(customEntity -> {
+        optional.ifPresent(protoEntity -> {
             LivingEntity entity = event.getEntity();
-            customEntity.onEntityDeath(event);
+            protoEntity.onEntityDeath(event);
             Player player = event.getEntity().getKiller();
             List<ItemStack> drops = event.getDrops();
             drops.clear();
             if (player != null) {
                 Map<Enchantment, Integer> enchantments = player.getInventory().getItemInMainHand().getEnchantments();
-                customEntity.getDeathDrops().forEach(deathDrop -> {
+                protoEntity.getDeathDrops().forEach(deathDrop -> {
                     int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                     if (deathDrop.shouldDrop(lootBonus)) {
                         Location location = entity.getLocation();
-                        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-                        customEntity.onItemDrop(new EntityDropItemEvent(deathDrop, item));
+                        factory.spawnDeathDrop(deathDrop, protoEntity, location);
                     }
                 });
             }

@@ -34,7 +34,7 @@ public class EntityEventListener implements Listener {
                     int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                     if (deathDrop.shouldDrop(lootBonus)) {
                         customEntity.onItemDrop(deathDrop);
-                        drops.add(deathDrop.getItemStack());
+                        drops.add(deathDrop.getItemStack().clone());
 
                     }
                 });

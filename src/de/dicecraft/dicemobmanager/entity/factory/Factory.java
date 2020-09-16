@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.factory;
 
+import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
@@ -52,6 +53,10 @@ public class Factory implements EntityFactory {
 
                 for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().supply((Mob) entity));
+                }
+
+                for (GoalKey<Mob> goalKey : protoEntity.getRemovedGoals()) {
+                    mobGoals.removeGoal(mob, goalKey);
                 }
 
                 for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {

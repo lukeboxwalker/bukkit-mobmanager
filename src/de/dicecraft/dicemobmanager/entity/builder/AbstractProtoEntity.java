@@ -1,9 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;

@@ -3,7 +3,6 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
-import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
@@ -50,7 +49,7 @@ public class CustomEntityBuilder implements EntityBuilder {
 
     public CustomEntityBuilder() {
         mobGoals = new PaperMobGoals();
-        this.protoEntity = new ProtoMobEntity();
+        this.protoEntity = new EntityInformation();
         this.potionEffects = new ArrayList<>();
         this.pathfinderGoals = new ArrayList<>();
         this.attributes = new HashMap<>();

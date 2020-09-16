@@ -1,8 +1,9 @@
 package de.dicecraft.dicemobmanager.entity.drops;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import de.dicecraft.dicemobmanager.entity.EntityManager;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * Loot an entity can drop.
@@ -15,9 +16,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CustomDeathDrop implements DeathDrop {
 
-    private final double dropChance;
-    private final DeathDrop.Rarity rarity;
-    private final ItemStack itemStack;
+    private double dropChance;
+    private DeathDrop.Rarity rarity;
+    private ItemStack itemStack;
 
     /**
      * Creates new CustomDeathDrop.
@@ -31,7 +32,7 @@ public class CustomDeathDrop implements DeathDrop {
      * @param rarity the rarity of the drop
      */
     public CustomDeathDrop(ItemStack itemStack, double dropChance, DeathDrop.Rarity rarity) {
-        this.dropChance = (dropChance > 1) ? 1.0 : ((dropChance < 0) ? 0 : dropChance);
+        this.setDropChance(dropChance);
         this.itemStack = itemStack.clone();
         this.rarity = rarity;
     }
@@ -64,6 +65,21 @@ public class CustomDeathDrop implements DeathDrop {
     @Override
     public DeathDrop.Rarity getRarity() {
         return rarity;
+    }
+
+    @Override
+    public void setItemStack(@Nonnull ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
+    @Override
+    public void setDropChance(double dropChance) {
+        this.dropChance = (dropChance > 1) ? 1.0 : ((dropChance < 0) ? 0 : dropChance);
+    }
+
+    @Override
+    public void setRarity(@Nonnull Rarity rarity) {
+        this.rarity = rarity;
     }
 
     /**

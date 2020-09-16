@@ -2,6 +2,8 @@ package de.dicecraft.dicemobmanager.entity.drops;
 
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * Loot an entity can drop.
  * <p>
@@ -33,6 +35,21 @@ public interface DeathDrop {
      * @return the rarity
      */
     Rarity getRarity();
+
+    /**
+     * Sets the item stack that can drop.
+     */
+    void setItemStack(@Nonnull ItemStack itemStack);
+
+    /**
+     * Sets the drop chance of the loot.
+     */
+    void setDropChance(double dropChance);
+
+    /**
+     * Sets the rarity of the loot drop.
+     */
+    void setRarity(@Nonnull Rarity rarity);
 
     /**
      * Calculates if the item should drop.

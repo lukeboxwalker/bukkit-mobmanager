@@ -28,7 +28,7 @@ public class DiceMobManager extends JavaPlugin {
         super.onEnable();
         INSTANCE = this;
         ENTITY_MANAGER = new EntityManager();
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(createSpawnFactory()), this);
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(createSpawnFactory(), ENTITY_MANAGER), this);
         CommandManager.registerCommands(this);
         restartScheduler(10);
     }
@@ -37,7 +37,7 @@ public class DiceMobManager extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
         SCHEDULER.cancel();
-        getEntityManager().destroyAll();
+        ENTITY_MANAGER.destroyAll();
     }
 
     public static void restartScheduler(int ticks) {
@@ -50,12 +50,8 @@ public class DiceMobManager extends JavaPlugin {
         return INSTANCE;
     }
 
-    public static EntityManager getEntityManager() {
-        return ENTITY_MANAGER;
-    }
-
     public static EntitySpawnFactory createSpawnFactory() {
-        return new SpawnFactory();
+        return new SpawnFactory(ENTITY_MANAGER);
     }
 
     public static ProtoBuilder builder() {

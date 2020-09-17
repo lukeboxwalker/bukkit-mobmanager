@@ -4,6 +4,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
@@ -30,6 +31,11 @@ import java.util.function.Consumer;
 public class SpawnFactory implements EntitySpawnFactory {
 
     private final MobGoals mobGoals = new PaperMobGoals();
+    private final EntityManager manager;
+
+    public SpawnFactory(final EntityManager manager) {
+        this.manager = manager;
+    }
 
     @Override
     public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation) {
@@ -73,7 +79,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                 }
 
                 protoEntity.getEquipment().equip(mob);
-                DiceMobManager.getEntityManager().addEntity(mob, protoEntity);
+                manager.registerEntity(mob, protoEntity);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");

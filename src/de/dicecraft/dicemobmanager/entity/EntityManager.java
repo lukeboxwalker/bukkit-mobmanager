@@ -22,7 +22,7 @@ public class EntityManager {
         tickedEntities.keySet().forEach(LivingEntity::remove);
     }
 
-    public Optional<ProtoEntity> getCustomEntity(LivingEntity entity) {
+    public Optional<ProtoEntity> getProtoEntity(LivingEntity entity) {
         if (tickedEntities.containsKey(entity)) {
             TickEvent tickEvent = tickedEntities.get(entity);
             return Optional.of(tickEvent.getProtoEntity());
@@ -50,7 +50,7 @@ public class EntityManager {
         }
     }
 
-    public void addEntity(LivingEntity entity, ProtoEntity protoEntity) {
+    public void registerEntity(LivingEntity entity, ProtoEntity protoEntity) {
         registeredEntities.put(entity, protoEntity);
     }
 

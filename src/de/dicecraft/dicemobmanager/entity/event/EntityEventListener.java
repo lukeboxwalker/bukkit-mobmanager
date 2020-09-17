@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import org.bukkit.Location;
@@ -22,18 +22,24 @@ import java.util.Optional;
 public class EntityEventListener implements Listener {
 
     private final EntitySpawnFactory factory;
+    private final EntityManager manager;
 
-    public EntityEventListener(final EntitySpawnFactory factory) {
+    public EntityEventListener(final EntitySpawnFactory factory, final EntityManager manager) {
         this.factory = factory;
+        this.manager = manager;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
+        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             LivingEntity entity = event.getEntity();
+            manager.removeEntity(entity);
             protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
-            if (!event.isCancelled()) {
+            if (event.isCancelled()) {
+                manager.registerEntity(entity, protoEntity);
+                manager.activateEntity(entity);
+            } else {
                 Player player = event.getEntity().getKiller();
                 List<ItemStack> drops = event.getDrops();
                 drops.clear();
@@ -47,7 +53,6 @@ public class EntityEventListener implements Listener {
                         }
                     });
                 }
-                DiceMobManager.getEntityManager().removeEntity(entity);
             }
         });
     }
@@ -56,10 +61,13 @@ public class EntityEventListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             final LivingEntity entity = (LivingEntity) event.getEntity();
-            if (DiceMobManager.getEntityManager().activateEntity(entity)) {
-                Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(entity);
+            if (manager.activateEntity(entity)) {
+                Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
                 optional.ifPresent(protoEntity -> {
                     protoEntity.onEntitySpawn(new SpawnEvent(entity, protoEntity, event));
+                    if (event.isCancelled()) {
+                        manager.removeEntity(entity);
+                    }
                 });
             }
         }
@@ -69,7 +77,7 @@ public class EntityEventListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             final LivingEntity entity = (LivingEntity) event.getEntity();
-            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(entity);
+            Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
             optional.ifPresent(protoEntity -> {
                 protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
                 if (!event.isCancelled()) {

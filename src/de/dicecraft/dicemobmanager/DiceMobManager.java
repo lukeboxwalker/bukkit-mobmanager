@@ -42,7 +42,7 @@ public class DiceMobManager extends JavaPlugin {
 
     public static void restartScheduler(int ticks) {
         if (SCHEDULER != null) SCHEDULER.cancel();
-        SCHEDULER = new TickScheduler();
+        SCHEDULER = new TickScheduler(ENTITY_MANAGER);
         SCHEDULER.runTaskTimer(INSTANCE, 0, ticks);
     }
 

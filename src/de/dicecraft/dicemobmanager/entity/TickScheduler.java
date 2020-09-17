@@ -1,6 +1,5 @@
 package de.dicecraft.dicemobmanager.entity;
 
-import de.dicecraft.dicemobmanager.DiceMobManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -11,8 +10,14 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class TickScheduler extends BukkitRunnable {
 
+    private final EntityManager manager;
+
+    public TickScheduler(final EntityManager manager) {
+        this.manager = manager;
+    }
+
     @Override
     public void run() {
-        DiceMobManager.getEntityManager().tickEntities();
+        manager.tickEntities();
     }
 }

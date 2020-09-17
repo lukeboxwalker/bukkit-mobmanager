@@ -6,7 +6,7 @@ import de.dicecraft.dicemobmanager.entity.SkullFactory;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
+import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.goals.GoalAvoidTarget;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import org.bukkit.Material;
@@ -51,7 +51,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .setName("Mutter Spinne")
                         .build();
 
-                SpawnFactory factory = new SpawnFactory();
+                EntitySpawnFactory factory = DiceMobManager.createSpawnFactory();
                 factory.spawnEntity(entity, player.getLocation());
 
             } catch (EntityCreationException | IllegalArgumentException e) {

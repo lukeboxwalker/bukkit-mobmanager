@@ -5,7 +5,6 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import net.minecraft.server.v1_16_R2.EntityCreature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
@@ -23,7 +22,6 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
     private static final int ACTIVATE_TICK = 20;
     private final Mob mob;
 
-    protected EntityCreature a;
     private final double speed;
     protected T avoidTarget;
     protected final float radius;

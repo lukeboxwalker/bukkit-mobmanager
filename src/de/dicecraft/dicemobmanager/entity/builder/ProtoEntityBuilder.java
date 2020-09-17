@@ -9,6 +9,7 @@ import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
+import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
@@ -39,7 +40,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final Set<GoalKey<Mob>> ignoredGoals = new HashSet<>();
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
 
-    private Strategy<Entity> onTickStrategy = entity -> {};
+    private Strategy<TickEvent> onTickStrategy = entity -> {};
     private Strategy<DamageEvent> onDamageStrategy = damageEvent -> {};
     private Strategy<DeathEvent> onDeathStrategy = deathEvent -> {};
     private Strategy<SpawnEvent> onSpawnStrategy = spawnEvent -> {};
@@ -226,7 +227,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         } else if (type.equals(StrategyType.ON_DEATH)) {
             onDeathStrategy = (Strategy<DeathEvent>) strategy;
         } else if (type.equals(StrategyType.ON_TICK)) {
-            onTickStrategy = (Strategy<Entity>) strategy;
+            onTickStrategy = (Strategy<TickEvent>) strategy;
         } else if (type.equals(StrategyType.ON_ITEM_DROP)) {
             onItemDropStrategy = (Strategy<ItemDropEvent>) strategy;
         } else if (type.equals(StrategyType.ON_SPAWN)) {

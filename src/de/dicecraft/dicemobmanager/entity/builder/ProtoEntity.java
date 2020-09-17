@@ -6,8 +6,8 @@ import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
+import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
 
@@ -61,9 +61,9 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      * Called when the entity is ticked
      * by the mob manager.
      *
-     * @param entity the bukkit entity.
+     * @param event the bukkit event.
      */
-    void onEntityTick(Entity entity);
+    void onEntityTick(TickEvent event);
 
     /**
      * Called when the entity is damaged.

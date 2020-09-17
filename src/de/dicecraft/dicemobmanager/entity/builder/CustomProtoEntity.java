@@ -7,6 +7,7 @@ import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
+import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
@@ -29,7 +30,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Set<PotionEffect> potionEffects;
     private Set<GoalKey<Mob>> ignoredGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
-    private Strategy<Entity> onTickStrategy;
+    private Strategy<TickEvent> onTickStrategy;
     private Strategy<DamageEvent> onDamageStrategy;
     private Strategy<DeathEvent> onDeathStrategy;
     private Strategy<ItemDropEvent> onItemDropStrategy;
@@ -90,7 +91,7 @@ public class CustomProtoEntity implements ProtoEntity {
         this.pathfinderGoals = pathfinderGoals;
     }
 
-    public void setOnTickStrategy(Strategy<Entity> onTickStrategy) {
+    public void setOnTickStrategy(Strategy<TickEvent> onTickStrategy) {
         this.onTickStrategy = onTickStrategy;
     }
 
@@ -141,8 +142,8 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
     @Override
-    public void onEntityTick(Entity entity) {
-        this.onTickStrategy.play(entity);
+    public void onEntityTick(TickEvent event) {
+        this.onTickStrategy.play(event);
     }
 
     @Override

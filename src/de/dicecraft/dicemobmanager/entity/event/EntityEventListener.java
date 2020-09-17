@@ -53,21 +53,23 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof LivingEntity && DiceMobManager.getEntityManager().activateEntity(event.getEntity())) {
-            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
-            optional.ifPresent(protoEntity -> {
-                final LivingEntity entity = (LivingEntity) event.getEntity();
-                protoEntity.onEntitySpawn(new SpawnEvent(entity, protoEntity, event));
-            });
+        if (event.getEntity() instanceof LivingEntity) {
+            final LivingEntity entity = (LivingEntity) event.getEntity();
+            if (DiceMobManager.getEntityManager().activateEntity(entity)) {
+                Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(entity);
+                optional.ifPresent(protoEntity -> {
+                    protoEntity.onEntitySpawn(new SpawnEvent(entity, protoEntity, event));
+                });
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
-            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
+            final LivingEntity entity = (LivingEntity) event.getEntity();
+            Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(entity);
             optional.ifPresent(protoEntity -> {
-                final LivingEntity entity = (LivingEntity) event.getEntity();
                 double finalHealth = (entity.getHealth() - event.getFinalDamage());
                 entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
                 protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));

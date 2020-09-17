@@ -8,6 +8,7 @@ import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
+import de.dicecraft.dicemobmanager.entity.event.SlimeEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
@@ -44,6 +45,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private Strategy<DamageEvent> onDamageStrategy = damageEvent -> {};
     private Strategy<DeathEvent> onDeathStrategy = deathEvent -> {};
     private Strategy<SpawnEvent> onSpawnStrategy = spawnEvent -> {};
+    private Strategy<SlimeEvent> onSlimeSplitStrategy = slimeEvent -> {};
     private Strategy<ItemDropEvent> onItemDropStrategy = deathDrops -> {};
     private Set<DeathDrop> deathDrops = new HashSet<>();
     private NameSupplier nameSupplier = new CustomNameSupplier();
@@ -232,6 +234,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
             onItemDropStrategy = (Strategy<ItemDropEvent>) strategy;
         } else if (type.equals(StrategyType.ON_SPAWN)) {
             onSpawnStrategy = (Strategy<SpawnEvent>) strategy;
+        } else if (type.equals(StrategyType.ON_SLIME_SPLIT)) {
+            onSlimeSplitStrategy = (Strategy<SlimeEvent>) strategy;
         }
         return this;
     }
@@ -257,6 +261,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setOnDeathStrategy(onDeathStrategy);
         protoEntity.setOnItemDropStrategy(onItemDropStrategy);
         protoEntity.setOnSpawnStrategy(onSpawnStrategy);
+        protoEntity.setOnSlimeSplitStrategy(onSlimeSplitStrategy);
         protoEntity.setOnTickStrategy(onTickStrategy);
         protoEntity.setNameSupplier(nameSupplier);
         protoEntity.setPotionEffects(potionEffects);

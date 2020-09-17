@@ -35,12 +35,8 @@ public class EntityEventListener implements Listener {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             LivingEntity entity = event.getEntity();
-            manager.removeEntity(entity);
             protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
-            if (event.isCancelled()) {
-                manager.registerEntity(entity, protoEntity);
-                manager.activateEntity(entity);
-            } else {
+            if (!event.isCancelled()) {
                 Player player = event.getEntity().getKiller();
                 List<ItemStack> drops = event.getDrops();
                 drops.clear();
@@ -92,6 +88,9 @@ public class EntityEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSlimeSplit(SlimeSplitEvent event) {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
-        optional.ifPresent(protoEntity -> protoEntity.onSlimeSplit(new SlimeEvent(event.getEntity(), protoEntity, event)));
+        optional.ifPresent(protoEntity -> {
+            manager.removeEntity(event.getEntity());
+            protoEntity.onSlimeSplit(new SlimeEvent(event.getEntity(), protoEntity, event));
+        });
     }
 }

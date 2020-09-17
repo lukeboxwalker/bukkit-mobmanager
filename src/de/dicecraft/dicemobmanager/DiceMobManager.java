@@ -66,6 +66,10 @@ public class DiceMobManager extends JavaPlugin {
         return new NamespacedKey(INSTANCE, key);
     }
 
+    public static Random getRandom() {
+        return RANDOM;
+    }
+
     public static int randomIntBetween(int min, int max) {
         return RANDOM.nextInt((max - min) + 1) + min;
     }

@@ -7,6 +7,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
+import de.dicecraft.dicemobmanager.entity.goals.GoalAvoidTarget;
 import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.strategy.SpiderBossTickStrategy;
@@ -42,12 +43,12 @@ public class SpawnEntityCommand extends AbstractCommand {
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 0.5, DeathDrop.Rarity.LEGENDARY);
 
                 ProtoEntity entity = DiceMobManager.builder()
-                        .setType(EntityType.SPIDER)
+                        .setType(EntityType.ZOMBIE)
                         .setDeathDrops(Collections.singleton(deathDrop))
                         .addEquipment(EquipmentSlot.HAND, new ItemStack(Material.IRON_SWORD))
                         .addEquipment(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE))
                         .addEquipment(EquipmentSlot.HEAD, heads.get(0))
-                        .addGoal(1, mob -> new GoalWalkToLocation(mob, player.getLocation().clone().add(10, 0, 0)))
+                        .addGoal(1, mob -> new GoalAvoidTarget<>(mob, Player.class, 6F, 1.5D))
                         .removeGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .setName("Mutter Spinne")

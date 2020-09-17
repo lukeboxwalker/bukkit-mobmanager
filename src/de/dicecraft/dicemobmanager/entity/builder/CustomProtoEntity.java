@@ -15,9 +15,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
@@ -30,7 +27,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Map<Attribute, Double> attributes;
     private Equipment equipment;
     private Set<PotionEffect> potionEffects;
-    private Set<GoalKey<Mob>> removedGoals;
+    private Set<GoalKey<Mob>> ignoredGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Strategy<Entity> onTickStrategy;
     private Strategy<DamageEvent> onDamageStrategy;
@@ -75,12 +72,12 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Nonnull
     @Override
-    public Set<GoalKey<Mob>> getRemovedGoals() {
-        return removedGoals;
+    public Set<GoalKey<Mob>> getIgnoredGoals() {
+        return ignoredGoals;
     }
 
-    public void setRemovedGoals(Set<GoalKey<Mob>> removedGoals) {
-        this.removedGoals = removedGoals;
+    public void setIgnoredGoals(Set<GoalKey<Mob>> ignoredGoals) {
+        this.ignoredGoals = ignoredGoals;
     }
 
     @Nonnull

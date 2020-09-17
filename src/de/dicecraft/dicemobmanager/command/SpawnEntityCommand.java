@@ -8,10 +8,7 @@ import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import de.dicecraft.dicemobmanager.entity.goals.GoalAvoidTarget;
-import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
-import de.dicecraft.dicemobmanager.entity.strategy.SpiderBossTickStrategy;
-import de.dicecraft.dicemobmanager.entity.strategy.StrategyType;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -49,7 +46,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .addEquipment(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE))
                         .addEquipment(EquipmentSlot.HEAD, heads.get(0))
                         .addGoal(1, mob -> new GoalAvoidTarget<>(mob, Player.class, 6F, 1.5D))
-                        .removeGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
+                        .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .setName("Mutter Spinne")
                         .build();

@@ -12,7 +12,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,9 +28,7 @@ import java.util.Set;
 public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
 
     @Nonnull
-    default Set<PotionEffect> getPotionEffects() {
-        return new HashSet<>();
-    }
+    Set<PotionEffect> getPotionEffects();
 
     /**
      * Gets the death drops.

@@ -7,8 +7,6 @@ import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.entity.Mob;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,14 +14,12 @@ public interface ProtoGoalEntity {
 
     /**
      * Specifies a list of goal keys which need
-     * to be removed from the bukkit entity.
+     * to be ignored from the bukkit entity.
      *
      * @return a list of goal keys
      */
     @Nonnull
-    default Set<GoalKey<Mob>> getRemovedGoals() {
-        return new HashSet<>();
-    }
+    Set<GoalKey<Mob>> getIgnoredGoals();
 
     /**
      * Using a supplier of {@link Goal} to ensure
@@ -35,7 +31,5 @@ public interface ProtoGoalEntity {
      * @return the custom goals
      */
     @Nonnull
-    default List<PriorityEntry<GoalSupplier<Mob>>> getGoals() {
-        return new ArrayList<>();
-    }
+    List<PriorityEntry<GoalSupplier<Mob>>> getGoals();
 }

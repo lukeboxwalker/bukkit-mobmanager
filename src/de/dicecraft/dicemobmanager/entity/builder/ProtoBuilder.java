@@ -74,11 +74,11 @@ public interface ProtoBuilder {
 
     /**
      * Specifies a goal which need
-     * to be removed from the bukkit entity.
+     * to be ignored from the bukkit entity.
      *
      * @return builder to continue
      */
-    ProtoBuilder removeGoal(@Nonnull GoalKey<Mob> goalKey);
+    ProtoBuilder ignoreGoal(@Nonnull GoalKey<Mob> goalKey);
 
     /**
      * Specifies the equipment for the entity.

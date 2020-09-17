@@ -60,7 +60,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                     mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().supply((Mob) entity));
                 }
 
-                for (GoalKey<Mob> goalKey : protoEntity.getRemovedGoals()) {
+                for (GoalKey<Mob> goalKey : protoEntity.getIgnoredGoals()) {
                     mobGoals.removeGoal(mob, goalKey);
                 }
 

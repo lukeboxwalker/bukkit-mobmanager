@@ -19,9 +19,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -39,7 +36,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final Map<Attribute, Double> attributes = new HashMap<>();
     private final Equipment equipment = new CustomEquipment();
     private final Set<PotionEffect> potionEffects = new HashSet<>();
-    private final Set<GoalKey<Mob>> removedGoals = new HashSet<>();
+    private final Set<GoalKey<Mob>> ignoredGoals = new HashSet<>();
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
 
     private Strategy<Entity> onTickStrategy = entity -> {};
@@ -128,8 +125,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder removeGoal(@Nonnull GoalKey<Mob> goalKey) {
-        removedGoals.add(goalKey);
+    public ProtoBuilder ignoreGoal(@Nonnull GoalKey<Mob> goalKey) {
+        ignoredGoals.add(goalKey);
         return this;
     }
 
@@ -262,7 +259,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setOnTickStrategy(onTickStrategy);
         protoEntity.setNameSupplier(nameSupplier);
         protoEntity.setPotionEffects(potionEffects);
-        protoEntity.setRemovedGoals(removedGoals);
+        protoEntity.setIgnoredGoals(ignoredGoals);
         protoEntity.setGoals(pathfinderGoals);
         return protoEntity;
     }

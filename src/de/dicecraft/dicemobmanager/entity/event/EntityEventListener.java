@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -40,15 +41,16 @@ public class EntityEventListener implements Listener {
                 Player player = event.getEntity().getKiller();
                 List<ItemStack> drops = event.getDrops();
                 drops.clear();
+                int lootBonus = 0;
                 if (player != null) {
                     Map<Enchantment, Integer> enchantments = player.getInventory().getItemInMainHand().getEnchantments();
-                    protoEntity.getDeathDrops().forEach(deathDrop -> {
-                        int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
-                        if (deathDrop.shouldDrop(lootBonus)) {
-                            Location location = entity.getLocation();
-                            factory.spawnDeathDrop(entity, protoEntity, deathDrop, location);
-                        }
-                    });
+                    lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
+                }
+                for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
+                    if (deathDrop.shouldDrop(lootBonus)) {
+                        Location location = entity.getLocation();
+                        factory.spawnDeathDrop(entity, protoEntity, deathDrop, location);
+                    }
                 }
             }
         });

@@ -78,8 +78,10 @@ public class EntityEventListener implements Listener {
             optional.ifPresent(protoEntity -> {
                 protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
                 if (!event.isCancelled()) {
-                    double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                    entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
+                    if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+                        double finalHealth = (entity.getHealth() - event.getFinalDamage());
+                        entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
+                    }
                 }
             });
         }

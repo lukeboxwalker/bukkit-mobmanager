@@ -7,14 +7,13 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
-import de.dicecraft.dicemobmanager.entity.goals.GoalAvoidTarget;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.strategy.StrategyType;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -40,15 +39,12 @@ public class SpawnEntityCommand extends AbstractCommand {
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 0.5, DeathDrop.Rarity.LEGENDARY);
 
                 ProtoEntity entity = DiceMobManager.builder()
-                        .setType(EntityType.ZOMBIE)
+                        .setType(EntityType.SLIME)
                         .setDeathDrops(Collections.singleton(deathDrop))
-                        .addEquipment(EquipmentSlot.HAND, new ItemStack(Material.IRON_SWORD))
-                        .addEquipment(EquipmentSlot.CHEST, new ItemStack(Material.DIAMOND_CHESTPLATE))
-                        .addEquipment(EquipmentSlot.HEAD, heads.get(0))
-                        .addGoal(1, mob -> new GoalAvoidTarget<>(mob, Player.class, 6F, 1.5D))
                         .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
-                        .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
-                        .setName("Mutter Spinne")
+                        .setAttribute(Attribute.GENERIC_MAX_HEALTH, 120)
+                        .setStrategy(StrategyType.ON_SLIME_SPLIT, (splitEvent -> splitEvent.getBukkitEvent().setCancelled(true)))
+                        .setName("Test")
                         .build();
 
                 EntitySpawnFactory factory = DiceMobManager.createSpawnFactory();

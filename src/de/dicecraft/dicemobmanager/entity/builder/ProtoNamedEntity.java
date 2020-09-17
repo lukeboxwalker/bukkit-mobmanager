@@ -12,7 +12,9 @@ public interface ProtoNamedEntity {
      *
      * @return the custom name string
      */
-    String getName();
+    default String getName() {
+        return "";
+    }
 
     /**
      * Gets the level of the entity.

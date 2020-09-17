@@ -2,13 +2,13 @@ package de.dicecraft.dicemobmanager.entity.builder;
 
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
-import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
+import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
+import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
+import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
+import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
@@ -73,7 +73,7 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntityDamage(EntityDamageEvent event);
+    void onEntityDamage(DamageEvent event);
 
     /**
      * Called when the entity dies
@@ -81,7 +81,7 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntityDeath(EntityDeathEvent event);
+    void onEntityDeath(DeathEvent event);
 
     /**
      * Called when the entity dies
@@ -89,12 +89,12 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntitySpawn(EntitySpawnEvent event);
+    void onEntitySpawn(SpawnEvent event);
 
     /**
      * Called when the entity drops an item.
      *
      * @param event the loot drop event.
      */
-    void onItemDrop(EntityDropItemEvent event);
+    void onItemDrop(ItemDropEvent event);
 }

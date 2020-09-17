@@ -5,7 +5,10 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
-import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
+import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
+import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
+import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
+import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
@@ -40,10 +43,10 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
 
     private Strategy<Entity> onTickStrategy = entity -> {};
-    private Strategy<EntityDamageEvent> onDamageStrategy = damageEvent -> {};
-    private Strategy<EntityDeathEvent> onDeathStrategy = deathEvent -> {};
-    private Strategy<EntitySpawnEvent> onSpawnStrategy = spawnEvent -> {};
-    private Strategy<EntityDropItemEvent> onItemDropStrategy = deathDrops -> {};
+    private Strategy<DamageEvent> onDamageStrategy = damageEvent -> {};
+    private Strategy<DeathEvent> onDeathStrategy = deathEvent -> {};
+    private Strategy<SpawnEvent> onSpawnStrategy = spawnEvent -> {};
+    private Strategy<ItemDropEvent> onItemDropStrategy = deathDrops -> {};
     private Set<DeathDrop> deathDrops = new HashSet<>();
     private NameSupplier nameSupplier = new CustomNameSupplier();
     private EntityType entityType = EntityType.ZOMBIE;
@@ -222,15 +225,15 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     @SuppressWarnings("unchecked")
     public <T> ProtoBuilder setStrategy(@Nonnull StrategyType<T> type, @Nonnull Strategy<T> strategy) {
         if (type.equals(StrategyType.ON_DAMAGE)) {
-            onDamageStrategy = (Strategy<EntityDamageEvent>) strategy;
+            onDamageStrategy = (Strategy<DamageEvent>) strategy;
         } else if (type.equals(StrategyType.ON_DEATH)) {
-            onDeathStrategy = (Strategy<EntityDeathEvent>) strategy;
+            onDeathStrategy = (Strategy<DeathEvent>) strategy;
         } else if (type.equals(StrategyType.ON_TICK)) {
             onTickStrategy = (Strategy<Entity>) strategy;
         } else if (type.equals(StrategyType.ON_ITEM_DROP)) {
-            onItemDropStrategy = (Strategy<EntityDropItemEvent>) strategy;
+            onItemDropStrategy = (Strategy<ItemDropEvent>) strategy;
         } else if (type.equals(StrategyType.ON_SPAWN)) {
-            onSpawnStrategy = (Strategy<EntitySpawnEvent>) strategy;
+            onSpawnStrategy = (Strategy<SpawnEvent>) strategy;
         }
         return this;
     }

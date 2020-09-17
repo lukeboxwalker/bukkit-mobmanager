@@ -32,7 +32,7 @@ public class EntityEventListener implements Listener {
         Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             LivingEntity entity = event.getEntity();
-            protoEntity.onEntityDeath(event);
+            protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
             Player player = event.getEntity().getKiller();
             List<ItemStack> drops = event.getDrops();
             drops.clear();
@@ -42,7 +42,7 @@ public class EntityEventListener implements Listener {
                     int lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                     if (deathDrop.shouldDrop(lootBonus)) {
                         Location location = entity.getLocation();
-                        factory.spawnDeathDrop(deathDrop, protoEntity, location);
+                        factory.spawnDeathDrop(entity, protoEntity, deathDrop, location);
                     }
                 });
             }
@@ -53,10 +53,11 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (DiceMobManager.getEntityManager().activateEntity(event.getEntity())) {
+        if (event.getEntity() instanceof LivingEntity && DiceMobManager.getEntityManager().activateEntity(event.getEntity())) {
             Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
-            optional.ifPresent(customEntity -> {
-                customEntity.onEntitySpawn(event);
+            optional.ifPresent(protoEntity -> {
+                final LivingEntity entity = (LivingEntity) event.getEntity();
+                protoEntity.onEntitySpawn(new SpawnEvent(entity, protoEntity, event));
             });
         }
     }
@@ -65,11 +66,11 @@ public class EntityEventListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             Optional<ProtoEntity> optional = DiceMobManager.getEntityManager().getCustomEntity(event.getEntity());
-            optional.ifPresent(customEntity -> {
+            optional.ifPresent(protoEntity -> {
                 final LivingEntity entity = (LivingEntity) event.getEntity();
                 double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                entity.setCustomName(customEntity.getNameSupplier().supply(entity, finalHealth, customEntity));
-                customEntity.onEntityDamage(event);
+                entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
+                protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
             });
         }
     }

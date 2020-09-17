@@ -3,7 +3,10 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
-import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
+import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
+import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
+import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
+import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
@@ -30,10 +33,10 @@ public class CustomProtoEntity implements ProtoEntity {
     private Set<GoalKey<Mob>> removedGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Strategy<Entity> onTickStrategy;
-    private Strategy<EntityDamageEvent> onDamageStrategy;
-    private Strategy<EntityDeathEvent> onDeathStrategy;
-    private Strategy<EntityDropItemEvent> onItemDropStrategy;
-    private Strategy<EntitySpawnEvent> onSpawnStrategy;
+    private Strategy<DamageEvent> onDamageStrategy;
+    private Strategy<DeathEvent> onDeathStrategy;
+    private Strategy<ItemDropEvent> onItemDropStrategy;
+    private Strategy<SpawnEvent> onSpawnStrategy;
     private Set<DeathDrop> deathDrops;
     private NameSupplier nameSupplier;
     private EntityType entityType;
@@ -95,22 +98,22 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
 
-    public void setOnDamageStrategy(Strategy<EntityDamageEvent> onDamageStrategy) {
+    public void setOnDamageStrategy(Strategy<DamageEvent> onDamageStrategy) {
         this.onDamageStrategy = onDamageStrategy;
     }
 
 
-    public void setOnDeathStrategy(Strategy<EntityDeathEvent> onDeathStrategy) {
+    public void setOnDeathStrategy(Strategy<DeathEvent> onDeathStrategy) {
         this.onDeathStrategy = onDeathStrategy;
     }
 
 
-    public void setOnItemDropStrategy(Strategy<EntityDropItemEvent> onItemDropStrategy) {
+    public void setOnItemDropStrategy(Strategy<ItemDropEvent> onItemDropStrategy) {
         this.onItemDropStrategy = onItemDropStrategy;
     }
 
 
-    public void setOnSpawnStrategy(Strategy<EntitySpawnEvent> onSpawnStrategy) {
+    public void setOnSpawnStrategy(Strategy<SpawnEvent> onSpawnStrategy) {
         this.onSpawnStrategy = onSpawnStrategy;
     }
 
@@ -146,22 +149,22 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
     @Override
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onEntityDamage(DamageEvent event) {
         this.onDamageStrategy.play(event);
     }
 
     @Override
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onEntityDeath(DeathEvent event) {
         this.onDeathStrategy.play(event);
     }
 
     @Override
-    public void onEntitySpawn(EntitySpawnEvent event) {
+    public void onEntitySpawn(SpawnEvent event) {
         this.onSpawnStrategy.play(event);
     }
 
     @Override
-    public void onItemDrop(EntityDropItemEvent event) {
+    public void onItemDrop(ItemDropEvent event) {
         this.onItemDropStrategy.play(event);
     }
 

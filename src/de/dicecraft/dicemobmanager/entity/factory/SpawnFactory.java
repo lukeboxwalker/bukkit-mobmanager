@@ -7,7 +7,8 @@ import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.event.EntityDropItemEvent;
+import de.dicecraft.dicemobmanager.entity.event.Event;
+import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.Location;
@@ -80,9 +81,16 @@ public class SpawnFactory implements EntitySpawnFactory {
     }
 
     @Override
-    public Item spawnDeathDrop(DeathDrop deathDrop, ProtoEntity protoEntity, Location location) {
+    public Item spawnDeathDrop(LivingEntity entity, ProtoEntity protoEntity, DeathDrop deathDrop, Location location) {
         Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-        protoEntity.onItemDrop(new EntityDropItemEvent(deathDrop, item));
+        protoEntity.onItemDrop(new ItemDropEvent(entity, protoEntity, deathDrop, item));
+        return item;
+    }
+
+    @Override
+    public Item spawnDeathDrop(Event event, DeathDrop deathDrop, Location location) {
+        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+        event.getProtoEntity().onItemDrop(new ItemDropEvent(event, deathDrop, item));
         return item;
     }
 }

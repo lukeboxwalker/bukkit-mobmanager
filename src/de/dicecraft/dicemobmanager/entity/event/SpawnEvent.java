@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
-public class SpawnEvent extends Event {
+public class SpawnEvent extends Event implements BukkitEvent<EntitySpawnEvent> {
 
     private final EntitySpawnEvent spawnEvent;
 
@@ -17,6 +17,7 @@ public class SpawnEvent extends Event {
         this.spawnEvent = spawnEvent;
     }
 
+    @Override
     public EntitySpawnEvent getBukkitEvent() {
         return spawnEvent;
     }

@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class DamageEvent extends Event {
+public class DamageEvent extends Event implements BukkitEvent<EntityDamageEvent> {
 
     private final EntityDamageEvent damageEvent;
 
@@ -17,6 +17,7 @@ public class DamageEvent extends Event {
         this.damageEvent = damageEvent;
     }
 
+    @Override
     public EntityDamageEvent getBukkitEvent() {
         return damageEvent;
     }

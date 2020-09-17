@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-public class DeathEvent extends Event {
+public class DeathEvent extends Event implements BukkitEvent<EntityDeathEvent> {
 
     private final EntityDeathEvent deathEvent;
 
@@ -17,6 +17,7 @@ public class DeathEvent extends Event {
         this.deathEvent = deathEvent;
     }
 
+    @Override
     public EntityDeathEvent getBukkitEvent() {
         return deathEvent;
     }

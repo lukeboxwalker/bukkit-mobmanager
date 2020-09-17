@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.SlimeSplitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -86,5 +87,11 @@ public class EntityEventListener implements Listener {
                 }
             });
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onSlimeSplit(SlimeSplitEvent event) {
+        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        optional.ifPresent(protoEntity -> protoEntity.onSlimeSplit(new SlimeEvent(event.getEntity(), protoEntity, event)));
     }
 }

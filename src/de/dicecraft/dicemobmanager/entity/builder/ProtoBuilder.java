@@ -129,12 +129,12 @@ public interface ProtoBuilder {
     /**
      * Sets an entity strategy.
      * <p>
-     * Using the {@link StrategyType} to identify for
-     * what the {@link Strategy} will be used.
+     * The {@link Strategy} defines a behavior
+     * for the entity
      *
      * @return builder to continue
      */
-    <T> ProtoBuilder setStrategy(@Nonnull StrategyType<T> type, @Nonnull Strategy<T> strategy);
+    ProtoBuilder addStrategy(@Nonnull Strategy strategy);
 
     /**
      * Builds the ProtoEntity.

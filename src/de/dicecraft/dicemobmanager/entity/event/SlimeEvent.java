@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.SlimeSplitEvent;
 
-public class SlimeEvent extends Event implements BukkitEvent<SlimeSplitEvent> {
+public class SlimeEvent extends Event implements BukkitEventHolder<SlimeSplitEvent> {
 
     private final SlimeSplitEvent splitEvent;
 

@@ -1,9 +1,9 @@
 package de.dicecraft.dicemobmanager.entity.factory;
 
+import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
-import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
@@ -12,6 +12,7 @@ import de.dicecraft.dicemobmanager.entity.event.Event;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -24,13 +25,18 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 public class SpawnFactory implements EntitySpawnFactory {
 
-    private final MobGoals mobGoals = new PaperMobGoals();
+    private static final Logger LOGGER = Bukkit.getLogger();
+    private static final MobGoals MOB_GOALS = new PaperMobGoals();
+
     private final EntityManager manager;
 
     public SpawnFactory(final EntityManager manager) {
@@ -62,12 +68,19 @@ public class SpawnFactory implements EntitySpawnFactory {
                     entity.setCustomName(protoEntity.getNameSupplier().supply(mob, mob.getHealth(), protoEntity));
                 }
 
+                final Set<GoalKey<Mob>> goalKeys = new HashSet<>();
                 for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
-                    mobGoals.addGoal((Mob) entity, entry.getPriority(), entry.getEntry().supply((Mob) entity));
+                    final Goal<Mob> goal = entry.getEntry().supply((Mob) entity);
+                    if (!goalKeys.contains(goal.getKey())) {
+                        MOB_GOALS.addGoal((Mob) entity, entry.getPriority(), goal);
+                        goalKeys.add(goal.getKey());
+                    } else {
+                        LOGGER.warning("[DiceMobManager] Trying to add a goal with goal key which already exist!");
+                    }
                 }
 
                 for (GoalKey<Mob> goalKey : protoEntity.getIgnoredGoals()) {
-                    mobGoals.removeGoal(mob, goalKey);
+                    MOB_GOALS.removeGoal(mob, goalKey);
                 }
 
                 for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {

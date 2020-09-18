@@ -14,9 +14,12 @@ import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import de.dicecraft.dicemobmanager.entity.strategy.SimpleStrategyManager;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
+import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyType;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -40,13 +43,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final Set<PotionEffect> potionEffects = new HashSet<>();
     private final Set<GoalKey<Mob>> ignoredGoals = new HashSet<>();
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
+    private final List<Strategy> strategies = new ArrayList<>();
 
-    private Strategy<TickEvent> onTickStrategy = entity -> {};
-    private Strategy<DamageEvent> onDamageStrategy = damageEvent -> {};
-    private Strategy<DeathEvent> onDeathStrategy = deathEvent -> {};
-    private Strategy<SpawnEvent> onSpawnStrategy = spawnEvent -> {};
-    private Strategy<SlimeEvent> onSlimeSplitStrategy = slimeEvent -> {};
-    private Strategy<ItemDropEvent> onItemDropStrategy = deathDrops -> {};
     private Set<DeathDrop> deathDrops = new HashSet<>();
     private NameSupplier nameSupplier = new CustomNameSupplier();
     private EntityType entityType = EntityType.ZOMBIE;
@@ -216,27 +214,14 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     /**
      * Sets an entity strategy.
      * <p>
-     * Using the {@link StrategyType} to identify for
-     * what the {@link Strategy} will be used.
+     * The {@link Strategy} defines a behavior
+     * for the entity
      *
      * @return builder to continue
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> ProtoBuilder setStrategy(@Nonnull StrategyType<T> type, @Nonnull Strategy<T> strategy) {
-        if (type.equals(StrategyType.ON_DAMAGE)) {
-            onDamageStrategy = (Strategy<DamageEvent>) strategy;
-        } else if (type.equals(StrategyType.ON_DEATH)) {
-            onDeathStrategy = (Strategy<DeathEvent>) strategy;
-        } else if (type.equals(StrategyType.ON_TICK)) {
-            onTickStrategy = (Strategy<TickEvent>) strategy;
-        } else if (type.equals(StrategyType.ON_ITEM_DROP)) {
-            onItemDropStrategy = (Strategy<ItemDropEvent>) strategy;
-        } else if (type.equals(StrategyType.ON_SPAWN)) {
-            onSpawnStrategy = (Strategy<SpawnEvent>) strategy;
-        } else if (type.equals(StrategyType.ON_SLIME_SPLIT)) {
-            onSlimeSplitStrategy = (Strategy<SlimeEvent>) strategy;
-        }
+    public ProtoBuilder addStrategy(@Nonnull Strategy strategy) {
+        this.strategies.add(strategy);
         return this;
     }
 
@@ -257,16 +242,15 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setEntityType(entityType);
         protoEntity.setLevel(level);
         protoEntity.setName(name);
-        protoEntity.setOnDamageStrategy(onDamageStrategy);
-        protoEntity.setOnDeathStrategy(onDeathStrategy);
-        protoEntity.setOnItemDropStrategy(onItemDropStrategy);
-        protoEntity.setOnSpawnStrategy(onSpawnStrategy);
-        protoEntity.setOnSlimeSplitStrategy(onSlimeSplitStrategy);
-        protoEntity.setOnTickStrategy(onTickStrategy);
         protoEntity.setNameSupplier(nameSupplier);
         protoEntity.setPotionEffects(potionEffects);
         protoEntity.setIgnoredGoals(ignoredGoals);
         protoEntity.setGoals(pathfinderGoals);
+
+        final StrategyManager strategyManager = new SimpleStrategyManager();
+        strategyManager.addStrategies(this.strategies);
+
+        protoEntity.setStrategyManager(strategyManager);
         return protoEntity;
     }
 }

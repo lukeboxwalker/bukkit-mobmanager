@@ -11,7 +11,7 @@ import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
-import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
+import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -25,17 +25,12 @@ import java.util.Set;
 
 public class CustomProtoEntity implements ProtoEntity {
 
+    private StrategyManager strategyManager;
     private Map<Attribute, Double> attributes;
     private Equipment equipment;
     private Set<PotionEffect> potionEffects;
     private Set<GoalKey<Mob>> ignoredGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
-    private Strategy<TickEvent> onTickStrategy;
-    private Strategy<DamageEvent> onDamageStrategy;
-    private Strategy<DeathEvent> onDeathStrategy;
-    private Strategy<ItemDropEvent> onItemDropStrategy;
-    private Strategy<SpawnEvent> onSpawnStrategy;
-    private Strategy<SlimeEvent> onSlimeSplitStrategy;
     private Set<DeathDrop> deathDrops;
     private NameSupplier nameSupplier;
     private EntityType entityType;
@@ -92,33 +87,6 @@ public class CustomProtoEntity implements ProtoEntity {
         this.pathfinderGoals = pathfinderGoals;
     }
 
-    public void setOnTickStrategy(Strategy<TickEvent> onTickStrategy) {
-        this.onTickStrategy = onTickStrategy;
-    }
-
-
-    public void setOnDamageStrategy(Strategy<DamageEvent> onDamageStrategy) {
-        this.onDamageStrategy = onDamageStrategy;
-    }
-
-
-    public void setOnDeathStrategy(Strategy<DeathEvent> onDeathStrategy) {
-        this.onDeathStrategy = onDeathStrategy;
-    }
-
-
-    public void setOnItemDropStrategy(Strategy<ItemDropEvent> onItemDropStrategy) {
-        this.onItemDropStrategy = onItemDropStrategy;
-    }
-
-    public void setOnSlimeSplitStrategy(Strategy<SlimeEvent> onSlimeSplitStrategy) {
-        this.onSlimeSplitStrategy = onSlimeSplitStrategy;
-    }
-
-    public void setOnSpawnStrategy(Strategy<SpawnEvent> onSpawnStrategy) {
-        this.onSpawnStrategy = onSpawnStrategy;
-    }
-
     @Nonnull
     @Override
     public NameSupplier getNameSupplier() {
@@ -147,32 +115,32 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Override
     public void onSlimeSplit(SlimeEvent event) {
-        onSlimeSplitStrategy.play(event);
+        strategyManager.getSlimeSplitStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override
     public void onEntityTick(TickEvent event) {
-        this.onTickStrategy.play(event);
+        strategyManager.getTickStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override
     public void onEntityDamage(DamageEvent event) {
-        this.onDamageStrategy.play(event);
+        strategyManager.getDamageStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override
     public void onEntityDeath(DeathEvent event) {
-        this.onDeathStrategy.play(event);
+        strategyManager.getDeathStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override
     public void onEntitySpawn(SpawnEvent event) {
-        this.onSpawnStrategy.play(event);
+        strategyManager.getSpawnStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override
     public void onItemDrop(ItemDropEvent event) {
-        this.onItemDropStrategy.play(event);
+        strategyManager.getItemDropStrategies().forEach(strategy -> strategy.play(event));
     }
 
     public void setEntityType(EntityType entityType) {
@@ -195,5 +163,9 @@ public class CustomProtoEntity implements ProtoEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setStrategyManager(StrategyManager strategyManager) {
+        this.strategyManager = strategyManager;
     }
 }

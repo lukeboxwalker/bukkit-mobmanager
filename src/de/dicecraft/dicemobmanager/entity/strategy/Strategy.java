@@ -1,7 +1,11 @@
 package de.dicecraft.dicemobmanager.entity.strategy;
 
-@FunctionalInterface
-public interface Strategy<T> {
+import org.bukkit.NamespacedKey;
 
-    void play(T consumable);
+import javax.annotation.Nonnull;
+
+public interface Strategy extends RegistrationAcceptor {
+
+    @Nonnull
+    NamespacedKey getKey();
 }

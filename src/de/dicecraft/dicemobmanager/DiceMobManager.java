@@ -14,10 +14,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class DiceMobManager extends JavaPlugin {
 
     private static final Random RANDOM = new Random();
+    private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
 
     private static DiceMobManager INSTANCE;
     private static EntityManager ENTITY_MANAGER;
@@ -60,6 +62,10 @@ public class DiceMobManager extends JavaPlugin {
 
     public static NamespacedKey createNameSpacedKey(String key) {
         return new NamespacedKey(INSTANCE, key);
+    }
+
+    public static Logger logger() {
+        return LOGGER;
     }
 
     public static Random getRandom() {

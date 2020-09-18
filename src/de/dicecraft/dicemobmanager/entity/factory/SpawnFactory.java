@@ -4,6 +4,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
+import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
@@ -12,7 +13,7 @@ import de.dicecraft.dicemobmanager.entity.event.Event;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
-import org.bukkit.Bukkit;
+import it.unimi.dsi.fastutil.Function;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -34,8 +35,10 @@ import java.util.logging.Logger;
 
 public class SpawnFactory implements EntitySpawnFactory {
 
-    private static final Logger LOGGER = Bukkit.getLogger();
+    private static final Logger LOGGER = DiceMobManager.logger();
     private static final MobGoals MOB_GOALS = new PaperMobGoals();
+    private static final Function<String, String> WARN_MSG = string ->
+            "Trying to add a goal with goal key: " + string + " which already exist!";
 
     private final EntityManager manager;
 
@@ -75,7 +78,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                         MOB_GOALS.addGoal((Mob) entity, entry.getPriority(), goal);
                         goalKeys.add(goal.getKey());
                     } else {
-                        LOGGER.warning("[DiceMobManager] Trying to add a goal with goal key which already exist!");
+                        LOGGER.warning(WARN_MSG.apply(goal.getKey().toString()));
                     }
                 }
 

@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.strategy;
 
-import org.bukkit.Bukkit;
+import de.dicecraft.dicemobmanager.DiceMobManager;
+import it.unimi.dsi.fastutil.Function;
 import org.bukkit.NamespacedKey;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,9 @@ import java.util.logging.Logger;
 
 public class SimpleStrategyManager implements StrategyManager, StrategyRegistrationVisitor {
 
-    private static final Logger LOGGER = Bukkit.getLogger();
+    private static final Logger LOGGER = DiceMobManager.logger();
+    private static final Function<String, String> WARN_MSG = string ->
+            "Trying to add a strategy with namespaced key: " + string + " which already exist!";
 
     private final List<SpawnStrategy> onSpawnStrategies = new ArrayList<>();
     private final List<DamageStrategy> onDamageStrategies = new ArrayList<>();
@@ -46,7 +49,7 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
         if (!keyMap.containsKey(strategy.getKey())) {
             strategy.accept(this);
         } else {
-            LOGGER.warning("[DiceMobManager] Trying to add a strategy with namespaced key which already exist!");
+            LOGGER.warning(WARN_MSG.apply(strategy.getKey().toString()));
         }
     }
 
@@ -55,6 +58,8 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
         strategies.forEach(strategy -> {
             if (!keyMap.containsKey(strategy.getKey())) {
                 strategy.accept(this);
+            } else {
+                LOGGER.warning(WARN_MSG.apply(strategy.getKey().toString()));
             }
         });
     }

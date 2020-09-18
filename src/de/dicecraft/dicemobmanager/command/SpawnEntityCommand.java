@@ -50,7 +50,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         .setType(EntityType.SLIME)
                         .setDeathDrops(Collections.singleton(deathDrop))
                         .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
-                        .setAttribute(Attribute.GENERIC_MAX_HEALTH, 120)
+                        .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .addStrategy(new SlimeSplitStrategy() {
 
                             private final NamespacedKey key = DiceMobManager.createNameSpacedKey("cancel_slime_split");
@@ -73,7 +73,7 @@ public class SpawnEntityCommand extends AbstractCommand {
                         })
                         .addStrategy(new SpawnStrategy() {
 
-                            private final NamespacedKey key = DiceMobManager.createNameSpacedKey("change_slime_size");
+                            private final NamespacedKey key = DiceMobManager.createNameSpacedKey("cancel_slime_split");
 
                             @Override
                             public void play(SpawnEvent spawnEvent) {

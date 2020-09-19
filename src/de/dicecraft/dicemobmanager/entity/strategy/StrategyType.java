@@ -3,7 +3,6 @@ package de.dicecraft.dicemobmanager.entity.strategy;
 import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
-import de.dicecraft.dicemobmanager.entity.event.SlimeEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 
@@ -13,7 +12,6 @@ public class StrategyType<T> {
     public static final StrategyType<DamageEvent> ON_DAMAGE = new StrategyType<>("ON_DAMAGE");
     public static final StrategyType<SpawnEvent> ON_SPAWN = new StrategyType<>("ON_SPAWN");
     public static final StrategyType<TickEvent> ON_TICK = new StrategyType<>("ON_TICK");
-    public static final StrategyType<SlimeEvent> ON_SLIME_SPLIT = new StrategyType<>("ON_SLIME_SPLIT");
     public static final StrategyType<ItemDropEvent> ON_ITEM_DROP = new StrategyType<>("ON_ITEM_DROP");
 
     private final String name;

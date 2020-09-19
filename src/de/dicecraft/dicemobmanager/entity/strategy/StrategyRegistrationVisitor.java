@@ -12,7 +12,5 @@ public interface StrategyRegistrationVisitor {
 
     void registerItemDropStrategy(@Nonnull ItemDropStrategy strategy);
 
-    void registerSlimeSplitStrategy(@Nonnull SlimeSplitStrategy strategy);
-
     void registerTickStrategy(@Nonnull TickStrategy strategy);
 }

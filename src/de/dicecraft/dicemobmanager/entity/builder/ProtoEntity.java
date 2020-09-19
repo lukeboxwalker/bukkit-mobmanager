@@ -25,7 +25,7 @@ import java.util.Set;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity, ProtoSlime {
+public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
 
     @Nonnull
     Set<PotionEffect> getPotionEffects();

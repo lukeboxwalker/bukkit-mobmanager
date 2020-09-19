@@ -6,7 +6,6 @@ import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import de.dicecraft.dicemobmanager.entity.event.DamageEvent;
 import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
-import de.dicecraft.dicemobmanager.entity.event.SlimeEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
@@ -111,11 +110,6 @@ public class CustomProtoEntity implements ProtoEntity {
 
     public void setAttributeMap(Map<Attribute, Double> attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public void onSlimeSplit(SlimeEvent event) {
-        strategyManager.getSlimeSplitStrategies().forEach(strategy -> strategy.play(event));
     }
 
     @Override

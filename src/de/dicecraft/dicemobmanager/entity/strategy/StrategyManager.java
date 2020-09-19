@@ -29,9 +29,4 @@ public interface StrategyManager {
 
     @Nonnull
     List<TickStrategy> getTickStrategies();
-
-    @Nonnull
-    List<SlimeSplitStrategy> getSlimeSplitStrategies();
-
-
 }

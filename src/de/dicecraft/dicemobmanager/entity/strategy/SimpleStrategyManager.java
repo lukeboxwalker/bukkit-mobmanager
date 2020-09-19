@@ -21,7 +21,6 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
     private final List<DeathStrategy> onDeathStrategies = new ArrayList<>();
     private final List<ItemDropStrategy> onItemDropStrategies = new ArrayList<>();
     private final List<TickStrategy> onTickStrategies = new ArrayList<>();
-    private final List<SlimeSplitStrategy> onSlimeSplitStrategies = new ArrayList<>();
 
     private final HashMap<NamespacedKey, List<? extends Strategy>> keyMap = new HashMap<>();
 
@@ -32,7 +31,6 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
         onDeathStrategies.clear();
         onItemDropStrategies.clear();
         onTickStrategies.clear();
-        onSlimeSplitStrategies.clear();
         keyMap.clear();
     }
 
@@ -94,13 +92,6 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
         return onTickStrategies;
     }
 
-    @Nonnull
-    @Override
-    public List<SlimeSplitStrategy> getSlimeSplitStrategies() {
-        return onSlimeSplitStrategies;
-    }
-
-
     @Override
     public void registerDeathStrategy(@Nonnull DeathStrategy strategy) {
         onDeathStrategies.add(strategy);
@@ -123,12 +114,6 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
     public void registerItemDropStrategy(@Nonnull ItemDropStrategy strategy) {
         onItemDropStrategies.add(strategy);
         keyMap.put(strategy.getKey(), onItemDropStrategies);
-    }
-
-    @Override
-    public void registerSlimeSplitStrategy(@Nonnull SlimeSplitStrategy strategy) {
-        onSlimeSplitStrategies.add(strategy);
-        keyMap.put(strategy.getKey(), onSlimeSplitStrategies);
     }
 
     @Override

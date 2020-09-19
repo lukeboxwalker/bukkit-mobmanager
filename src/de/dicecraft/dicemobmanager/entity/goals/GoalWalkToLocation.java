@@ -25,10 +25,9 @@ import java.util.Queue;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public class GoalWalkToLocation implements Goal<Mob> {
+public class GoalWalkToLocation implements CustomGoal<Mob> {
 
     private static final int DEFAULT_SPEED = 1;
-    private static final GoalKey<Mob> GOAL_KEY = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("walk_to_location"));
 
     private final Queue<Location> locationQueue;
     private final Mob mob;
@@ -150,7 +149,7 @@ public class GoalWalkToLocation implements Goal<Mob> {
     @Nonnull
     @Override
     public GoalKey<Mob> getKey() {
-        return GOAL_KEY;
+        return CustomGoal.WALK_TO_LOCATION;
     }
 
     /**

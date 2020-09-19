@@ -4,7 +4,6 @@ import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.dicecraft.dicemobmanager.DiceMobManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
@@ -16,8 +15,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
-
-    private static final GoalKey<Mob> GOAL_KEY = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("avoid_target"));
 
     private static final int ACTIVATE_TICK = 20;
     private final Mob mob;
@@ -117,7 +114,7 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
     @Nonnull
     @Override
     public GoalKey<Mob> getKey() {
-        return GOAL_KEY;
+        return CustomGoal.AVOID_TARGET;
     }
 
     /**

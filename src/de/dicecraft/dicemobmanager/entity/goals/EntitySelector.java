@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.goals;
 
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

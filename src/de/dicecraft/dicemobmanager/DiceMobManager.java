@@ -2,6 +2,9 @@ package de.dicecraft.dicemobmanager;
 
 import de.dicecraft.dicemobmanager.command.CommandManager;
 
+import de.dicecraft.dicemobmanager.configuration.ConfigBuilder;
+import de.dicecraft.dicemobmanager.configuration.Configuration;
+import de.dicecraft.dicemobmanager.configuration.CustomConfigBuilder;
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
@@ -52,8 +55,16 @@ public class DiceMobManager extends JavaPlugin {
         return INSTANCE;
     }
 
+    public static ConfigBuilder configBuilder() {
+        return new CustomConfigBuilder();
+    }
+
+    public static EntitySpawnFactory createSpawnFactory(Configuration configuration) {
+        return new SpawnFactory(ENTITY_MANAGER, configuration);
+    }
+
     public static EntitySpawnFactory createSpawnFactory() {
-        return new SpawnFactory(ENTITY_MANAGER);
+        return new SpawnFactory(ENTITY_MANAGER, configBuilder().build());
     }
 
     public static ProtoBuilder builder() {

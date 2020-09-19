@@ -5,6 +5,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
@@ -41,9 +42,11 @@ public class SpawnFactory implements EntitySpawnFactory {
             "Trying to add a goal with goal key: " + string + " which already exist!";
 
     private final EntityManager manager;
+    private final Configuration configuration;
 
-    public SpawnFactory(final EntityManager manager) {
+    public SpawnFactory(final EntityManager manager, final Configuration configuration) {
         this.manager = manager;
+        this.configuration = configuration;
     }
 
     @Override

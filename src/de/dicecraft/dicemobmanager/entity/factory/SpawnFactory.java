@@ -98,24 +98,10 @@ public class SpawnFactory implements EntitySpawnFactory {
                 }
 
                 protoEntity.getEquipment().equip(mob);
-                manager.registerEntity(mob, protoEntity);
+                manager.registerEntity(mob, protoEntity, configuration);
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");
         }
-    }
-
-    @Override
-    public Item spawnDeathDrop(LivingEntity entity, ProtoEntity protoEntity, DeathDrop deathDrop, Location location) {
-        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-        protoEntity.onItemDrop(new ItemDropEvent(entity, protoEntity, deathDrop, item));
-        return item;
-    }
-
-    @Override
-    public Item spawnDeathDrop(Event event, DeathDrop deathDrop, Location location) {
-        Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-        event.getProtoEntity().onItemDrop(new ItemDropEvent(event, deathDrop, item));
-        return item;
     }
 }

@@ -4,5 +4,5 @@ public interface Configuration {
 
     boolean canSlimeSplit();
 
-    boolean canDestroyBlock();
+    boolean canProjectileBlockDamage();
 }

@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager;
 import de.dicecraft.dicemobmanager.command.CommandManager;
 
 import de.dicecraft.dicemobmanager.configuration.ConfigBuilder;
+import de.dicecraft.dicemobmanager.configuration.ConfigEventListener;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.configuration.CustomConfigBuilder;
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
@@ -23,6 +24,7 @@ public class DiceMobManager extends JavaPlugin {
 
     private static final Random RANDOM = new Random();
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
+    private static final int DEFAULT_TICK_SPEED = 10;
 
     private static DiceMobManager INSTANCE;
     private static EntityManager ENTITY_MANAGER;
@@ -33,9 +35,10 @@ public class DiceMobManager extends JavaPlugin {
         super.onEnable();
         INSTANCE = this;
         ENTITY_MANAGER = new EntityManager();
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(createSpawnFactory(), ENTITY_MANAGER), this);
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), this);
+        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), this);
         CommandManager.registerCommands(this);
-        restartScheduler(10);
+        restartScheduler(DEFAULT_TICK_SPEED);
     }
 
     @Override

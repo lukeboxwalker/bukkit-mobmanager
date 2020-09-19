@@ -1,9 +1,12 @@
 package de.dicecraft.dicemobmanager.entity;
 
+import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
+import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Slime;
 
 import java.util.ArrayList;
@@ -16,9 +19,10 @@ import java.util.stream.Collectors;
 
 public class EntityManager {
 
-    private final Map<LivingEntity, ProtoEntity> registeredEntities = new HashMap<>();
-    private final Map<LivingEntity, ProtoEntity> activeEntities = new HashMap<>();
-    private final Map<LivingEntity, TickEvent> tickedEntities = new HashMap<>();
+    private final Map<LivingEntity, Component<ProtoEntity, Configuration>> registeredEntities = new HashMap<>();
+    private final Map<LivingEntity, Component<ProtoEntity, Configuration>> activeEntities = new HashMap<>();
+    private final Map<LivingEntity, Component<TickEvent, Configuration>> tickedEntities = new HashMap<>();
+    private final Map<Projectile, LivingEntity> projectileMap = new HashMap<>();
 
     private final List<LivingEntity> deathEntities = new ArrayList<>();
 
@@ -29,17 +33,29 @@ public class EntityManager {
 
     public Optional<ProtoEntity> getProtoEntity(LivingEntity entity) {
         if (tickedEntities.containsKey(entity)) {
-            TickEvent tickEvent = tickedEntities.get(entity);
-            return Optional.of(tickEvent.getProtoEntity());
+            Component<TickEvent, Configuration> component = tickedEntities.get(entity);
+            return Optional.of(component.getFirst().getProtoEntity());
         } else if (activeEntities.containsKey(entity)) {
-            return Optional.of(activeEntities.get(entity));
+            return Optional.of(activeEntities.get(entity).getFirst());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Configuration> getEntityConfig(LivingEntity entity) {
+        if (tickedEntities.containsKey(entity)) {
+            Component<TickEvent, Configuration> component = tickedEntities.get(entity);
+            return Optional.of(component.getSecond());
+        } else if (activeEntities.containsKey(entity)) {
+            return Optional.of(activeEntities.get(entity).getSecond());
         } else {
             return Optional.empty();
         }
     }
 
     public void tickEntities() {
-        tickedEntities.values().forEach(tickEvent -> {
+        tickedEntities.values().forEach(component -> {
+            TickEvent tickEvent = component.getFirst();
             LivingEntity entity = tickEvent.getEntity();
             if (entity.isDead()) {
                 // only remove entity on tick if entity is not a slimes with size > 1
@@ -60,19 +76,16 @@ public class EntityManager {
 
         // add waiting entities to ticking map so they can be
         // ticked by this method
-        tickedEntities.putAll(activeEntities.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> new TickEvent(entry.getKey(), entry.getValue()))));
+        tickedEntities.putAll(activeEntities.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry ->
+                        new Component<>(new TickEvent(entry.getKey(), entry.getValue().getFirst()), entry.getValue().getSecond()))));
         activeEntities.clear();
     }
 
-    public Map<LivingEntity, TickEvent> getTickedEntities() {
-        return tickedEntities;
-    }
 
     public boolean activateEntity(LivingEntity entity) {
-        ProtoEntity protoEntity = registeredEntities.remove(entity);
-        if (protoEntity != null) {
-            activeEntities.put(entity, protoEntity);
+        Component<ProtoEntity, Configuration> component = registeredEntities.remove(entity);
+        if (component != null) {
+            activeEntities.put(entity, component);
             return true;
         } else {
             return false;
@@ -80,13 +93,29 @@ public class EntityManager {
 
     }
 
-    public void registerEntity(LivingEntity entity, ProtoEntity protoEntity) {
-        registeredEntities.put(entity, protoEntity);
+    public void registerEntity(LivingEntity entity, ProtoEntity protoEntity, Configuration configuration) {
+        registeredEntities.put(entity, new Component<>(protoEntity, configuration));
     }
 
     public void removeEntity(LivingEntity entity) {
         registeredEntities.remove(entity);
         tickedEntities.remove(entity);
         activeEntities.remove(entity);
+    }
+
+    public void watchProjectile(Projectile projectile, LivingEntity livingEntity) {
+        projectileMap.put(projectile, livingEntity);
+    }
+
+    public boolean isWatchingProjectile(Projectile projectile) {
+        return projectileMap.containsKey(projectile);
+    }
+
+    public void unWatchProjectile(Projectile projectile) {
+        projectileMap.remove(projectile);
+    }
+
+    public LivingEntity getProjectileShooter(Projectile projectile) {
+        return projectileMap.get(projectile);
     }
 }

@@ -7,10 +7,6 @@ public class CustomConfiguration implements Configuration {
 
     private Map<ConfigFlag, Boolean> configFlags = new HashMap<>();
 
-    public Map<ConfigFlag, Boolean> getConfigFlags() {
-        return configFlags;
-    }
-
     public void setConfigFlags(Map<ConfigFlag, Boolean> configFlags) {
         this.configFlags = configFlags;
     }
@@ -21,7 +17,7 @@ public class CustomConfiguration implements Configuration {
     }
 
     @Override
-    public boolean canDestroyBlock() {
-        return configFlags.getOrDefault(ConfigFlag.DESTROY_BLOCK, true);
+    public boolean canProjectileBlockDamage() {
+        return configFlags.getOrDefault(ConfigFlag.PROJECTILE_BLOCK_DAMAGE, true);
     }
 }

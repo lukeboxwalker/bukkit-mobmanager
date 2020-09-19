@@ -2,7 +2,9 @@ package de.dicecraft.dicemobmanager.command;
 
 import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
-import de.dicecraft.dicemobmanager.entity.SkullFactory;
+import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
+import de.dicecraft.dicemobmanager.configuration.Configuration;
+import de.dicecraft.dicemobmanager.entity.factory.SkullFactory;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
@@ -13,12 +15,14 @@ import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.strategy.SlimeSplitStrategy;
 import de.dicecraft.dicemobmanager.entity.strategy.SpawnStrategy;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyRegistrationVisitor;
+import net.minecraft.server.v1_16_R2.EntityWither;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.inventory.ItemStack;
@@ -47,61 +51,19 @@ public class SpawnEntityCommand extends AbstractCommand {
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 0.5, DeathDrop.Rarity.LEGENDARY);
 
                 ProtoEntity entity = DiceMobManager.builder()
-                        .setType(EntityType.SLIME)
+                        .setType(EntityType.WITHER)
                         .setDeathDrops(Collections.singleton(deathDrop))
                         .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
-                        .addStrategy(new SlimeSplitStrategy() {
-
-                            private final NamespacedKey key = DiceMobManager.createNameSpacedKey("cancel_slime_split");
-
-                            @Override
-                            public void play(SlimeEvent slimeEvent) {
-                                slimeEvent.getBukkitEvent().setCancelled(true);
-                            }
-
-                            @Nonnull
-                            @Override
-                            public NamespacedKey getKey() {
-                                return key;
-                            }
-
-                            @Override
-                            public void accept(StrategyRegistrationVisitor registrationVisitor) {
-                                registrationVisitor.registerSlimeSplitStrategy(this);
-                            }
-                        })
-                        .addStrategy(new SpawnStrategy() {
-
-                            private final NamespacedKey key = DiceMobManager.createNameSpacedKey("cancel_slime_split");
-
-                            @Override
-                            public void play(SpawnEvent spawnEvent) {
-                                double health = spawnEvent.getEntity().getHealth();
-                                // setSize on slime resets the health to size^2
-                                ((Slime)  spawnEvent.getEntity()).setSize(5);
-                                AttributeInstance instance =  spawnEvent.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                                if (instance != null) {
-                                    instance.setBaseValue(spawnEvent.getProtoEntity().getAttributeMap().get(Attribute.GENERIC_MAX_HEALTH));
-                                    spawnEvent.getEntity().setHealth(health);
-                                }
-                            }
-
-                            @Nonnull
-                            @Override
-                            public NamespacedKey getKey() {
-                                return key;
-                            }
-
-                            @Override
-                            public void accept(StrategyRegistrationVisitor registrationVisitor) {
-                                registrationVisitor.registerSpawnStrategy(this);
-                            }
-                        })
                         .setName("Test")
                         .build();
 
-                EntitySpawnFactory factory = DiceMobManager.createSpawnFactory();
+                Configuration configuration = DiceMobManager.configBuilder()
+                        .setBooleanFlag(ConfigFlag.SLIME_SPLIT, false)
+                        .setBooleanFlag(ConfigFlag.PROJECTILE_BLOCK_DAMAGE, false)
+                        .build();
+
+                EntitySpawnFactory factory = DiceMobManager.createSpawnFactory(configuration);
                 factory.spawnEntity(entity, player.getLocation());
 
             } catch (EntityCreationException | IllegalArgumentException e) {

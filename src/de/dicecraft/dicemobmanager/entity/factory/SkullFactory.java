@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity;
+package de.dicecraft.dicemobmanager.entity.factory;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;

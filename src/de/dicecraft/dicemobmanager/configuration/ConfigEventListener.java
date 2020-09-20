@@ -12,6 +12,13 @@ import org.bukkit.event.entity.SlimeSplitEvent;
 
 import java.util.Optional;
 
+/**
+ * Responsible to cancel events which should
+ * be canceled due to the configuration of the entity.
+ *
+ * @author Walkehorst Lukas
+ * @since 1.0
+ */
 public class ConfigEventListener implements Listener {
 
     private final EntityManager manager;
@@ -20,6 +27,14 @@ public class ConfigEventListener implements Listener {
         this.manager = manager;
     }
 
+    /**
+     * Listening to SlimeSplitEvent.
+     * <p>
+     * Cancels the event if {@link Configuration#canSlimeSplit()} is
+     * false
+     *
+     * @param event the slime split event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSlimeSplit(SlimeSplitEvent event) {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
@@ -29,6 +44,15 @@ public class ConfigEventListener implements Listener {
         });
     }
 
+    /**
+     * Listening to ExplosionPrimeEvent.
+     * <p>
+     * Cancels the event if {@link Configuration#canCreeperBlockDamage()} is
+     * false, or the event was fired by a projectile and the
+     * {@link Configuration#canProjectileBlockDamage()} is false
+     *
+     * @param event the explosion event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onExplodeDamage(ExplosionPrimeEvent event) {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());

@@ -1,13 +1,12 @@
 package de.dicecraft.dicemobmanager.configuration;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
+import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
 
@@ -32,14 +31,21 @@ public class ConfigEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onExplodeDamage(ExplosionPrimeEvent event) {
-       if (event.getEntity() instanceof Projectile) {
+        Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+        optional.ifPresent(configuration -> {
+            if (!configuration.canCreeperBlockDamage()) {
+                event.getEntity().getWorld().createExplosion(event.getEntity().getLocation(), event.getRadius(), false, false);
+                event.setCancelled(true);
+            }
+        });
+        if (EntitySelector.isProjectile.test(event.getEntity())) {
             Projectile projectile = (Projectile) event.getEntity();
             if (manager.isWatchingProjectile(projectile)) {
-                Optional<Configuration> optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
+                optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
                 optional.ifPresent(configuration -> {
                     manager.unWatchProjectile(projectile);
                     if (!configuration.canProjectileBlockDamage()) {
-                        event.getEntity().getWorld().createExplosion(event.getEntity().getLocation(), event.getRadius() , false, false);
+                        event.getEntity().getWorld().createExplosion(event.getEntity().getLocation(), event.getRadius(), false, false);
                         event.setCancelled(true);
                     }
                 });

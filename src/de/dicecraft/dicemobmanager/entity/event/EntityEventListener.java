@@ -1,15 +1,13 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.factory.ItemSpawnFactory;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftWitherSkull;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -19,9 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.entity.SlimeSplitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -63,46 +59,42 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            final LivingEntity entity = (LivingEntity) event.getEntity();
-            if (manager.activateEntity(entity)) {
-                Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
-                optional.ifPresent(protoEntity -> {
-                    protoEntity.onEntitySpawn(new SpawnEvent(entity, protoEntity, event));
-                    if (event.isCancelled()) {
-                        manager.removeEntity(entity);
-                    }
-                });
-            }
+        if (manager.activateEntity(event.getEntity())) {
+            Entity entity = event.getEntity();
+            Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
+            optional.ifPresent(protoEntity -> {
+                protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
+                if (event.isCancelled()) {
+                    manager.removeEntity(entity);
+                }
+            });
         }
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (event.getEntity() instanceof Fireball) {
+        if (EntityType.WITHER_SKULL.equals(event.getEntityType()) || EntityType.FIREBALL.equals(event.getEntityType())) {
             final Projectile projectile = event.getEntity();
-            if (projectile.getShooter() instanceof LivingEntity) {
-                LivingEntity shooter = (LivingEntity) projectile.getShooter();
-                Optional<ProtoEntity> optional = manager.getProtoEntity(shooter);
-                optional.ifPresent(protoEntity -> manager.watchProjectile(projectile, shooter));
-            }
+            LivingEntity shooter = (LivingEntity) projectile.getShooter();
+            Optional<ProtoEntity> optional = manager.getProtoEntity(shooter);
+            optional.ifPresent(protoEntity -> manager.watchProjectile(projectile, shooter));
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
+        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        optional.ifPresent(protoEntity -> {
             final LivingEntity entity = (LivingEntity) event.getEntity();
-            Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
-            optional.ifPresent(protoEntity -> {
-                protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
-                if (!event.isCancelled()) {
-                    if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
-                        double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                        entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
-                    }
+            protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
+            if (!event.isCancelled()) {
+                if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+                    double finalHealth = (entity.getHealth() - event.getFinalDamage());
+                    entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
                 }
-            });
-        }
+            }
+        });
     }
 }
+

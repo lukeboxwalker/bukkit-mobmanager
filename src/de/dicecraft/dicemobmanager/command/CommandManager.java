@@ -3,8 +3,6 @@ package de.dicecraft.dicemobmanager.command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-
 /**
  * Managing Command registration.
  *
@@ -13,20 +11,18 @@ import java.util.Arrays;
  */
 public final class CommandManager {
 
+    private static final String baseCommandString = "MobManager";
+
     /**
-     * Registers all plugin commands.
+     * Registers the base plugin command.
      *
-     * Commands can be found in {@link Command}, which links the
-     * valid command string to its implementation class.
      * @param plugin to register commands
      */
     public static void registerCommands(final JavaPlugin plugin) {
-        Arrays.stream(Command.values()).forEach(commandContainer -> {
-            final PluginCommand command = plugin.getCommand(commandContainer.getName());
-            assert command != null;
-            command.setExecutor(commandContainer.getCommand());
-            command.setTabCompleter(commandContainer.getCommand());
-        });
+        final BaseCommand baseCommand = new BaseCommand();
+        final PluginCommand command = plugin.getCommand(baseCommandString);
+        assert command != null;
+        command.setExecutor(baseCommand);
+        command.setTabCompleter(baseCommand);
     }
-
 }

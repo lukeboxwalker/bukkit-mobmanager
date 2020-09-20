@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeEntityTickCommand extends AbstractCommand {
+public class ChangeEntityTickCommand implements Command {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {

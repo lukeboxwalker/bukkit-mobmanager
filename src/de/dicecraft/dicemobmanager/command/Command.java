@@ -1,34 +1,30 @@
 package de.dicecraft.dicemobmanager.command;
 
-/**
- * Contains all commands for this plugin.
- *
- * Associates the correct command implementation to
- * a given command string specified in plugin.yml.
- * Acts as a container class for the actual command executor
- * and tabCompleter {@link AbstractCommand}.
- *
- * @author Walkehorst Lukas
- * @since 1.0
- */
-public enum Command {
+import org.bukkit.command.CommandSender;
 
-    SPAWN_MOB("spawnEntity", new SpawnEntityCommand()),
-    CHANGE_TICK("changeEntityTick", new ChangeEntityTickCommand());
+import java.util.List;
 
-    private final String name;
-    private final AbstractCommand command;
+public interface Command {
 
-    Command(final String name, final AbstractCommand command) {
-        this.name = name;
-        this.command = command;
-    }
+    /**
+     * Executes the command.
+     *
+     * @param sender who wants to execute the command
+     * @param args the arguments for the command
+     * @return if command executes successful
+     */
+    boolean execute(final CommandSender sender, final String[] args);
 
-    public String getName() {
-        return name;
-    }
-
-    public AbstractCommand getCommand() {
-        return command;
-    }
+    /**
+     * Provides tab completion.
+     *
+     * Pressing tab on a specific command in chat,
+     * results in a string list of possible arguments that
+     * can fit in this position.
+     *
+     * @param sender who wants to the possible arguments
+     * @param args current arguments of the command
+     * @return list of possible tab completions
+     */
+    List<String> tabComplete(final CommandSender sender, final String[] args);
 }

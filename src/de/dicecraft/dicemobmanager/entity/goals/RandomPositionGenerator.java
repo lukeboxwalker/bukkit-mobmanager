@@ -10,34 +10,26 @@ import java.util.Random;
 
 public final class RandomPositionGenerator {
 
-    public static Vector getRandomVector(Mob mob, int xzRadius, int yRadius, Vector vector) {
-        Vector direction = mob.getLocation().toVector().subtract(vector);
+    public static Vector getRandomVector(final Mob mob, final int xzRadius, final int yRadius, final Vector vector) {
+        final Random random = DiceMobManager.getRandom();
+        final Vector direction = mob.getLocation().toVector().subtract(vector);
 
-        Random random = DiceMobManager.getRandom();
-
-        boolean foundVector = false;
-        Vector result = mob.getLocation().toVector();
-
+        Vector result = null;
+        Vector tempVector;
         for (int i = 0; i < 10; i++) {
-            Vector createdVector = createVector(random, xzRadius, yRadius, direction);
-            if (createdVector != null) {
-                Vector possibleResult = mob.getLocation().toVector().add(createdVector);
+            tempVector = createVector(random, xzRadius, yRadius, direction);
+            if (tempVector != null) {
+                Vector possibleResult = mob.getLocation().toVector().add(tempVector);
                 Block block = mob.getWorld().getBlockAt(possibleResult.getBlockX(), possibleResult.getBlockY() - 1, possibleResult.getBlockZ());
                 if (block.getType().isSolid()) {
                     result = possibleResult;
-                    foundVector = true;
                 }
             }
         }
-
-        if (foundVector) {
-            return result;
-        } else {
-            return null;
-        }
+        return result;
     }
 
-    private static Vector createVector(Random random, int xzRadius, int yRadius, Vector vector) {
+    private static Vector createVector(final Random random, final int xzRadius, final int yRadius, final Vector vector) {
         if (vector != null) {
             double atan2 = Math.atan2(vector.getZ(), vector.getX()) - (Math.PI / 2);
             double input = atan2 + (double) (2.0F * random.nextFloat() - 1.0F) * (Math.PI / 2);

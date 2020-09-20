@@ -93,7 +93,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                     mob.addPotionEffect(potionEffect);
                 }
 
-                if (entity instanceof Zombie) {
+                if (EntityType.ZOMBIE.equals(protoEntity.getEntityType())) {
                     ((Zombie) entity).setShouldBurnInDay(false);
                 }
 

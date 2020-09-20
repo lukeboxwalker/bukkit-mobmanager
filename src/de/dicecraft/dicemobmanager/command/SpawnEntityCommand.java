@@ -21,15 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SpawnEntityCommand extends AbstractCommand {
-
-    private final List<ItemStack> heads;
-
-    public SpawnEntityCommand() {
-        this.heads = new ArrayList<>();
-        SkullFactory skullFactory = new SkullFactory();
-        heads.add(skullFactory.createSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZlNjUwMmFjNGM4NDdiMWFjMzc4MTBkNjZkMjhjOTFhOGIxOGZkN2Y2MzgzMTI4MjI4NzU1YWE4YzhmNSJ9fX0="));
-    }
+public class SpawnEntityCommand implements Command {
 
     @Override
     public boolean execute(final CommandSender sender, final String[] args) {
@@ -40,9 +32,8 @@ public class SpawnEntityCommand extends AbstractCommand {
                 DeathDrop deathDrop = new CustomDeathDrop(new ItemStack(Material.DIAMOND), 0.5, DeathDrop.Rarity.LEGENDARY);
 
                 ProtoEntity entity = DiceMobManager.builder()
-                        .setType(EntityType.WITHER)
+                        .setType(EntityType.CREEPER)
                         .setDeathDrops(Collections.singleton(deathDrop))
-                        .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
                         .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                         .setName("Test")
                         .build();
@@ -50,16 +41,15 @@ public class SpawnEntityCommand extends AbstractCommand {
                 Configuration configuration = DiceMobManager.configBuilder()
                         .setBooleanFlag(ConfigFlag.SLIME_SPLIT, false)
                         .setBooleanFlag(ConfigFlag.PROJECTILE_BLOCK_DAMAGE, false)
+                        .setBooleanFlag(ConfigFlag.CREEPER_EXPLOSION_DAMAGE, false)
                         .build();
 
                 EntitySpawnFactory factory = DiceMobManager.createSpawnFactory(configuration);
                 factory.spawnEntity(entity, player.getLocation());
-
-            } catch (EntityCreationException | IllegalArgumentException e) {
-                e.printStackTrace();
+                return true;
+            } catch (EntityCreationException e) {
+                return false;
             }
-
-            return true;
         } else {
             return false;
         }

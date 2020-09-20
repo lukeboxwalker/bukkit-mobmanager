@@ -20,4 +20,9 @@ public class CustomConfiguration implements Configuration {
     public boolean canProjectileBlockDamage() {
         return configFlags.getOrDefault(ConfigFlag.PROJECTILE_BLOCK_DAMAGE, true);
     }
+
+    @Override
+    public boolean canCreeperBlockDamage() {
+        return configFlags.getOrDefault(ConfigFlag.CREEPER_EXPLOSION_DAMAGE, true);
+    }
 }

@@ -6,11 +6,7 @@ authors: []
 website: http://dicecraft.de
 api-version: "1.16"
 commands:
-  spawnEntity:
-    description: spawning a mob
+  MobManager:
+    description: Base Command of the MobManager
     permission: dicemobmanager
     usage: /<command> [command]
-  changeEntityTick:
-    description: changes the number of gameticks needed to tick the entity
-    permission: dicemobmanager
-    usage: /<command> <integer>

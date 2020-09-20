@@ -146,6 +146,7 @@ public class CustomProtoEntity implements ProtoEntity {
         return level;
     }
 
+    @Override
     public void setLevel(int level) {
         this.level = level;
     }
@@ -155,6 +156,7 @@ public class CustomProtoEntity implements ProtoEntity {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }

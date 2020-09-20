@@ -31,7 +31,7 @@ public class BaseCommand implements Command, CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean execute(@Nonnull @Nonnull CommandSender sender, @Nonnull String @Nonnull [] args) {
+    public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
         if (args.length == 0) {
             return true;
         } else {
@@ -44,7 +44,7 @@ public class BaseCommand implements Command, CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> tabComplete(@Nonnull @Nonnull CommandSender sender, @Nonnull String @Nonnull [] args) {
+    public List<String> tabComplete(@Nonnull CommandSender sender, @Nonnull String[] args) {
         if (args.length == 1) {
             return Arrays.stream(SubCommand.values())
                     .map(command -> command.commandName)

@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoNamedEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -14,7 +15,7 @@ import org.bukkit.entity.LivingEntity;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public class CustomNameSupplier implements NameSupplier {
+public class CustomNameUpdater implements NameUpdater {
 
     private static final int HUNDRED = 100;
     private static final int FIFTY = 50;
@@ -26,6 +27,11 @@ public class CustomNameSupplier implements NameSupplier {
     private static final String LIGHT_GREEN = "" + ChatColor.COLOR_CHAR + ChatColor.GREEN.getChar();
     private static final String YELLOW = "" + ChatColor.COLOR_CHAR + ChatColor.YELLOW.getChar();
 
+    private final ProtoNamedEntity protoEntity;
+
+    public CustomNameUpdater(final ProtoNamedEntity protoEntity) {
+        this.protoEntity = protoEntity;
+    }
 
     /**
      * Supplying the new name string.
@@ -39,19 +45,18 @@ public class CustomNameSupplier implements NameSupplier {
      *
      * @param entity        to create name for
      * @param currentHealth of the entity
-     * @param information   of the entity
      * @return new custom name for the given entity
      */
     @Override
-    public String supply(final LivingEntity entity, final double currentHealth, final ProtoEntity information) {
+    public String buildName(final LivingEntity entity, final double currentHealth) {
         AttributeInstance instance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         double health = currentHealth < 1 ? currentHealth < 0 ? 0 : 1 : currentHealth;
         if (instance != null) {
             final double maxHealth = instance.getBaseValue();
 
             StringBuilder builder = new StringBuilder()
-                    .append(DARK_GRAY).append("[").append(LIGHT_GRAY).append("Lv").append(information.getLevel())
-                    .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(information.getName()).append(" ");
+                    .append(DARK_GRAY).append("[").append(LIGHT_GRAY).append("Lv").append(protoEntity.getLevel())
+                    .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(protoEntity.getName()).append(" ");
             double percent = health / maxHealth * HUNDRED;
             if (percent > FIFTY) {
                 builder.append(LIGHT_GREEN).append((int) health);
@@ -62,5 +67,15 @@ public class CustomNameSupplier implements NameSupplier {
             return builder.toString();
         }
         return entity.getCustomName();
+    }
+
+    @Override
+    public void updateName(LivingEntity entity) {
+        updateName(entity, entity.getHealth());
+    }
+
+    @Override
+    public void updateName(LivingEntity entity, double currentHealth) {
+        entity.setCustomName(buildName(entity, currentHealth));
     }
 }

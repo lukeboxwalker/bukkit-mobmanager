@@ -5,8 +5,8 @@ import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
-import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
-import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import de.dicecraft.dicemobmanager.entity.name.CustomNameUpdater;
+import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.SimpleStrategyManager;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
@@ -36,8 +36,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final List<Strategy> strategies = new ArrayList<>();
 
     private Set<DeathDrop> deathDrops = new HashSet<>();
-    private NameSupplier nameSupplier = new CustomNameSupplier();
     private EntityType entityType = EntityType.ZOMBIE;
+    private NameUpdater nameUpdater;
     private int level;
     private String name;
 
@@ -192,14 +192,14 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * <p>
      * Used to create the displayed name string
      * for the entity. The default name supplier
-     * {@link CustomNameSupplier} is used if its not overridden.
+     * {@link CustomNameUpdater} is used if its not overridden.
      *
-     * @param nameSupplier the name supplier
+     * @param nameUpdater the name supplier
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder setNameSupplier(@Nonnull NameSupplier nameSupplier) {
-        this.nameSupplier = nameSupplier;
+    public ProtoBuilder setNameSupplier(@Nonnull NameUpdater nameUpdater) {
+        this.nameUpdater = nameUpdater;
         return this;
     }
 
@@ -234,7 +234,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setEntityType(entityType);
         protoEntity.setLevel(level);
         protoEntity.setName(name);
-        protoEntity.setNameSupplier(nameSupplier);
+        protoEntity.setNameUpdater(nameUpdater == null ? new CustomNameUpdater(protoEntity) : nameUpdater);
         protoEntity.setPotionEffects(potionEffects);
         protoEntity.setIgnoredGoals(ignoredGoals);
         protoEntity.setGoals(pathfinderGoals);

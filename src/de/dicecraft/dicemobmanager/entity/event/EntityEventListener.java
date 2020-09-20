@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class EntityEventListener implements Listener {
+public final class EntityEventListener implements Listener {
 
     private final EntityManager manager;
 
@@ -32,6 +32,19 @@ public class EntityEventListener implements Listener {
         this.manager = manager;
     }
 
+    /**
+     * Listens to the EntityDeathEvent to identify when a
+     * custom entity died.
+     * <p>
+     * Whenever a custom entity dies the {@link ProtoEntity#onEntityDeath(DeathEvent)}
+     * method is called to notify the entity.
+     * If the entity Death isn't canceled the configured item drops will
+     * spawn according to there drop chance. Each time an item Drops the entity
+     * which dropped the item, will be notified by the {@link ProtoEntity#onItemDrop(ItemDropEvent)}
+     * The item drop can't be canceled.
+     *
+     * @param event the EntityDeathEvent
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
@@ -58,21 +71,40 @@ public class EntityEventListener implements Listener {
         });
     }
 
+    /**
+     * Listens to the EntityDeathEvent to identify when a
+     * custom entity spawns.
+     * <p>
+     * Whenever a custom entity spawns the {@link ProtoEntity#onEntitySpawn(SpawnEvent)}
+     * method is called to notify the entity.
+     * Activates the entity so it can be ticked by the scheduler.
+     *
+     * @param event the EntityDeathEvent
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (manager.activateEntity(event.getEntity())) {
+        if (manager.canActivateEntity(event.getEntity())) {
             Entity entity = event.getEntity();
             Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
             optional.ifPresent(protoEntity -> {
                 protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
-                if (event.isCancelled()) {
-                    manager.removeEntity(entity);
+                if (!event.isCancelled()) {
+                    manager.activateEntity(entity);
                 }
             });
         }
 
     }
 
+    /**
+     * Listens to the ProjectileLaunchEvent to identify when a
+     * custom entity launches a projectile.
+     * <p>
+     * The projectiles launched by a custom entity will be added to the active
+     * {@link EntityManager} to track when ever they hit a target or do damage.
+     *
+     * @param event the ProjectileLaunchEvent
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
@@ -83,6 +115,16 @@ public class EntityEventListener implements Listener {
         }
     }
 
+    /**
+     * Listens to the EntityDamageEvent to identify when a
+     * custom entity takes damage.
+     * <p>
+     * Whenever a custom entity takes damage the {@link ProtoEntity#onEntityDamage(DamageEvent)}
+     * method is called to notify the entity.
+     * Updates the custom name of the entity if the name is not null and not empty.
+     *
+     * @param event the EntityDamageEvent
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
@@ -92,7 +134,7 @@ public class EntityEventListener implements Listener {
             if (!event.isCancelled()) {
                 if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
                     double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                    entity.setCustomName(protoEntity.getNameSupplier().supply(entity, finalHealth, protoEntity));
+                    protoEntity.getNameUpdater().updateName(entity, finalHealth);
                 }
             }
         });

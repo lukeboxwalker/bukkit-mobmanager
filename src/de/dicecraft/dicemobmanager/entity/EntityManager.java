@@ -89,6 +89,10 @@ public class EntityManager {
     }
 
 
+    public boolean canActivateEntity(Entity entity) {
+        return registeredEntities.containsKey(entity);
+    }
+
     public boolean activateEntity(Entity entity) {
         Component<ProtoEntity, Configuration> component = registeredEntities.remove(entity);
         if (component != null) {

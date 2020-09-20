@@ -3,7 +3,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
-import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -115,12 +115,12 @@ public interface ProtoBuilder {
      * <p>
      * Used to create the displayed name string
      * for the entity. The default name supplier
-     * {@link NameSupplier} is used if its not overridden.
+     * {@link NameUpdater} is used if its not overridden.
      *
-     * @param nameSupplier the name supplier
+     * @param nameUpdater the name supplier
      * @return builder to continue
      */
-    ProtoBuilder setNameSupplier(@Nonnull NameSupplier nameSupplier);
+    ProtoBuilder setNameSupplier(@Nonnull NameUpdater nameUpdater);
 
     /**
      * Sets an entity strategy.

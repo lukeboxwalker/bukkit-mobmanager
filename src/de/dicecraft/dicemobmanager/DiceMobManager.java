@@ -35,10 +35,17 @@ public class DiceMobManager extends JavaPlugin {
         super.onEnable();
         instance = this;
         entityManager = new EntityManager();
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(entityManager), this);
-        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), this);
-        CommandManager.registerCommands(this);
-        restartScheduler(DEFAULT_TICK_SPEED);
+
+        // register events
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(entityManager), instance);
+        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), instance);
+
+        // register commands
+        CommandManager.registerCommands(instance);
+
+        // starting tick scheduler
+        scheduler = new TickScheduler(entityManager, instance);
+        scheduler.restart(DEFAULT_TICK_SPEED);
     }
 
     @Override
@@ -49,15 +56,7 @@ public class DiceMobManager extends JavaPlugin {
     }
 
     public static void restartScheduler(int ticks) {
-        if (scheduler != null) {
-            scheduler.cancel();
-        }
-        scheduler = new TickScheduler(entityManager);
-        scheduler.runTaskTimer(instance, 0, ticks);
-    }
-
-    public static DiceMobManager getInstance() {
-        return instance;
+        scheduler.restart(ticks);
     }
 
     public static ConfigBuilder configBuilder() {

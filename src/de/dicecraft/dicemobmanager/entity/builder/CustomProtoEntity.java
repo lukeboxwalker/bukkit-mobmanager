@@ -9,7 +9,7 @@ import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
-import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.attribute.Attribute;
@@ -31,7 +31,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Set<GoalKey<Mob>> ignoredGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Set<DeathDrop> deathDrops;
-    private NameSupplier nameSupplier;
+    private NameUpdater nameUpdater;
     private EntityType entityType;
     private int level;
     private String name;
@@ -88,12 +88,12 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Nonnull
     @Override
-    public NameSupplier getNameSupplier() {
-        return nameSupplier;
+    public NameUpdater getNameUpdater() {
+        return nameUpdater;
     }
 
-    public void setNameSupplier(NameSupplier nameSupplier) {
-        this.nameSupplier = nameSupplier;
+    public void setNameUpdater(NameUpdater nameUpdater) {
+        this.nameUpdater = nameUpdater;
     }
 
     @Nonnull

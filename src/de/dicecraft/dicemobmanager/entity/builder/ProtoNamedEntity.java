@@ -1,7 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
-import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
-import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
+import de.dicecraft.dicemobmanager.entity.name.CustomNameUpdater;
+import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 
 import javax.annotation.Nonnull;
 
@@ -31,13 +31,13 @@ public interface ProtoNamedEntity {
      * <p>
      * Used to create the displayed name string
      * for the entity. The default name supplier
-     * {@link CustomNameSupplier} is used if its not overridden.
+     * {@link CustomNameUpdater} is used if its not overridden.
      *
      * @return the name supplier
      */
     @Nonnull
-    default NameSupplier getNameSupplier() {
-        return new CustomNameSupplier();
+    default NameUpdater getNameUpdater() {
+        return new CustomNameUpdater(this);
     }
 
 }

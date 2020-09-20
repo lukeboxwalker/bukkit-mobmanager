@@ -70,7 +70,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                 mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
                 if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
                     entity.setCustomNameVisible(true);
-                    entity.setCustomName(protoEntity.getNameSupplier().supply(mob, mob.getHealth(), protoEntity));
+                    protoEntity.getNameUpdater().updateName(mob);
                 }
 
                 final Set<GoalKey<Mob>> goalKeys = new HashSet<>();

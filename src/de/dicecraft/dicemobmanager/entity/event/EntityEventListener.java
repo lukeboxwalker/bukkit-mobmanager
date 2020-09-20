@@ -61,10 +61,12 @@ public final class EntityEventListener implements Listener {
                             .getItemInMainHand().getEnchantments();
                     lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                 }
-                for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
-                    if (deathDrop.shouldDrop(lootBonus)) {
-                        Location location = entity.getLocation();
-                        ItemSpawnHelper.spawnDeathDrop(entity, protoEntity, deathDrop, location);
+                if (manager.canItemsDrop()) {
+                    for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
+                        if (deathDrop.shouldDrop(lootBonus)) {
+                            Location location = entity.getLocation();
+                            ItemSpawnHelper.spawnDeathDrop(entity, protoEntity, deathDrop, location);
+                        }
                     }
                 }
             }
@@ -83,17 +85,14 @@ public final class EntityEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (manager.canActivateEntity(event.getEntity())) {
+        Optional<ProtoEntity> optional = manager.canActivateEntity(event.getEntity());
+        optional.ifPresent(protoEntity -> {
             Entity entity = event.getEntity();
-            Optional<ProtoEntity> optional = manager.getProtoEntity(entity);
-            optional.ifPresent(protoEntity -> {
-                protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
-                if (!event.isCancelled()) {
-                    manager.activateEntity(entity);
-                }
-            });
-        }
-
+            protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
+            if (!event.isCancelled()) {
+                manager.activateEntity(entity);
+            }
+        });
     }
 
     /**

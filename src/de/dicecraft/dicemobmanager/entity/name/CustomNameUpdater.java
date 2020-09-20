@@ -69,6 +69,10 @@ public class CustomNameUpdater implements NameUpdater {
         return entity.getCustomName();
     }
 
+    public String buildName(final LivingEntity entity) {
+        return buildName(entity, entity.getHealth());
+    }
+
     @Override
     public void updateName(LivingEntity entity) {
         updateName(entity, entity.getHealth());

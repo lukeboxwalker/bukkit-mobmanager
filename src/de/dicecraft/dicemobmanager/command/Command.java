@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface Command {
 
+    String getName();
+
     /**
      * Executes the command.
      *

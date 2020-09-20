@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.command;
 
+import de.dicecraft.dicemobmanager.entity.EntityManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,8 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class CommandManager {
 
-    private static final String BASE_COMMAND_STRING = "MobManager";
-
     private CommandManager() {
     }
 
@@ -21,9 +20,9 @@ public final class CommandManager {
      *
      * @param plugin to register commands
      */
-    public static void registerCommands(final JavaPlugin plugin) {
-        final BaseCommand baseCommand = new BaseCommand();
-        final PluginCommand command = plugin.getCommand(BASE_COMMAND_STRING);
+    public static void registerCommands(final JavaPlugin plugin, final EntityManager manager) {
+        final BasePluginCommand baseCommand = new BasePluginCommand(manager);
+        final PluginCommand command = plugin.getCommand(baseCommand.getName());
         assert command != null;
         command.setExecutor(baseCommand);
         command.setTabCompleter(baseCommand);

@@ -12,6 +12,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Slime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import java.util.List;
@@ -31,9 +32,37 @@ public class EntityManager {
     private final Function<Map.Entry<Entity, Component<ProtoEntity, Configuration>>, TickEvent> toTickEvent =
             entry -> new TickEvent((LivingEntity) entry.getKey(), entry.getValue().getFirst());
 
+    private boolean canItemsDrop = true;
+
+    public boolean canItemsDrop() {
+        return canItemsDrop;
+    }
+
+    public void setItemsDrop(boolean canItemsDrop) {
+        this.canItemsDrop = canItemsDrop;
+    }
+
     public void destroyAll() {
         registeredEntities.keySet().forEach(Entity::remove);
         tickedEntities.keySet().forEach(Entity::remove);
+    }
+
+    public Map<Entity, ProtoEntity> getAllEntities(Entity... entities) {
+        Map<Entity, ProtoEntity> result = new HashMap<>();
+        if (entities.length == 0) {
+            activeEntities.forEach((entity, component) -> result.put(entity, component.getFirst()));
+            tickedEntities.forEach((entity, component) -> result.put(entity, component.getFirst().getProtoEntity()));
+        } else {
+            Arrays.stream(entities).forEach(entity -> {
+                if (activeEntities.containsKey(entity)) {
+                    result.put(entity, activeEntities.get(entity).getFirst());
+                }
+                if (tickedEntities.containsKey(entity)) {
+                    result.put(entity, tickedEntities.get(entity).getFirst().getProtoEntity());
+                }
+            });
+        }
+        return result;
     }
 
     public Optional<ProtoEntity> getProtoEntity(Entity entity) {
@@ -59,6 +88,7 @@ public class EntityManager {
     }
 
     public void tickEntities() {
+
         tickedEntities.values().forEach(component -> {
             TickEvent tickEvent = component.getFirst();
             LivingEntity entity = tickEvent.getEntity();
@@ -89,19 +119,19 @@ public class EntityManager {
     }
 
 
-    public boolean canActivateEntity(Entity entity) {
-        return registeredEntities.containsKey(entity);
+    public Optional<ProtoEntity> canActivateEntity(Entity entity) {
+        if (registeredEntities.containsKey(entity)) {
+            return Optional.of(registeredEntities.get(entity).getFirst());
+        } else {
+            return Optional.empty();
+        }
     }
 
-    public boolean activateEntity(Entity entity) {
+    public void activateEntity(Entity entity) {
         Component<ProtoEntity, Configuration> component = registeredEntities.remove(entity);
         if (component != null) {
             activeEntities.put(entity, component);
-            return true;
-        } else {
-            return false;
         }
-
     }
 
     public void registerEntity(LivingEntity entity, ProtoEntity protoEntity, Configuration configuration) {

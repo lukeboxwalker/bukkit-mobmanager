@@ -26,6 +26,8 @@ public interface NameUpdater {
      */
     String buildName(final LivingEntity entity, final double currentHealth);
 
+    String buildName(final LivingEntity entity);
+
     void updateName(final LivingEntity entity);
 
     void updateName(final LivingEntity entity, final double currentHealth);

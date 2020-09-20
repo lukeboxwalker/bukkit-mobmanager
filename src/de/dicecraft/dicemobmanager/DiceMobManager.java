@@ -41,7 +41,7 @@ public class DiceMobManager extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), instance);
 
         // register commands
-        CommandManager.registerCommands(instance);
+        CommandManager.registerCommands(instance, entityManager);
 
         // starting tick scheduler
         scheduler = new TickScheduler(entityManager, instance);

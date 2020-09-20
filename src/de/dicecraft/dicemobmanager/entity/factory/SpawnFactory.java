@@ -11,7 +11,7 @@ import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
-import it.unimi.dsi.fastutil.Function;
+
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class SpawnFactory implements EntitySpawnFactory {

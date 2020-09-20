@@ -3,11 +3,11 @@ package de.dicecraft.dicemobmanager.entity.event;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.factory.ItemSpawnFactory;
+import de.dicecraft.dicemobmanager.entity.factory.ItemSpawnHelper;
+import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -44,13 +44,14 @@ public class EntityEventListener implements Listener {
                 drops.clear();
                 int lootBonus = 0;
                 if (player != null) {
-                    Map<Enchantment, Integer> enchantments = player.getInventory().getItemInMainHand().getEnchantments();
+                    Map<Enchantment, Integer> enchantments = player.getInventory()
+                            .getItemInMainHand().getEnchantments();
                     lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
                 }
                 for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
                     if (deathDrop.shouldDrop(lootBonus)) {
                         Location location = entity.getLocation();
-                        ItemSpawnFactory.spawnDeathDrop(entity, protoEntity, deathDrop, location);
+                        ItemSpawnHelper.spawnDeathDrop(entity, protoEntity, deathDrop, location);
                     }
                 }
             }
@@ -74,7 +75,7 @@ public class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (EntityType.WITHER_SKULL.equals(event.getEntityType()) || EntityType.FIREBALL.equals(event.getEntityType())) {
+        if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
             final Projectile projectile = event.getEntity();
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
             Optional<ProtoEntity> optional = manager.getProtoEntity(shooter);

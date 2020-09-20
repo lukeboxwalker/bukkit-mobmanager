@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
  */
 public class CustomDeathDrop implements DeathDrop {
 
+    private static final int LOOT_MULTIPLIER = 10_000;
+    private static final int DROP_MULTIPLIER = 10_0000;
+
     private double dropChance;
     private DeathDrop.Rarity rarity;
     private ItemStack itemStack;
@@ -27,9 +30,9 @@ public class CustomDeathDrop implements DeathDrop {
      * If the drop chance is below 0 the chance is set to 0.
      * If the drop chance is above 1 the chance is set to 1.
      *
-     * @param itemStack the itemStack to drop
+     * @param itemStack  the itemStack to drop
      * @param dropChance the drop chance of the item
-     * @param rarity the rarity of the drop
+     * @param rarity     the rarity of the drop
      */
     public CustomDeathDrop(ItemStack itemStack, double dropChance, DeathDrop.Rarity rarity) {
         this.setDropChance(dropChance);
@@ -92,8 +95,8 @@ public class CustomDeathDrop implements DeathDrop {
      */
     @Override
     public boolean shouldDrop(int lootBonus) {
-        int dropChance = (int) (getDropChance() * 10000 + lootBonus * 1000 * getDropChance());
-        return (DiceMobManager.randomIntBetween(0, 10000) < dropChance);
+        int dropChance = (int) (getDropChance() * DROP_MULTIPLIER + lootBonus * LOOT_MULTIPLIER * getDropChance());
+        return (DiceMobManager.randomIntBetween(0, DROP_MULTIPLIER) < dropChance);
     }
 
     @Override

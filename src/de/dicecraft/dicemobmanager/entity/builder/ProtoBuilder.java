@@ -1,13 +1,10 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
-import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
-import de.dicecraft.dicemobmanager.entity.name.CustomNameSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameSupplier;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
-import de.dicecraft.dicemobmanager.entity.strategy.StrategyType;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
@@ -16,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Set;
 
 public interface ProtoBuilder {
@@ -60,7 +56,7 @@ public interface ProtoBuilder {
     /**
      * Specifies a pathfinder goal.
      * <p>
-     * Using a supplier of {@link Goal} to ensure
+     * Using a {@link GoalSupplier} to ensure
      * to provide a unique object for each entity when building.
      * Each goal has a priority to determine the order to use them.
      * The goal selection always prefers lower prioritised pathfinder goals.
@@ -119,7 +115,7 @@ public interface ProtoBuilder {
      * <p>
      * Used to create the displayed name string
      * for the entity. The default name supplier
-     * {@link CustomNameSupplier} is used if its not overridden.
+     * {@link NameSupplier} is used if its not overridden.
      *
      * @param nameSupplier the name supplier
      * @return builder to continue

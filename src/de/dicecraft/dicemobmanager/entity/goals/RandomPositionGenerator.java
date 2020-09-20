@@ -10,17 +10,23 @@ import java.util.Random;
 
 public final class RandomPositionGenerator {
 
+    private static final int MAX_ITERATION = 10;
+
+    private RandomPositionGenerator() {
+    }
+
     public static Vector getRandomVector(final Mob mob, final int xzRadius, final int yRadius, final Vector vector) {
         final Random random = DiceMobManager.getRandom();
         final Vector direction = mob.getLocation().toVector().subtract(vector);
 
         Vector result = null;
         Vector tempVector;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_ITERATION; i++) {
             tempVector = createVector(random, xzRadius, yRadius, direction);
             if (tempVector != null) {
                 Vector possibleResult = mob.getLocation().toVector().add(tempVector);
-                Block block = mob.getWorld().getBlockAt(possibleResult.getBlockX(), possibleResult.getBlockY() - 1, possibleResult.getBlockZ());
+                Block block = mob.getWorld().getBlockAt(possibleResult.getBlockX(),
+                        possibleResult.getBlockY() - 1, possibleResult.getBlockZ());
                 if (block.getType().isSolid()) {
                     result = possibleResult;
                 }
@@ -29,11 +35,12 @@ public final class RandomPositionGenerator {
         return result;
     }
 
-    private static Vector createVector(final Random random, final int xzRadius, final int yRadius, final Vector vector) {
+    private static Vector createVector(final Random random, final int xzRadius,
+                                       final int yRadius, final Vector vector) {
         if (vector != null) {
             double atan2 = Math.atan2(vector.getZ(), vector.getX()) - (Math.PI / 2);
             double input = atan2 + (double) (2.0F * random.nextFloat() - 1.0F) * (Math.PI / 2);
-            double factor = Math.sqrt(random.nextDouble()) * 4.0 * (double) xzRadius;
+            double factor = Math.sqrt(random.nextDouble()) * 2.0 * 2.0 * (double) xzRadius;
             double x = -factor * Math.sin(input);
             double z = factor * Math.cos(input);
             if (Math.abs(x) <= (double) xzRadius && Math.abs(z) <= (double) xzRadius) {

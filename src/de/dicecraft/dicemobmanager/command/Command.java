@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.command;
 
 import org.bukkit.command.CommandSender;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface Command {
@@ -13,7 +14,7 @@ public interface Command {
      * @param args the arguments for the command
      * @return if command executes successful
      */
-    boolean execute(final CommandSender sender, final String[] args);
+    boolean execute(@Nonnull final CommandSender sender, @Nonnull final String[] args);
 
     /**
      * Provides tab completion.
@@ -26,5 +27,5 @@ public interface Command {
      * @param args current arguments of the command
      * @return list of possible tab completions
      */
-    List<String> tabComplete(final CommandSender sender, final String[] args);
+    List<String> tabComplete(@Nonnull final CommandSender sender, @Nonnull final String[] args);
 }

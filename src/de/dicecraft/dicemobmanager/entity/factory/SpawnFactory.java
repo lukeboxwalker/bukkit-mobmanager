@@ -9,9 +9,6 @@ import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
-import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.event.Event;
-import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import it.unimi.dsi.fastutil.Function;
@@ -20,7 +17,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Zombie;
@@ -35,6 +31,9 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class SpawnFactory implements EntitySpawnFactory {
+
+    private static final double DEFAULT_MAX_HEALTH = 20D;
+    private static final CreatureSpawnEvent.SpawnReason SPAWN_REASON = CreatureSpawnEvent.SpawnReason.CUSTOM;
 
     private static final Logger LOGGER = DiceMobManager.logger();
     private static final MobGoals MOB_GOALS = new PaperMobGoals();
@@ -57,10 +56,10 @@ public class SpawnFactory implements EntitySpawnFactory {
     @Override
     public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
         final Map<Attribute, Double> attributes = protoEntity.getAttributeMap();
-        attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, 20D);
+        attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, DEFAULT_MAX_HEALTH);
         final EntityType type = protoEntity.getEntityType();
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
-            return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+            return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, SPAWN_REASON, entity -> {
                 Mob mob = (Mob) entity;
                 protoEntity.getAttributeMap().forEach((attribute, value) -> {
                     AttributeInstance instance = mob.getAttribute(attribute);

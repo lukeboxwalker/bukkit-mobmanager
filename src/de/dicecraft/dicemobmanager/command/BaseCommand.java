@@ -14,18 +14,24 @@ import java.util.stream.Collectors;
 public class BaseCommand implements Command, CommandExecutor, TabCompleter {
 
     @Override
-    public final boolean onCommand(@Nonnull CommandSender sender, @Nonnull org.bukkit.command.Command command, @Nonnull String name, @Nonnull String[] args) {
+    public final boolean onCommand(@Nonnull CommandSender sender,
+                                   @Nonnull org.bukkit.command.Command command,
+                                   @Nonnull String name,
+                                   @Nonnull String[] args) {
         return execute(sender, args);
     }
 
     @Override
-    public final List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull org.bukkit.command.Command command, @Nonnull String name, @Nonnull String[] args) {
-        final  List<String> list = tabComplete(sender, args);
+    public final List<String> onTabComplete(@Nonnull CommandSender sender,
+                                            @Nonnull org.bukkit.command.Command command,
+                                            @Nonnull String name,
+                                            @Nonnull String[] args) {
+        final List<String> list = tabComplete(sender, args);
         return list == null ? new ArrayList<>() : list;
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(@Nonnull @Nonnull CommandSender sender, @Nonnull String @Nonnull [] args) {
         if (args.length == 0) {
             return true;
         } else {
@@ -38,7 +44,7 @@ public class BaseCommand implements Command, CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
+    public List<String> tabComplete(@Nonnull @Nonnull CommandSender sender, @Nonnull String @Nonnull [] args) {
         if (args.length == 1) {
             return Arrays.stream(SubCommand.values())
                     .map(command -> command.commandName)

@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +15,17 @@ import org.bukkit.entity.LivingEntity;
  * @since 1.0
  */
 public class CustomNameSupplier implements NameSupplier {
+
+    private static final int HUNDRED = 100;
+    private static final int FIFTY = 50;
+
+    private static final String DARK_GRAY = "" + ChatColor.COLOR_CHAR + ChatColor.DARK_GRAY.getChar();
+    private static final String LIGHT_GRAY = "" + ChatColor.COLOR_CHAR + ChatColor.GRAY.getChar();
+    private static final String LIGHT_RED = "" + ChatColor.COLOR_CHAR + ChatColor.RED.getChar();
+    private static final String WHITE = "" + ChatColor.COLOR_CHAR + ChatColor.WHITE.getChar();
+    private static final String LIGHT_GREEN = "" + ChatColor.COLOR_CHAR + ChatColor.GREEN.getChar();
+    private static final String YELLOW = "" + ChatColor.COLOR_CHAR + ChatColor.YELLOW.getChar();
+
 
     /**
      * Supplying the new name string.
@@ -36,16 +48,17 @@ public class CustomNameSupplier implements NameSupplier {
         double health = currentHealth < 1 ? currentHealth < 0 ? 0 : 1 : currentHealth;
         if (instance != null) {
             final double maxHealth = instance.getBaseValue();
+
             StringBuilder builder = new StringBuilder()
-                    .append("§8[").append("§7Lv").append(information.getLevel())
-                    .append("§8] ").append("§c").append(information.getName()).append(" ");
-            double percent = health / maxHealth * 100;
-            if (percent > 50) {
-                builder.append("§a").append((int) health);
+                    .append(DARK_GRAY).append("[").append(LIGHT_GRAY).append("Lv").append(information.getLevel())
+                    .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(information.getName()).append(" ");
+            double percent = health / maxHealth * HUNDRED;
+            if (percent > FIFTY) {
+                builder.append(LIGHT_GREEN).append((int) health);
             } else {
-                builder.append("§e").append((int) health);
+                builder.append(YELLOW).append((int) health);
             }
-            builder.append("§f/").append("§a").append((int) maxHealth);
+            builder.append(WHITE).append("/").append(LIGHT_GREEN).append((int) maxHealth);
             return builder.toString();
         }
         return entity.getCustomName();

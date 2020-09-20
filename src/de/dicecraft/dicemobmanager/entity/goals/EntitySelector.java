@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public final class EntitySelector {
 
-    public static final Predicate<Entity> isPlayerInSurvival = (entity) -> {
+    public static final Predicate<Entity> IS_PLAYER_IN_SURVIVAL = (entity) -> {
         if (EntityType.PLAYER.equals(entity.getType())) {
             GameMode gameMode = ((Player) entity).getGameMode();
             return gameMode != GameMode.SPECTATOR && gameMode != GameMode.CREATIVE;
@@ -18,7 +18,7 @@ public final class EntitySelector {
         }
     };
 
-    public static final Predicate<Entity> isProjectile = (entity) -> {
+    public static final Predicate<Entity> IS_PROJECTILE = (entity) -> {
         switch (entity.getType()) {
             case FIREBALL:
             case WITHER_SKELETON:
@@ -28,7 +28,7 @@ public final class EntitySelector {
         }
     };
 
-    public static final Predicate<Entity> isSlimeEntity = (entity) -> {
+    public static final Predicate<Entity> IS_SLIME_ENTITY = (entity) -> {
         switch (entity.getType()) {
             case SLIME:
             case MAGMA_CUBE:
@@ -37,4 +37,7 @@ public final class EntitySelector {
                 return false;
         }
     };
+
+    private EntitySelector() {
+    }
 }

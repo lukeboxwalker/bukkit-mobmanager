@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EntityManager {
@@ -27,6 +28,8 @@ public class EntityManager {
     private final Map<Entity, Entity> projectileMap = new HashMap<>();
 
     private final List<LivingEntity> deathEntities = new ArrayList<>();
+    private final Function<Map.Entry<Entity, Component<ProtoEntity, Configuration>>, TickEvent> toTickEvent =
+            entry -> new TickEvent((LivingEntity) entry.getKey(), entry.getValue().getFirst());
 
     public void destroyAll() {
         registeredEntities.keySet().forEach(Entity::remove);
@@ -63,7 +66,7 @@ public class EntityManager {
                 // only remove entity on tick if entity is not a slimes with size > 1
                 // because the slime will be removed when the slime split event
                 // of this entity was called.
-                if (!(EntitySelector.isSlimeEntity.test(entity) && ((Slime) entity).getSize() > 1)) {
+                if (!(EntitySelector.IS_SLIME_ENTITY.test(entity) && ((Slime) entity).getSize() > 1)) {
                     deathEntities.add(tickEvent.getEntity());
                 }
             } else {
@@ -78,8 +81,10 @@ public class EntityManager {
 
         // add waiting entities to ticking map so they can be
         // ticked by this method
-        tickedEntities.putAll(activeEntities.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry ->
-                        new Component<>(new TickEvent((LivingEntity) entry.getKey(), entry.getValue().getFirst()), entry.getValue().getSecond()))));
+
+        tickedEntities.putAll(activeEntities.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry ->
+                        new Component<>(toTickEvent.apply(entry), entry.getValue().getSecond()))));
         activeEntities.clear();
     }
 

@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public class SkullFactory {
 
+    private static final int RANDOM_ALPHANUMERIC = 10;
+
     public ItemStack createSkull(final String texture, final String sessionKey, final UUID uuid) {
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         ItemMeta headMeta = skull.getItemMeta();
@@ -34,7 +36,7 @@ public class SkullFactory {
     }
 
     public ItemStack createSkull(final String texture) {
-        String generatedString = RandomStringUtils.randomAlphanumeric(10);
+        String generatedString = RandomStringUtils.randomAlphanumeric(RANDOM_ALPHANUMERIC);
         return createSkull(texture, generatedString, UUID.randomUUID());
     }
 }

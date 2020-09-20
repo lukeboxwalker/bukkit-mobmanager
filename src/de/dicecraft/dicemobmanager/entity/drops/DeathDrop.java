@@ -38,16 +38,22 @@ public interface DeathDrop {
 
     /**
      * Sets the item stack that can drop.
+     *
+     * @param itemStack to set
      */
     void setItemStack(@Nonnull ItemStack itemStack);
 
     /**
      * Sets the drop chance of the loot.
+     *
+     * @param dropChance to set
      */
     void setDropChance(double dropChance);
 
     /**
      * Sets the rarity of the loot drop.
+     *
+     * @param rarity to set
      */
     void setRarity(@Nonnull Rarity rarity);
 
@@ -57,6 +63,7 @@ public interface DeathDrop {
      * Using the lootBonus (e.g looting enchantment) to
      * decide whether the item should drop
      *
+     * @param lootBonus from entity
      * @return if the item should drop
      */
     boolean shouldDrop(int lootBonus);

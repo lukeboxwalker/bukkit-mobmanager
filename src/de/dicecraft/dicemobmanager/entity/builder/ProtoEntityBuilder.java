@@ -1,6 +1,5 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
-import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
@@ -93,7 +92,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     /**
      * Specifies a pathfinder goal.
      * <p>
-     * Using a supplier of {@link Goal} to ensure
+     * Using a {@link GoalSupplier} to ensure
      * to provide a unique object for each entity when building.
      * Each goal has a priority to determine the order to use them.
      * The goal selection always prefers lower prioritised pathfinder goals.
@@ -150,6 +149,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
             case CHEST:
                 equipment.setChestPlate(itemStack);
                 break;
+            default:
+                return this;
         }
         return this;
     }

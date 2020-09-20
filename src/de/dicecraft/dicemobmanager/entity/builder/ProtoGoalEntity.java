@@ -1,6 +1,5 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
-import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
@@ -22,7 +21,7 @@ public interface ProtoGoalEntity {
     Set<GoalKey<Mob>> getIgnoredGoals();
 
     /**
-     * Using a supplier of {@link Goal} to ensure
+     * Using a {@link GoalSupplier} to ensure
      * to provide a unique object for each entity when building.
      * Each goal has a priority to determine the order to use them.
      * The goal selection always prefers lower prioritised pathfinder goals.

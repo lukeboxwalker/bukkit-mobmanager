@@ -26,17 +26,17 @@ public class DiceMobManager extends JavaPlugin {
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
     private static final int DEFAULT_TICK_SPEED = 10;
 
-    private static DiceMobManager INSTANCE;
-    private static EntityManager ENTITY_MANAGER;
-    private static TickScheduler SCHEDULER;
+    private static DiceMobManager instance;
+    private static EntityManager entityManager;
+    private static TickScheduler scheduler;
 
     @Override
     public void onEnable() {
         super.onEnable();
-        INSTANCE = this;
-        ENTITY_MANAGER = new EntityManager();
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), this);
-        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), this);
+        instance = this;
+        entityManager = new EntityManager();
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(entityManager), this);
+        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), this);
         CommandManager.registerCommands(this);
         restartScheduler(DEFAULT_TICK_SPEED);
     }
@@ -44,18 +44,20 @@ public class DiceMobManager extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
-        SCHEDULER.cancel();
-        ENTITY_MANAGER.destroyAll();
+        scheduler.cancel();
+        entityManager.destroyAll();
     }
 
     public static void restartScheduler(int ticks) {
-        if (SCHEDULER != null) SCHEDULER.cancel();
-        SCHEDULER = new TickScheduler(ENTITY_MANAGER);
-        SCHEDULER.runTaskTimer(INSTANCE, 0, ticks);
+        if (scheduler != null) {
+            scheduler.cancel();
+        }
+        scheduler = new TickScheduler(entityManager);
+        scheduler.runTaskTimer(instance, 0, ticks);
     }
 
     public static DiceMobManager getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     public static ConfigBuilder configBuilder() {
@@ -63,11 +65,11 @@ public class DiceMobManager extends JavaPlugin {
     }
 
     public static EntitySpawnFactory createSpawnFactory(Configuration configuration) {
-        return new SpawnFactory(ENTITY_MANAGER, configuration);
+        return new SpawnFactory(entityManager, configuration);
     }
 
     public static EntitySpawnFactory createSpawnFactory() {
-        return new SpawnFactory(ENTITY_MANAGER, configBuilder().build());
+        return new SpawnFactory(entityManager, configBuilder().build());
     }
 
     public static ProtoBuilder builder() {
@@ -75,7 +77,7 @@ public class DiceMobManager extends JavaPlugin {
     }
 
     public static NamespacedKey createNameSpacedKey(String key) {
-        return new NamespacedKey(INSTANCE, key);
+        return new NamespacedKey(instance, key);
     }
 
     public static Logger logger() {

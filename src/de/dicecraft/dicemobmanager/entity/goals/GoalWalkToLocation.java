@@ -1,11 +1,9 @@
 package de.dicecraft.dicemobmanager.entity.goals;
 
 import com.destroystokyo.paper.entity.Pathfinder;
-import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 
-import de.dicecraft.dicemobmanager.DiceMobManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
 
@@ -120,7 +118,8 @@ public class GoalWalkToLocation implements CustomGoal<Mob> {
      */
     @Override
     public boolean shouldStayActive() {
-        if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex() && !locationQueue.isEmpty()) {
+        if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex()
+                && !locationQueue.isEmpty()) {
             this.nextGoal = null;
             if (this.shouldActivate()) {
                 this.start();

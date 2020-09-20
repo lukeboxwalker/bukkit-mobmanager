@@ -8,9 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 
-public class ItemSpawnFactory {
+public final class ItemSpawnHelper {
 
-    public static Item spawnDeathDrop(LivingEntity entity, ProtoEntity protoEntity, DeathDrop deathDrop, Location location) {
+    private ItemSpawnHelper() {
+    }
+
+    public static Item spawnDeathDrop(LivingEntity entity, ProtoEntity protoEntity,
+                                      DeathDrop deathDrop, Location location) {
         Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
         protoEntity.onItemDrop(new ItemDropEvent(entity, protoEntity, deathDrop, item));
         return item;

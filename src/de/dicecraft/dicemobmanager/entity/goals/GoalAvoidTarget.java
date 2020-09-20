@@ -4,6 +4,7 @@ import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
@@ -16,22 +17,24 @@ import java.util.function.Predicate;
 
 public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
 
-    private static final int ACTIVATE_TICK = 20;
+    private static final double Y_RADIUS = 3D;
+    private static final int XYZ_RADIUS = 8;
+
     private final Mob mob;
 
     private final double speed;
-    protected T avoidTarget;
-    protected final float radius;
-    protected Pathfinder.PathResult pathResult;
-    protected final Class<T> avoidEntityClass;
-    protected final Predicate<Entity> entityPredicate;
-    private int tickCounter;
+    private T avoidTarget;
+    private final float radius;
+    private Pathfinder.PathResult pathResult;
+    private final Class<T> avoidEntityClass;
+    private final Predicate<Entity> entityPredicate;
 
-    public GoalAvoidTarget(final Mob mob, Class<T> avoidEntityClass, float radius, double speed) {
-        this(mob, avoidEntityClass, radius, speed, EntitySelector.isPlayerInSurvival);
+    public GoalAvoidTarget(final Mob mob, final Class<T> avoidEntityClass, final float radius, final double speed) {
+        this(mob, avoidEntityClass, radius, speed, EntitySelector.IS_PLAYER_IN_SURVIVAL);
     }
 
-    public GoalAvoidTarget(Mob mob, Class<T> avoidEntityClass, float radius, double speed, Predicate<Entity> entityPredicate) {
+    public GoalAvoidTarget(final Mob mob, final Class<T> avoidEntityClass, final float radius,
+                           final double speed, final Predicate<Entity> entityPredicate) {
         this.mob = mob;
         this.avoidEntityClass = avoidEntityClass;
         this.radius = radius;
@@ -44,15 +47,16 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
         Optional<T> nearestEntity = getNearestAvoidableEntity();
         if (nearestEntity.isPresent()) {
             avoidTarget = nearestEntity.get();
-            Vector vector = RandomPositionGenerator.getRandomVector(mob, 8, 7, avoidTarget.getLocation().toVector());
+            Vector avoidTargetVector = avoidTarget.getLocation().toVector();
+            Vector vector = RandomPositionGenerator.getRandomVector(mob, XYZ_RADIUS, XYZ_RADIUS, avoidTargetVector);
             if (vector == null) {
                 return false;
             }
-            double avoidTargetToVector = distanceSquared(avoidTarget.getLocation().toVector(), vector);
-            double avoidTargetToMob = distanceSquared(avoidTarget.getLocation().toVector(), mob.getLocation().toVector());
+            double avoidTargetToVector = distanceSquared(avoidTargetVector, vector);
+            double avoidTargetToMob = distanceSquared(avoidTargetVector, mob.getLocation().toVector());
             if (avoidTargetToVector < avoidTargetToMob) {
                 return false;
-            }  else {
+            } else {
                 pathResult = mob.getPathfinder().findPath(vector.toLocation(mob.getWorld()));
                 return pathResult != null;
             }
@@ -64,7 +68,9 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
     @SuppressWarnings("unchecked")
     private Optional<T> getNearestAvoidableEntity() {
         Optional<T> result = Optional.empty();
-        Collection<T> nearByEntities = (Collection<T>) mob.getWorld().getNearbyEntitiesByType(avoidEntityClass, mob.getLocation(), radius, 3.0D, radius, entityPredicate);
+        Location mobLocation = mob.getLocation();
+        Collection<T> nearByEntities = (Collection<T>) mob.getWorld()
+                .getNearbyEntitiesByType(avoidEntityClass, mobLocation, radius, Y_RADIUS, radius, entityPredicate);
         double shortestDistance = radius * radius * radius;
         Vector vector1 = mob.getLocation().toVector();
         for (T entity : nearByEntities) {

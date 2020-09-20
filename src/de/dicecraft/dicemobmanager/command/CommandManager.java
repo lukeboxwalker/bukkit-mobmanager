@@ -11,7 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class CommandManager {
 
-    private static final String baseCommandString = "MobManager";
+    private static final String BASE_COMMAND_STRING = "MobManager";
+
+    private CommandManager() {
+    }
 
     /**
      * Registers the base plugin command.
@@ -20,7 +23,7 @@ public final class CommandManager {
      */
     public static void registerCommands(final JavaPlugin plugin) {
         final BaseCommand baseCommand = new BaseCommand();
-        final PluginCommand command = plugin.getCommand(baseCommandString);
+        final PluginCommand command = plugin.getCommand(BASE_COMMAND_STRING);
         assert command != null;
         command.setExecutor(baseCommand);
         command.setTabCompleter(baseCommand);

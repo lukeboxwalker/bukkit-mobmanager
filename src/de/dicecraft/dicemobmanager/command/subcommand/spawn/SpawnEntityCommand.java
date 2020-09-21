@@ -49,7 +49,6 @@ public class SpawnEntityCommand implements Command {
                     return false;
                 }
             }
-
             int finalAmount = amount;
             new BukkitRunnable() {
                 private int spawnedEntities = 0;

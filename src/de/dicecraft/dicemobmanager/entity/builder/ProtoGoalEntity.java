@@ -18,7 +18,7 @@ public interface ProtoGoalEntity {
      * @return a list of goal keys
      */
     @Nonnull
-    Set<GoalKey<Mob>> getIgnoredGoals();
+    Set<GoalKey<? extends Mob>> getIgnoredGoals();
 
     /**
      * Using a {@link GoalSupplier} to ensure

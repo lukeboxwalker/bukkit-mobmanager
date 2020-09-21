@@ -100,6 +100,7 @@ public class SpawnFactory implements EntitySpawnFactory {
 
     private void prepareZombie(Zombie zombie) {
         zombie.setShouldBurnInDay(false);
+        zombie.setAdult();
     }
 
     private void preparePotionEffects(Mob mob, ProtoEntity protoEntity) {
@@ -120,12 +121,24 @@ public class SpawnFactory implements EntitySpawnFactory {
             }
         }
 
-        for (GoalKey<Mob> goalKey : protoEntity.getIgnoredGoals()) {
-            MOB_GOALS.removeGoal(mob, goalKey);
+        for (GoalKey<? extends Mob> goalKey : protoEntity.getIgnoredGoals()) {
+            if (goalKey.getEntityClass().isAssignableFrom(mob.getClass())) {
+                removeGoal(mob, goalKey);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Mob> void removeGoal(Mob mob, GoalKey<T> goalKey) {
+        if (goalKey.getEntityClass().isAssignableFrom(mob.getClass())) {
+            MOB_GOALS.removeGoal((T) mob, goalKey);
         }
     }
 
     private void prepareAttributes(Mob mob, ProtoEntity protoEntity, Map<Attribute, Double> attributes) {
+        // disables baby zombies on chickens
+        attributes.put(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
+
         protoEntity.getAttributeMap().forEach((attribute, value) -> {
             AttributeInstance instance = mob.getAttribute(attribute);
             if (instance != null) {

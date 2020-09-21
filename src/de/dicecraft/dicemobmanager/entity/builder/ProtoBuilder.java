@@ -72,9 +72,10 @@ public interface ProtoBuilder {
      * Specifies a goal which need
      * to be ignored from the bukkit entity.
      *
+     * @param goalKey to ignore
      * @return builder to continue
      */
-    ProtoBuilder ignoreGoal(@Nonnull GoalKey<Mob> goalKey);
+    ProtoBuilder ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey);
 
     /**
      * Specifies the equipment for the entity.

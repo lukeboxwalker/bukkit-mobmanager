@@ -31,7 +31,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private final Map<Attribute, Double> attributes = new HashMap<>();
     private final Equipment equipment = new CustomEquipment();
     private final Set<PotionEffect> potionEffects = new HashSet<>();
-    private final Set<GoalKey<Mob>> ignoredGoals = new HashSet<>();
+    private final Set<GoalKey<? extends Mob>> ignoredGoals = new HashSet<>();
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
     private final List<Strategy> strategies = new ArrayList<>();
 
@@ -116,7 +116,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder ignoreGoal(@Nonnull GoalKey<Mob> goalKey) {
+    public ProtoBuilder ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey) {
         ignoredGoals.add(goalKey);
         return this;
     }

@@ -28,7 +28,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private Map<Attribute, Double> attributes;
     private Equipment equipment;
     private Set<PotionEffect> potionEffects;
-    private Set<GoalKey<Mob>> ignoredGoals;
+    private Set<GoalKey<? extends Mob>> ignoredGoals;
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Set<DeathDrop> deathDrops;
     private NameUpdater nameUpdater;
@@ -68,11 +68,11 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Nonnull
     @Override
-    public Set<GoalKey<Mob>> getIgnoredGoals() {
+    public Set<GoalKey<? extends Mob>> getIgnoredGoals() {
         return ignoredGoals;
     }
 
-    public void setIgnoredGoals(Set<GoalKey<Mob>> ignoredGoals) {
+    public void setIgnoredGoals(Set<GoalKey<? extends Mob>> ignoredGoals) {
         this.ignoredGoals = ignoredGoals;
     }
 

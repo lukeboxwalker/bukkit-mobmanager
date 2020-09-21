@@ -15,22 +15,19 @@ import java.util.List;
 public class BasePluginCommand extends BaseCommand implements CommandExecutor, TabCompleter {
 
     public BasePluginCommand(final EntityManager manager) {
-        super("MobManager", new SpawnEntityCommand(), new ChangeEntityTickCommand(), new KillEntityCommand(manager));
+        super("MobManager", new SpawnEntityCommand(), new ChangeEntityTickCommand(), new KillEntityCommand(manager)
+        );
     }
 
     @Override
-    public final boolean onCommand(@Nonnull CommandSender sender,
-                                   @Nonnull org.bukkit.command.Command command,
-                                   @Nonnull String name,
-                                   @Nonnull String[] args) {
+    public final boolean onCommand(@Nonnull CommandSender sender, @Nonnull org.bukkit.command.Command command,
+                                   @Nonnull String name, @Nonnull String[] args) {
         return execute(sender, args);
     }
 
     @Override
-    public final List<String> onTabComplete(@Nonnull CommandSender sender,
-                                            @Nonnull org.bukkit.command.Command command,
-                                            @Nonnull String name,
-                                            @Nonnull String[] args) {
+    public final List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull org.bukkit.command.Command command,
+                                            @Nonnull String name, @Nonnull String[] args) {
         final List<String> list = tabComplete(sender, args);
         return list == null ? new ArrayList<>() : list;
     }

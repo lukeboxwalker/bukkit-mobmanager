@@ -1,6 +1,8 @@
 package de.dicecraft.dicemobmanager.command;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
+import de.dicecraft.dicemobmanager.message.MessageFormatter;
+import de.dicecraft.dicemobmanager.message.PluginMessageFormatter;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 1.0
  */
 public final class CommandManager {
+
+    private static final MessageFormatter MESSAGE_FORMATTER = new PluginMessageFormatter();
 
     private CommandManager() {
     }
@@ -26,5 +30,9 @@ public final class CommandManager {
         assert command != null;
         command.setExecutor(baseCommand);
         command.setTabCompleter(baseCommand);
+    }
+
+    public static MessageFormatter messageFormatter() {
+        return MESSAGE_FORMATTER;
     }
 }

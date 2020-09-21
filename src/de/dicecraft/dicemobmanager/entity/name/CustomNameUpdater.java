@@ -1,6 +1,5 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoNamedEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
@@ -37,7 +36,7 @@ public class CustomNameUpdater implements NameUpdater {
      * Supplying the new name string.
      * <p>
      * Creates new name from given information using
-     * the entity, the currentHealth as well as the {@link ProtoEntity}
+     * the entity and the currentHealth.
      * <p>
      * Coloring the current health green
      * when its above 50% of the maximum heath, otherwise

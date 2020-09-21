@@ -16,8 +16,10 @@ import javax.annotation.Nonnull;
  */
 public class CustomDeathDrop implements DeathDrop {
 
-    private static final int LOOT_MULTIPLIER = 10_000;
-    private static final int DROP_MULTIPLIER = 10_0000;
+    // minimal drop chance 0.0001%
+    private static final double MIN_DROP_CHANCE = 0.000_001;
+    private static final int LOOT_MULTIPLIER = 100_000;
+    private static final int DROP_MULTIPLIER = 1_000_000;
 
     private double dropChance;
     private DeathDrop.Rarity rarity;
@@ -77,7 +79,7 @@ public class CustomDeathDrop implements DeathDrop {
 
     @Override
     public void setDropChance(double dropChance) {
-        this.dropChance = (dropChance > 1) ? 1.0 : ((dropChance < 0) ? 0 : dropChance);
+        this.dropChance = (dropChance > 1) ? 1.0 : (Math.max(dropChance, MIN_DROP_CHANCE));
     }
 
     @Override

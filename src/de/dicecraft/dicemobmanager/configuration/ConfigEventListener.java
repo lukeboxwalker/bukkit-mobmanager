@@ -30,7 +30,7 @@ public class ConfigEventListener implements Listener {
     /**
      * Listening to SlimeSplitEvent.
      * <p>
-     * Cancels the event if {@link Configuration#canSlimeSplit()} is
+     * Cancels the event if SLIME_SPLIT flag is
      * false
      *
      * @param event the slime split event
@@ -40,16 +40,16 @@ public class ConfigEventListener implements Listener {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
         optional.ifPresent(configuration -> {
             manager.removeEntity(event.getEntity());
-            event.setCancelled(!configuration.canSlimeSplit());
+            event.setCancelled(!configuration.getBoolean(ConfigFlag.SLIME_SPLIT));
         });
     }
 
     /**
      * Listening to ExplosionPrimeEvent.
      * <p>
-     * Cancels the event if {@link Configuration#canCreeperBlockDamage()} is
+     * Cancels the event if CREEPER_EXPLOSION_DAMAGE flag is
      * false, or the event was fired by a projectile and the
-     * {@link Configuration#canProjectileBlockDamage()} is false
+     * PROJECTILE_BLOCK_DAMAGE flag is false
      *
      * @param event the explosion event
      */
@@ -57,7 +57,7 @@ public class ConfigEventListener implements Listener {
     public void onExplodeDamage(ExplosionPrimeEvent event) {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
         optional.ifPresent(configuration -> {
-            if (!configuration.canCreeperBlockDamage()) {
+            if (!configuration.getBoolean(ConfigFlag.CREEPER_EXPLOSION_DAMAGE)) {
                 Entity entity = event.getEntity();
                 entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
                 event.setCancelled(true);
@@ -69,7 +69,7 @@ public class ConfigEventListener implements Listener {
                 optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
                 optional.ifPresent(configuration -> {
                     manager.unWatchProjectile(projectile);
-                    if (!configuration.canProjectileBlockDamage()) {
+                    if (!configuration.getBoolean(ConfigFlag.PROJECTILE_BLOCK_DAMAGE)) {
                         Entity entity = event.getEntity();
                         entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
                         event.setCancelled(true);

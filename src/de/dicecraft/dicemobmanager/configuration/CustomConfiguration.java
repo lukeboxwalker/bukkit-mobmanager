@@ -12,17 +12,7 @@ public class CustomConfiguration implements Configuration {
     }
 
     @Override
-    public boolean canSlimeSplit() {
-        return configFlags.getOrDefault(ConfigFlag.SLIME_SPLIT, true);
-    }
-
-    @Override
-    public boolean canProjectileBlockDamage() {
-        return configFlags.getOrDefault(ConfigFlag.PROJECTILE_BLOCK_DAMAGE, true);
-    }
-
-    @Override
-    public boolean canCreeperBlockDamage() {
-        return configFlags.getOrDefault(ConfigFlag.CREEPER_EXPLOSION_DAMAGE, true);
+    public boolean getBoolean(ConfigFlag flag) {
+        return configFlags.getOrDefault(flag, true);
     }
 }

@@ -62,11 +62,11 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE, DeathDrop.Rarity.LEGENDARY);
 
                             ProtoEntity protoEntity = DiceMobManager.builder()
-                                    .setType(EntityType.CREEPER)
+                                    .setType(EntityType.WITHER)
                                     .setDeathDrops(Collections.singleton(deathDrop))
-                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1000)
+                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                                     .setName("Super BOOM Creeper")
-                                    .setLevel(100)
+                                    .setLevel(1)
                                     .build();
 
                             Configuration configuration = DiceMobManager.configBuilder()

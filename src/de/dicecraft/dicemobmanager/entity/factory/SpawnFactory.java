@@ -5,6 +5,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
@@ -15,10 +16,12 @@ import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.Wither;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
@@ -51,7 +54,8 @@ public class SpawnFactory implements EntitySpawnFactory {
 
     @Override
     public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation) {
-        return spawnEntity(protoEntity, spawnLocation, (entity) -> {});
+        return spawnEntity(protoEntity, spawnLocation, (entity) -> {
+        });
     }
 
     @Override
@@ -62,39 +66,19 @@ public class SpawnFactory implements EntitySpawnFactory {
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
             return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, SPAWN_REASON, entity -> {
                 Mob mob = (Mob) entity;
-                protoEntity.getAttributeMap().forEach((attribute, value) -> {
-                    AttributeInstance instance = mob.getAttribute(attribute);
-                    if (instance != null) {
-                        instance.setBaseValue(value);
-                    }
-                });
-                mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
-                if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
-                    entity.setCustomNameVisible(true);
-                    protoEntity.getNameUpdater().updateName(mob);
-                }
+                this.prepareAttributes(mob, protoEntity, attributes);
+                this.prepareCustomName(mob, protoEntity);
+                this.prepareGoals(mob, protoEntity);
+                this.preparePotionEffects(mob, protoEntity);
 
-                final Set<GoalKey<Mob>> goalKeys = new HashSet<>();
-                for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
-                    final Goal<Mob> goal = entry.getEntry().supply((Mob) entity);
-                    if (!goalKeys.contains(goal.getKey())) {
-                        MOB_GOALS.addGoal((Mob) entity, entry.getPriority(), goal);
-                        goalKeys.add(goal.getKey());
-                    } else {
-                        LOGGER.warning(WARN_MSG.apply(goal.getKey().toString()));
-                    }
-                }
-
-                for (GoalKey<Mob> goalKey : protoEntity.getIgnoredGoals()) {
-                    MOB_GOALS.removeGoal(mob, goalKey);
-                }
-
-                for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {
-                    mob.addPotionEffect(potionEffect);
-                }
-
-                if (EntityType.ZOMBIE.equals(protoEntity.getEntityType())) {
-                    ((Zombie) entity).setShouldBurnInDay(false);
+                switch (protoEntity.getEntityType()) {
+                    case ZOMBIE:
+                        prepareZombie((Zombie) mob);
+                        break;
+                    case WITHER:
+                        prepareWither((Wither) mob);
+                        break;
+                    default:
                 }
 
                 protoEntity.getEquipment().equip(mob);
@@ -102,6 +86,59 @@ public class SpawnFactory implements EntitySpawnFactory {
             });
         } else {
             throw new EntityCreationException("Entity type is not a mob");
+        }
+    }
+
+    private void prepareWither(Wither wither) {
+        if (!configuration.getBoolean(ConfigFlag.SHOW_WITHER_BOSS_BAR)) {
+            BossBar bossBar = wither.getBossBar();
+            if (bossBar != null) {
+                bossBar.setVisible(false);
+            }
+        }
+    }
+
+    private void prepareZombie(Zombie zombie) {
+        zombie.setShouldBurnInDay(false);
+    }
+
+    private void preparePotionEffects(Mob mob, ProtoEntity protoEntity) {
+        for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {
+            mob.addPotionEffect(potionEffect);
+        }
+    }
+
+    private void prepareGoals(Mob mob, ProtoEntity protoEntity) {
+        final Set<GoalKey<Mob>> goalKeys = new HashSet<>();
+        for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
+            final Goal<Mob> goal = entry.getEntry().supply(mob);
+            if (!goalKeys.contains(goal.getKey())) {
+                MOB_GOALS.addGoal(mob, entry.getPriority(), goal);
+                goalKeys.add(goal.getKey());
+            } else {
+                LOGGER.warning(WARN_MSG.apply(goal.getKey().toString()));
+            }
+        }
+
+        for (GoalKey<Mob> goalKey : protoEntity.getIgnoredGoals()) {
+            MOB_GOALS.removeGoal(mob, goalKey);
+        }
+    }
+
+    private void prepareAttributes(Mob mob, ProtoEntity protoEntity, Map<Attribute, Double> attributes) {
+        protoEntity.getAttributeMap().forEach((attribute, value) -> {
+            AttributeInstance instance = mob.getAttribute(attribute);
+            if (instance != null) {
+                instance.setBaseValue(value);
+            }
+        });
+        mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
+    }
+
+    private void prepareCustomName(Mob mob, ProtoEntity protoEntity) {
+        if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+            mob.setCustomNameVisible(true);
+            protoEntity.getNameUpdater().updateName(mob);
         }
     }
 }

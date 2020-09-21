@@ -55,6 +55,10 @@ public class DiceMobManager extends JavaPlugin {
         entityManager.destroyAll();
     }
 
+    public static DiceMobManager getInstance() {
+        return instance;
+    }
+
     public static void restartScheduler(int ticks) {
         scheduler.restart(ticks);
     }

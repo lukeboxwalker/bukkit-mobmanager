@@ -1,20 +1,13 @@
 package de.dicecraft.dicemobmanager.entity.strategy;
 
-import de.dicecraft.dicemobmanager.DiceMobManager;
-import it.unimi.dsi.fastutil.Function;
 import org.bukkit.NamespacedKey;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class SimpleStrategyManager implements StrategyManager, StrategyRegistrationVisitor {
-
-    private static final Logger LOGGER = DiceMobManager.logger();
-    private static final Function<String, String> WARN_MSG = string ->
-            "Trying to add a strategy with namespaced key: " + string + " which already exist!";
 
     private final List<SpawnStrategy> onSpawnStrategies = new ArrayList<>();
     private final List<DamageStrategy> onDamageStrategies = new ArrayList<>();
@@ -44,22 +37,15 @@ public class SimpleStrategyManager implements StrategyManager, StrategyRegistrat
 
     @Override
     public void addStrategy(@Nonnull Strategy strategy) {
-        if (!keyMap.containsKey(strategy.getKey())) {
-            strategy.accept(this);
-        } else {
-            LOGGER.warning(WARN_MSG.apply(strategy.getKey().toString()));
+        if (keyMap.containsKey(strategy.getKey())) {
+            keyMap.get(strategy.getKey()).removeIf(entry -> entry.getKey().equals(strategy.getKey()));
         }
+        strategy.accept(this);
     }
 
     @Override
     public void addStrategies(@Nonnull List<Strategy> strategies) {
-        strategies.forEach(strategy -> {
-            if (!keyMap.containsKey(strategy.getKey())) {
-                strategy.accept(this);
-            } else {
-                LOGGER.warning(WARN_MSG.apply(strategy.getKey().toString()));
-            }
-        });
+        strategies.forEach(this::addStrategy);
     }
 
     @Nonnull

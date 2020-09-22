@@ -10,8 +10,6 @@ import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
-import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -26,6 +24,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class SpawnEntityCommand implements Command {
+
+    private static final String SINGLE_SPAWN =
+            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob.";
+    private static final String MULTI_SPAWN =
+            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob, §5{3} §7times";
 
     private static final double DROP_CHANCE = 0.5;
     private static final int PERIOD = 1;
@@ -60,7 +63,8 @@ public class SpawnEntityCommand implements Command {
                     if (spawnedEntities < finalAmount) {
                         try {
                             ItemStack itemStack = new ItemStack(Material.DIAMOND);
-                            DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE, DeathDrop.Rarity.LEGENDARY);
+                            DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
+                                    DeathDrop.Rarity.LEGENDARY);
 
                             ProtoEntity protoEntity = DiceMobManager.builder()
                                     .setType(EntityType.ZOMBIE)
@@ -81,14 +85,14 @@ public class SpawnEntityCommand implements Command {
                             if (spawnedEntities == 0) {
                                 if (finalAmount > 1) {
                                     CommandManager.messageFormatter().sendMessage(sender,
-                                            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob, §5{3} §7times",
+                                            MULTI_SPAWN,
                                             protoEntity.getName(),
                                             protoEntity.getLevel(),
                                             protoEntity.getEntityType().name().toLowerCase(),
                                             finalAmount);
                                 } else {
                                     CommandManager.messageFormatter().sendMessage(sender,
-                                            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob.",
+                                            SINGLE_SPAWN,
                                             protoEntity.getName(),
                                             protoEntity.getLevel(),
                                             protoEntity.getEntityType().name().toLowerCase());

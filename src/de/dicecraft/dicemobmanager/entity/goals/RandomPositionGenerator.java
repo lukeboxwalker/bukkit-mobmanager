@@ -20,7 +20,8 @@ public final class RandomPositionGenerator {
         return getRandomVector(mob.getLocation(), xzRadius, yRadius, vector);
     }
 
-    public static Vector getRandomVector(final Location location, final int xzRadius, final int yRadius, final Vector vector) {
+    public static Vector getRandomVector(final Location location, final int xzRadius,
+                                         final int yRadius, final Vector vector) {
         final Random random = DiceMobManager.getRandom();
         final Vector direction = location.toVector().subtract(vector);
 

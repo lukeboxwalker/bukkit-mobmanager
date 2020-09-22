@@ -93,6 +93,7 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
         if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex()) {
             avoidTarget = null;
             if (this.shouldActivate()) {

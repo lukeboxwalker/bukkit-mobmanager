@@ -62,7 +62,10 @@ public class CustomNameUpdater implements NameUpdater {
             } else {
                 builder.append(YELLOW).append((int) health);
             }
-            builder.append(WHITE).append("/").append(LIGHT_GREEN).append((int) maxHealth);
+            builder.append(WHITE).append("/")
+                    .append(LIGHT_GREEN)
+                    .append((int) maxHealth)
+                    .append(LIGHT_RED).append("❤");
             return builder.toString();
         }
         return entity.getCustomName();

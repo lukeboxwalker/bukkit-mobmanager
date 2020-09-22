@@ -118,9 +118,11 @@ public class GoalWalkToLocation implements CustomGoal<Mob> {
      */
     @Override
     public boolean shouldStayActive() {
+        Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
         if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex()
                 && !locationQueue.isEmpty()) {
             this.nextGoal = null;
+
             if (this.shouldActivate()) {
                 this.start();
             }

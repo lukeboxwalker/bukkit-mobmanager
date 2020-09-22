@@ -10,6 +10,8 @@ import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.goals.GoalWalkToLocation;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -61,7 +63,7 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE, DeathDrop.Rarity.LEGENDARY);
 
                             ProtoEntity protoEntity = DiceMobManager.builder()
-                                    .setType(EntityType.WITHER)
+                                    .setType(EntityType.ZOMBIE)
                                     .setDeathDrops(Collections.singleton(deathDrop))
                                     .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
                                     .setName("Super BOOM Creeper")

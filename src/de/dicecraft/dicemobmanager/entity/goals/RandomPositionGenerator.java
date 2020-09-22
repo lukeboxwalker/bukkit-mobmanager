@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.goals;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
@@ -16,16 +17,20 @@ public final class RandomPositionGenerator {
     }
 
     public static Vector getRandomVector(final Mob mob, final int xzRadius, final int yRadius, final Vector vector) {
+        return getRandomVector(mob.getLocation(), xzRadius, yRadius, vector);
+    }
+
+    public static Vector getRandomVector(final Location location, final int xzRadius, final int yRadius, final Vector vector) {
         final Random random = DiceMobManager.getRandom();
-        final Vector direction = mob.getLocation().toVector().subtract(vector);
+        final Vector direction = location.toVector().subtract(vector);
 
         Vector result = null;
         Vector tempVector;
         for (int i = 0; i < MAX_ITERATION; i++) {
             tempVector = createVector(random, xzRadius, yRadius, direction);
             if (tempVector != null) {
-                Vector possibleResult = mob.getLocation().toVector().add(tempVector);
-                Block block = mob.getWorld().getBlockAt(possibleResult.getBlockX(),
+                Vector possibleResult = location.toVector().add(tempVector);
+                Block block = location.getWorld().getBlockAt(possibleResult.getBlockX(),
                         possibleResult.getBlockY() - 1, possibleResult.getBlockZ());
                 if (block.getType().isSolid()) {
                     result = possibleResult;

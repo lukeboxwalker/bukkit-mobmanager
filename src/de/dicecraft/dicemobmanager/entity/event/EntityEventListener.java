@@ -2,34 +2,41 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
-import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.factory.ItemSpawnHelper;
+import de.dicecraft.dicemobmanager.entity.enchatment.EnchantmentHandler;
+import de.dicecraft.dicemobmanager.entity.enchatment.KnockBackHandler;
+import de.dicecraft.dicemobmanager.entity.enchatment.LootingHandler;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
 import org.bukkit.Location;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public final class EntityEventListener implements Listener {
 
+    private static final int PARTICLE_COUNT = 10;
+    private static final double PARTICLE_MULTIPLIER = 0.1D;
+
     private final EntityManager manager;
+    private final EnchantmentHandler lootingHandler;
+    private final EnchantmentHandler knockBackHandler;
 
     public EntityEventListener(final EntityManager manager) {
         this.manager = manager;
+        this.lootingHandler = new LootingHandler(manager);
+        this.knockBackHandler = new KnockBackHandler();
     }
 
     /**
@@ -45,29 +52,17 @@ public final class EntityEventListener implements Listener {
      *
      * @param event the EntityDeathEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            LivingEntity entity = event.getEntity();
-            protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
             if (!event.isCancelled()) {
-                Player player = event.getEntity().getKiller();
-                List<ItemStack> drops = event.getDrops();
-                drops.clear();
-                int lootBonus = 0;
-                if (player != null) {
-                    Map<Enchantment, Integer> enchantments = player.getInventory()
-                            .getItemInMainHand().getEnchantments();
-                    lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
-                }
-                if (manager.canItemsDrop()) {
-                    for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
-                        if (deathDrop.shouldDrop(lootBonus)) {
-                            Location location = entity.getLocation();
-                            ItemSpawnHelper.spawnDeathDrop(entity, protoEntity, deathDrop, location);
-                        }
-                    }
+                LivingEntity entity = event.getEntity();
+                protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
+                if (!event.isCancelled()) {
+                    Player player = event.getEntity().getKiller();
+                    event.getDrops().clear();
+                    lootingHandler.handle(entity, protoEntity, player);
                 }
             }
         });
@@ -83,14 +78,16 @@ public final class EntityEventListener implements Listener {
      *
      * @param event the EntityDeathEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
         Optional<ProtoEntity> optional = manager.canActivateEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            Entity entity = event.getEntity();
-            protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
             if (!event.isCancelled()) {
-                manager.activateEntity(entity);
+                Entity entity = event.getEntity();
+                protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
+                if (!event.isCancelled()) {
+                    manager.activateEntity(entity);
+                }
             }
         });
     }
@@ -104,15 +101,16 @@ public final class EntityEventListener implements Listener {
      *
      * @param event the ProjectileLaunchEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
+        if (!event.isCancelled() && EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
             final Projectile projectile = event.getEntity();
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
             Optional<ProtoEntity> optional = manager.getProtoEntity(shooter);
             optional.ifPresent(protoEntity -> manager.watchProjectile(projectile, shooter));
         }
     }
+
 
     /**
      * Listens to the EntityDamageEvent to identify when a
@@ -124,19 +122,43 @@ public final class EntityEventListener implements Listener {
      *
      * @param event the EntityDamageEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            final LivingEntity entity = (LivingEntity) event.getEntity();
-            protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
             if (!event.isCancelled()) {
-                if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
-                    double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                    protoEntity.getNameUpdater().updateName(entity, finalHealth);
+                final LivingEntity entity = (LivingEntity) event.getEntity();
+                protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
+                if (!event.isCancelled()) {
+                    if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+                        double finalHealth = (entity.getHealth() - event.getFinalDamage());
+                        protoEntity.getNameUpdater().updateName(entity, finalHealth);
+                    }
                 }
             }
         });
     }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        optional.ifPresent(protoEntity -> {
+            if (!event.isCancelled()) {
+                if (EntityType.PLAYER.equals(event.getDamager().getType())) {
+                    Player player = (Player) event.getDamager();
+                    double finalDamage = event.getFinalDamage();
+                    event.setCancelled(true);
+                    final LivingEntity entity = (LivingEntity) event.getEntity();
+                    entity.damage(finalDamage);
+                    Location loc = entity.getLocation();
+                    entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),
+                            PARTICLE_COUNT, 0D, 0D, 0D, PARTICLE_MULTIPLIER);
+                    entity.setLastDamageCause(event);
+                    knockBackHandler.handle(entity, protoEntity, player);
+                }
+            }
+        });
+    }
+
 }
 

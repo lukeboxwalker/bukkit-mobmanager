@@ -35,7 +35,7 @@ public class ConfigEventListener implements Listener {
      *
      * @param event the slime split event
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSlimeSplit(SlimeSplitEvent event) {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
         optional.ifPresent(configuration -> {
@@ -53,7 +53,7 @@ public class ConfigEventListener implements Listener {
      *
      * @param event the explosion event
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onExplodeDamage(ExplosionPrimeEvent event) {
         Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
         optional.ifPresent(configuration -> {

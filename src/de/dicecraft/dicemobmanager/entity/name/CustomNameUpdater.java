@@ -16,6 +16,8 @@ import org.bukkit.entity.LivingEntity;
  */
 public class CustomNameUpdater implements NameUpdater {
 
+    private static final int THOUSAND = 1_000;
+    private static final int MILLION = 1_000_000;
     private static final int HUNDRED = 100;
     private static final int FIFTY = 50;
 
@@ -58,17 +60,27 @@ public class CustomNameUpdater implements NameUpdater {
                     .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(protoEntity.getName()).append(" ");
             double percent = health / maxHealth * HUNDRED;
             if (percent > FIFTY) {
-                builder.append(LIGHT_GREEN).append((int) health);
+                builder.append(LIGHT_GREEN).append(formatHealth((int) health));
             } else {
-                builder.append(YELLOW).append((int) health);
+                builder.append(YELLOW).append(formatHealth((int) health));
             }
             builder.append(WHITE).append("/")
                     .append(LIGHT_GREEN)
-                    .append((int) maxHealth)
+                    .append(formatHealth((int) maxHealth))
                     .append(LIGHT_RED).append("❤");
             return builder.toString();
         }
         return entity.getCustomName();
+    }
+
+    public String formatHealth(int number) {
+        if (number >= MILLION) {
+            return number / MILLION + "m";
+        } else if (number >= THOUSAND) {
+            return number / THOUSAND + "k";
+        } else {
+            return String.valueOf(number);
+        }
     }
 
     public String buildName(final LivingEntity entity) {

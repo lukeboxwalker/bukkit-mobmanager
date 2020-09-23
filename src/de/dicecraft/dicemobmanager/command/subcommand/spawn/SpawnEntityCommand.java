@@ -26,9 +26,9 @@ import java.util.List;
 public class SpawnEntityCommand implements Command {
 
     private static final String SINGLE_SPAWN =
-            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob.";
+            "§7Entity  '§8[§7Lv§5{1}§8]§7' '§5{0}§7' spawned as a '§5{2}§7' mob.";
     private static final String MULTI_SPAWN =
-            "§7Entity '§5{0}§7' with '§8[§7Lv§5{1}§8]§7' spawned as a '§5{2}§7' mob, §5{3} §7times";
+            "§7Entity '§8[§7Lv§5{1}§8]§7' '§5{0}§7' with spawned as a '§5{2}§7' mob, §5{3} §7times";
 
     private static final double DROP_CHANCE = 0.5;
     private static final int PERIOD = 1;
@@ -67,11 +67,11 @@ public class SpawnEntityCommand implements Command {
                                     DeathDrop.Rarity.LEGENDARY);
 
                             ProtoEntity protoEntity = DiceMobManager.builder()
-                                    .setType(EntityType.ZOMBIE)
+                                    .setType(EntityType.CREEPER)
                                     .setDeathDrops(Collections.singleton(deathDrop))
-                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1)
+                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 250000D)
                                     .setName("Super BOOM Creeper")
-                                    .setLevel(1)
+                                    .setLevel(100)
                                     .build();
 
                             Configuration configuration = DiceMobManager.configBuilder()

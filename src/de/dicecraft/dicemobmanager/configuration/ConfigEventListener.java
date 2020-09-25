@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
+import org.bukkit.inventory.AnvilInventory;
 
 import java.util.Optional;
 

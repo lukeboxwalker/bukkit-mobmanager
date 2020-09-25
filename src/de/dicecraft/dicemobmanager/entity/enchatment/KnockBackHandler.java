@@ -15,6 +15,7 @@ public class KnockBackHandler implements EnchantmentHandler {
 
     private static final double DEFAULT_STRENGTH = 0.4D;
     private static final double DEG_TO_RAD = Math.PI / 180.0D;
+    private static final double KNOCK_BACK_MULTIPLIER = 0.5D;
 
     @Override
     public void handle(LivingEntity attacked, ProtoEntity attackedProtoEntity, Player attacker) {
@@ -27,7 +28,7 @@ public class KnockBackHandler implements EnchantmentHandler {
     }
 
     private void doKnockBack(double knockBack, float yaw, LivingEntity livingEntity) {
-        knockBack = Math.max(knockBack, DEFAULT_STRENGTH);
+        knockBack = Math.max(knockBack * KNOCK_BACK_MULTIPLIER, DEFAULT_STRENGTH);
         AttributeInstance instance = livingEntity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
         if (instance != null) {
             knockBack = knockBack * (1.0D - instance.getBaseValue());

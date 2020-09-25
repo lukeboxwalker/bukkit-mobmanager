@@ -15,8 +15,9 @@ import java.util.List;
 public class BasePluginCommand extends BaseCommand implements CommandExecutor, TabCompleter {
 
     public BasePluginCommand(final EntityManager manager) {
-        super("MobManager", new SpawnEntityCommand(), new ChangeEntityTickCommand(), new KillEntityCommand(manager)
-        );
+        super("MobManager", new SpawnEntityCommand(),
+                new ChangeEntityTickCommand(), new KillEntityCommand(manager),
+                new TestCommand());
     }
 
     @Override

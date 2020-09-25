@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
+import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.enchatment.EnchantmentHandler;
@@ -26,7 +27,8 @@ import java.util.Optional;
 
 public final class EntityEventListener implements Listener {
 
-    private static final int PARTICLE_COUNT = 10;
+    private static final int MAX_PARTICLE = 10;
+    private static final int MIN_PARTICLE = 2;
     private static final double PARTICLE_MULTIPLIER = 0.1D;
 
     private final EntityManager manager;
@@ -54,16 +56,17 @@ public final class EntityEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
+            LivingEntity entity = event.getEntity();
+            protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
             if (!event.isCancelled()) {
-                LivingEntity entity = event.getEntity();
-                protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
-                if (!event.isCancelled()) {
-                    Player player = event.getEntity().getKiller();
-                    event.getDrops().clear();
-                    lootingHandler.handle(entity, protoEntity, player);
-                }
+                Player player = event.getEntity().getKiller();
+                event.getDrops().clear();
+                lootingHandler.handle(entity, protoEntity, player);
             }
         });
     }
@@ -80,14 +83,15 @@ public final class EntityEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Optional<ProtoEntity> optional = manager.canActivateEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
+            Entity entity = event.getEntity();
+            protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
             if (!event.isCancelled()) {
-                Entity entity = event.getEntity();
-                protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
-                if (!event.isCancelled()) {
-                    manager.activateEntity(entity);
-                }
+                manager.activateEntity(entity);
             }
         });
     }
@@ -124,16 +128,17 @@ public final class EntityEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
+            final LivingEntity entity = (LivingEntity) event.getEntity();
+            protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
             if (!event.isCancelled()) {
-                final LivingEntity entity = (LivingEntity) event.getEntity();
-                protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
-                if (!event.isCancelled()) {
-                    if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
-                        double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                        protoEntity.getNameUpdater().updateName(entity, finalHealth);
-                    }
+                if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+                    double finalHealth = (entity.getHealth() - event.getFinalDamage());
+                    protoEntity.getNameUpdater().updateName(entity, finalHealth);
                 }
             }
         });
@@ -141,21 +146,23 @@ public final class EntityEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            if (!event.isCancelled()) {
-                if (EntityType.PLAYER.equals(event.getDamager().getType())) {
-                    Player player = (Player) event.getDamager();
-                    double finalDamage = event.getFinalDamage();
-                    event.setCancelled(true);
-                    final LivingEntity entity = (LivingEntity) event.getEntity();
-                    entity.damage(finalDamage);
-                    Location loc = entity.getLocation();
-                    entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),
-                            PARTICLE_COUNT, 0D, 0D, 0D, PARTICLE_MULTIPLIER);
-                    entity.setLastDamageCause(event);
-                    knockBackHandler.handle(entity, protoEntity, player);
-                }
+            if (EntityType.PLAYER.equals(event.getDamager().getType())) {
+                Player player = (Player) event.getDamager();
+                double finalDamage = event.getFinalDamage();
+                event.setCancelled(true);
+                final LivingEntity entity = (LivingEntity) event.getEntity();
+                entity.damage(finalDamage);
+                Location loc = entity.getLocation();
+                int particleCount = DiceMobManager.randomIntBetween(MIN_PARTICLE, MAX_PARTICLE);
+                entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),
+                        particleCount, 0D, 0D, 0D, PARTICLE_MULTIPLIER);
+                entity.setLastDamageCause(event);
+                knockBackHandler.handle(entity, protoEntity, player);
             }
         });
     }

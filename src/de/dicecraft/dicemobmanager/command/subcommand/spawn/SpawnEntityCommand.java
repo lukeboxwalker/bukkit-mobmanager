@@ -69,7 +69,7 @@ public class SpawnEntityCommand implements Command {
                             ProtoEntity protoEntity = DiceMobManager.builder()
                                     .setType(EntityType.CREEPER)
                                     .setDeathDrops(Collections.singleton(deathDrop))
-                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 250000D)
+                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 2500000D)
                                     .setName("Super BOOM Creeper")
                                     .setLevel(100)
                                     .build();

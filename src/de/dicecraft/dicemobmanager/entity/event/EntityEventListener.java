@@ -156,12 +156,13 @@ public final class EntityEventListener implements Listener {
                 double finalDamage = event.getFinalDamage();
                 event.setCancelled(true);
                 final LivingEntity entity = (LivingEntity) event.getEntity();
+                entity.setLastDamageCause(event);
                 entity.damage(finalDamage);
                 Location loc = entity.getLocation();
                 int particleCount = DiceMobManager.randomIntBetween(MIN_PARTICLE, MAX_PARTICLE);
                 entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),
                         particleCount, 0D, 0D, 0D, PARTICLE_MULTIPLIER);
-                entity.setLastDamageCause(event);
+
                 knockBackHandler.handle(entity, protoEntity, player);
             }
         });

@@ -24,7 +24,7 @@ public class DiceMobManager extends JavaPlugin {
 
     private static final Random RANDOM = new Random();
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
-    private static final int DEFAULT_TICK_SPEED = 10;
+    private static final int DEFAULT_TICK_SPEED = 1;
 
     private static DiceMobManager instance;
     private static EntityManager entityManager;

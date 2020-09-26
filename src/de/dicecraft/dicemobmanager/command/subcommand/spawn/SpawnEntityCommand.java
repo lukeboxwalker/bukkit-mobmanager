@@ -8,9 +8,13 @@ import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
+import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.strategy.StrategyRegistrationVisitor;
+import de.dicecraft.dicemobmanager.entity.strategy.TickStrategy;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -72,6 +76,23 @@ public class SpawnEntityCommand implements Command {
                                     .setAttribute(Attribute.GENERIC_MAX_HEALTH, 2500000D)
                                     .setName("Super BOOM Creeper")
                                     .setLevel(100)
+                                    .addStrategy(new TickStrategy() {
+                                        @Override
+                                        public void play(TickEvent tickEvent) {
+                                            System.out.println("test");
+                                        }
+
+                                        @Nonnull
+                                        @Override
+                                        public NamespacedKey getKey() {
+                                            return DiceMobManager.createNameSpacedKey("test");
+                                        }
+
+                                        @Override
+                                        public void accept(StrategyRegistrationVisitor registrationVisitor) {
+                                            registrationVisitor.registerTickStrategy(this);
+                                        }
+                                    })
                                     .build();
 
                             Configuration configuration = DiceMobManager.configBuilder()

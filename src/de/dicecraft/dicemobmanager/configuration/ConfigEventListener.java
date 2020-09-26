@@ -9,7 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
-import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 
 import java.util.Optional;
 
@@ -38,11 +38,13 @@ public class ConfigEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSlimeSplit(SlimeSplitEvent event) {
-        Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
-        optional.ifPresent(configuration -> {
-            manager.removeEntity(event.getEntity());
-            event.setCancelled(!configuration.getBoolean(ConfigFlag.SLIME_SPLIT));
-        });
+        if (event.isCancelled()) {
+            Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            optional.ifPresent(configuration -> {
+                manager.removeEntity(event.getEntity());
+                event.setCancelled(configuration.shouldCancel(ConfigFlag.SLIME_SPLIT));
+            });
+        }
     }
 
     /**
@@ -56,28 +58,41 @@ public class ConfigEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onExplodeDamage(ExplosionPrimeEvent event) {
-        Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
-        optional.ifPresent(configuration -> {
-            if (!configuration.getBoolean(ConfigFlag.CREEPER_EXPLOSION_DAMAGE)) {
-                Entity entity = event.getEntity();
-                entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
-                event.setCancelled(true);
-            }
-        });
-        if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
-            Projectile projectile = (Projectile) event.getEntity();
-            if (manager.isWatchingProjectile(projectile)) {
-                optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
-                optional.ifPresent(configuration -> {
-                    manager.unWatchProjectile(projectile);
-                    if (!configuration.getBoolean(ConfigFlag.PROJECTILE_BLOCK_DAMAGE)) {
-                        Entity entity = event.getEntity();
-                        entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
-                        event.setCancelled(true);
-                    }
-                });
+        if (!event.isCancelled()) {
+            Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            optional.ifPresent(configuration -> {
+                if (configuration.shouldCancel(ConfigFlag.CREEPER_EXPLOSION_DAMAGE)) {
+                    Entity entity = event.getEntity();
+                    entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
+                    event.setCancelled(true);
+                }
+            });
+            if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
+                Projectile projectile = (Projectile) event.getEntity();
+                if (manager.isWatchingProjectile(projectile)) {
+                    optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
+                    optional.ifPresent(configuration -> {
+                        manager.unWatchProjectile(projectile);
+                        if (configuration.shouldCancel(ConfigFlag.PROJECTILE_BLOCK_DAMAGE)) {
+                            Entity entity = event.getEntity();
+                            entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
+                            event.setCancelled(true);
+                        }
+                    });
+                }
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSheepShear(PlayerShearEntityEvent event) {
+        if (!event.isCancelled()) {
+            Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            optional.ifPresent(configuration -> {
+                event.setCancelled(configuration.shouldCancel(ConfigFlag.CAN_SHEAR_SHEEP));
+            });
+        }
+    }
+
 }
 

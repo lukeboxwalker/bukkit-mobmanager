@@ -12,7 +12,7 @@ public class CustomConfiguration implements Configuration {
     }
 
     @Override
-    public boolean getBoolean(ConfigFlag flag) {
+    public boolean shouldCancel(ConfigFlag flag) {
         return configFlags.getOrDefault(flag, true);
     }
 }

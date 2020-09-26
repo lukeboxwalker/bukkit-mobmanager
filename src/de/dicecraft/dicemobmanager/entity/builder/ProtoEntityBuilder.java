@@ -40,6 +40,13 @@ public class ProtoEntityBuilder implements ProtoBuilder {
     private NameUpdater nameUpdater;
     private int level;
     private String name;
+    private boolean shouldBurnInDay = true;
+
+    @Override
+    public ProtoBuilder setShouldBurnInDay(boolean shouldBurnInDay) {
+        this.shouldBurnInDay = shouldBurnInDay;
+        return this;
+    }
 
     /**
      * Specifies an attribute for the entity.
@@ -238,6 +245,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setPotionEffects(potionEffects);
         protoEntity.setIgnoredGoals(ignoredGoals);
         protoEntity.setGoals(pathfinderGoals);
+        protoEntity.setShouldBurnInDay(shouldBurnInDay);
 
         final StrategyManager strategyManager = new SimpleStrategyManager();
         strategyManager.addStrategies(this.strategies);

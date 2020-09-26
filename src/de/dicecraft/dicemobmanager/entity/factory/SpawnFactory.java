@@ -4,29 +4,36 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import com.destroystokyo.paper.entity.ai.PaperMobGoals;
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 
-import net.minecraft.server.v1_16_R2.GenericAttributes;
+import net.minecraft.server.v1_16_R2.EntityPhantom;
+import net.minecraft.server.v1_16_R2.EntitySkeleton;
+import net.minecraft.server.v1_16_R2.EntityZombie;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BossBar;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftZombie;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
-import org.spigotmc.SpigotConfig;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -75,7 +82,7 @@ public class SpawnFactory implements EntitySpawnFactory {
 
                 switch (protoEntity.getEntityType()) {
                     case ZOMBIE:
-                        prepareZombie((Zombie) mob);
+                        prepareZombie((Zombie) mob, protoEntity);
                         break;
                     case WITHER:
                         prepareWither((Wither) mob);
@@ -100,8 +107,8 @@ public class SpawnFactory implements EntitySpawnFactory {
         }
     }
 
-    private void prepareZombie(Zombie zombie) {
-        zombie.setShouldBurnInDay(false);
+    private void prepareZombie(Zombie zombie, ProtoEntity protoEntity) {
+        zombie.setShouldBurnInDay(protoEntity.shouldBurnInDay());
         zombie.setAdult();
     }
 

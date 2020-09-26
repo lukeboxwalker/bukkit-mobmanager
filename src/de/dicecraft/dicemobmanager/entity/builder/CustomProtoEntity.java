@@ -35,6 +35,16 @@ public class CustomProtoEntity implements ProtoEntity {
     private EntityType entityType;
     private int level;
     private String name;
+    private boolean shouldBurnInDay;
+
+    @Override
+    public boolean shouldBurnInDay() {
+        return shouldBurnInDay;
+    }
+
+    public void setShouldBurnInDay(boolean shouldBurnInDay) {
+        this.shouldBurnInDay = shouldBurnInDay;
+    }
 
     @Nonnull
     @Override

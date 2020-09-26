@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
@@ -7,6 +8,7 @@ import de.dicecraft.dicemobmanager.entity.enchatment.EnchantmentHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.KnockBackHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.LootingHandler;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
+import net.minecraft.server.v1_16_R2.EntityPhantom;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;

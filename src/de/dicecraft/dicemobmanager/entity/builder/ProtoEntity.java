@@ -27,6 +27,19 @@ import java.util.Set;
  */
 public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
 
+    /**
+     * Defines whether the entity should
+     * burn at day.
+     * <p>
+     * Can only be applied on mobs providing
+     * a setter method eg. Zombie or Phantom
+     *
+     * @return if the entity should burn at day.
+     */
+    default boolean shouldBurnInDay() {
+        return false;
+    }
+
     @Nonnull
     Set<PotionEffect> getPotionEffects();
 

@@ -17,6 +17,8 @@ import java.util.Set;
 
 public interface ProtoBuilder {
 
+    ProtoBuilder setShouldBurnInDay(boolean shouldBurnInDay);
+
     /**
      * Specifies an attribute for the entity.
      * <p>

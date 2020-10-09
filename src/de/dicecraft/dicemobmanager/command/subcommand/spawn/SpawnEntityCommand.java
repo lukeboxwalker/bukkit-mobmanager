@@ -9,9 +9,11 @@ import de.dicecraft.dicemobmanager.entity.builder.CustomType;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
+import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
+import de.dicecraft.dicemobmanager.entity.strategy.SpawnStrategy;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyRegistrationVisitor;
 import de.dicecraft.dicemobmanager.entity.strategy.TickStrategy;
 import org.bukkit.Material;
@@ -23,6 +25,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,15 +78,15 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
                                     DeathDrop.Rarity.LEGENDARY);
 
-                            ProtoEntity<Zombie> protoEntity = DiceMobManager.builder(CustomType.ZOMBIE)
+                            ProtoEntity<Slime> protoEntity = DiceMobManager.builder(CustomType.SLIME)
                                     .setDeathDrops(Collections.singleton(deathDrop))
-                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 2500000D)
+                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 10D)
                                     .setName("Super BOOM Creeper")
                                     .setLevel(100)
-                                    .addStrategy(new TickStrategy<Mob>() {
+                                    .addStrategy(new SpawnStrategy<Slime>() {
                                         @Override
-                                        public void play(TickEvent tickEvent, Mob zombie) {
-                                            System.out.println("test");
+                                        public void play(SpawnEvent spawnEvent, Slime slime) {
+                                            slime.setSize(5);
                                         }
 
                                         @Nonnull
@@ -94,7 +97,7 @@ public class SpawnEntityCommand implements Command {
 
                                         @Override
                                         public void accept(StrategyRegistrationVisitor registrationVisitor) {
-                                            registrationVisitor.registerTickStrategy(this);
+                                            registrationVisitor.registerSpawnStrategy(this);
                                         }
                                     })
                                     .build();

@@ -2,13 +2,14 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 
 public abstract class Event {
 
     private final LivingEntity entity;
-    private final ProtoEntity<?> protoEntity;
+    private final ProtoEntity<? extends Mob> protoEntity;
 
-    public Event(LivingEntity entity, ProtoEntity<?> protoEntity) {
+    public Event(LivingEntity entity, ProtoEntity<? extends Mob> protoEntity) {
         this.entity = entity;
         this.protoEntity = protoEntity;
     }
@@ -17,7 +18,7 @@ public abstract class Event {
         return entity;
     }
 
-    public ProtoEntity<?> getProtoEntity() {
+    public ProtoEntity<? extends Mob> getProtoEntity() {
         return protoEntity;
     }
 }

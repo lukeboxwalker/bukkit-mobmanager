@@ -38,7 +38,7 @@ public class ConfigEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSlimeSplit(SlimeSplitEvent event) {
-        if (event.isCancelled()) {
+        if (!event.isCancelled()) {
             Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
             optional.ifPresent(configuration -> {
                 manager.removeEntity(event.getEntity());

@@ -2,7 +2,7 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.enchatment.EnchantmentHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.KnockBackHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.LootingHandler;

@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity.builder;
+package de.dicecraft.dicemobmanager.entity;
 
 import org.bukkit.entity.*;
 

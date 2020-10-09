@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.enchatment;
 
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;

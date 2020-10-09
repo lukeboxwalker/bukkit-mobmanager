@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.factory;
 
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

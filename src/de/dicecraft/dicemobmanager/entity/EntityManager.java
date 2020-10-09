@@ -1,7 +1,6 @@
 package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.configuration.Configuration;
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;

@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity.builder;
+package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;

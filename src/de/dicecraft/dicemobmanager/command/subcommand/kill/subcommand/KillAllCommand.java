@@ -3,7 +3,7 @@ package de.dicecraft.dicemobmanager.command.subcommand.kill.subcommand;
 import de.dicecraft.dicemobmanager.command.Command;
 import de.dicecraft.dicemobmanager.command.CommandManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

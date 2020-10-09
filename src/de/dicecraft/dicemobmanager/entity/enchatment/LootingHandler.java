@@ -1,9 +1,8 @@
 package de.dicecraft.dicemobmanager.entity.enchatment;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.Map;
 

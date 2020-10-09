@@ -1,8 +1,7 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class SpawnEvent extends Event implements BukkitEventHolder<EntitySpawnEvent> {

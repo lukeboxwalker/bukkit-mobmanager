@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity.builder;
+package de.dicecraft.dicemobmanager.entity;
 
 import de.dicecraft.dicemobmanager.entity.name.CustomNameUpdater;
 import de.dicecraft.dicemobmanager.entity.name.NameUpdater;

@@ -1,4 +1,4 @@
-package de.dicecraft.dicemobmanager.entity.builder;
+package de.dicecraft.dicemobmanager.entity;
 
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;

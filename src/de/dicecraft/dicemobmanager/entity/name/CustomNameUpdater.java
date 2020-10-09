@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.name;
 
-import de.dicecraft.dicemobmanager.entity.builder.ProtoNamedEntity;
+import de.dicecraft.dicemobmanager.entity.ProtoNamedEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;

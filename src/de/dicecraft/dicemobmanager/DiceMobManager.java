@@ -8,7 +8,7 @@ import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.configuration.CustomConfigBuilder;
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
-import de.dicecraft.dicemobmanager.entity.builder.CustomType;
+import de.dicecraft.dicemobmanager.entity.CustomType;
 import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;

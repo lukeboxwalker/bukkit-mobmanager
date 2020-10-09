@@ -1,6 +1,8 @@
 package de.dicecraft.dicemobmanager.entity.builder;
 
 import com.destroystokyo.paper.entity.ai.GoalKey;
+import de.dicecraft.dicemobmanager.entity.CustomType;
+import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.equipment.CustomEquipment;
 import de.dicecraft.dicemobmanager.entity.equipment.Equipment;
@@ -12,7 +14,6 @@ import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

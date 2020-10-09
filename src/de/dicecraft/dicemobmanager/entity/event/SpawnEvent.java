@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class SpawnEvent extends Event implements BukkitEventHolder<EntitySpawnEvent> {
@@ -12,7 +13,7 @@ public class SpawnEvent extends Event implements BukkitEventHolder<EntitySpawnEv
         this(event.getEntity(), event.getProtoEntity(), spawnEvent);
     }
 
-    public SpawnEvent(LivingEntity entity, ProtoEntity protoEntity, EntitySpawnEvent spawnEvent) {
+    public SpawnEvent(LivingEntity entity, ProtoEntity<?> protoEntity, EntitySpawnEvent spawnEvent) {
         super(entity, protoEntity);
         this.spawnEvent = spawnEvent;
     }

@@ -8,6 +8,7 @@ import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
 import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Slime;
 
@@ -23,13 +24,13 @@ import java.util.stream.Collectors;
 
 public class EntityManager {
 
-    private final Map<Entity, Component<ProtoEntity, Configuration>> registeredEntities = new HashMap<>();
-    private final Map<Entity, Component<ProtoEntity, Configuration>> activeEntities = new HashMap<>();
+    private final Map<Entity, Component<ProtoEntity<?>, Configuration>> registeredEntities = new HashMap<>();
+    private final Map<Entity, Component<ProtoEntity<?>, Configuration>> activeEntities = new HashMap<>();
     private final Map<Entity, Component<TickEvent, Configuration>> tickedEntities = new HashMap<>();
     private final Map<Entity, Entity> projectileMap = new HashMap<>();
 
     private final List<LivingEntity> deathEntities = new ArrayList<>();
-    private final Function<Map.Entry<Entity, Component<ProtoEntity, Configuration>>, TickEvent> toTickEvent =
+    private final Function<Map.Entry<Entity, Component<ProtoEntity<?>, Configuration>>, TickEvent> toTickEvent =
             entry -> new TickEvent((LivingEntity) entry.getKey(), entry.getValue().getFirst());
 
     private boolean canItemsDrop = true;
@@ -47,8 +48,8 @@ public class EntityManager {
         tickedEntities.keySet().forEach(Entity::remove);
     }
 
-    public Map<Entity, ProtoEntity> getAllEntities(Entity... entities) {
-        Map<Entity, ProtoEntity> result = new HashMap<>();
+    public Map<Entity, ProtoEntity<?>> getAllEntities(Entity... entities) {
+        Map<Entity, ProtoEntity<?>> result = new HashMap<>();
         if (entities.length == 0) {
             activeEntities.forEach((entity, component) -> result.put(entity, component.getFirst()));
             tickedEntities.forEach((entity, component) -> result.put(entity, component.getFirst().getProtoEntity()));
@@ -65,7 +66,7 @@ public class EntityManager {
         return result;
     }
 
-    public Optional<ProtoEntity> getProtoEntity(Entity entity) {
+    public Optional<ProtoEntity<?>> getProtoEntity(Entity entity) {
         if (tickedEntities.containsKey(entity)) {
             Component<TickEvent, Configuration> component = tickedEntities.get(entity);
             return Optional.of(component.getFirst().getProtoEntity());
@@ -87,8 +88,12 @@ public class EntityManager {
         }
     }
 
-    public void tickEntities() {
+    @SuppressWarnings("unchecked")
+    public <T extends Mob> void tickEntity(final TickEvent tickEvent, final ProtoEntity<T> protoEntity) {
+        protoEntity.onEntityTick(tickEvent, (T) tickEvent.getEntity());
+    }
 
+    public void tickEntities() {
         tickedEntities.values().forEach(component -> {
             TickEvent tickEvent = component.getFirst();
             LivingEntity entity = tickEvent.getEntity();
@@ -101,7 +106,7 @@ public class EntityManager {
                 }
             } else {
                 // ticking the entity
-                tickEvent.getProtoEntity().onEntityTick(tickEvent);
+                tickEntity(tickEvent, tickEvent.getProtoEntity());
             }
         });
 
@@ -119,7 +124,7 @@ public class EntityManager {
     }
 
 
-    public Optional<ProtoEntity> canActivateEntity(Entity entity) {
+    public Optional<ProtoEntity<?>> canActivateEntity(Entity entity) {
         if (registeredEntities.containsKey(entity)) {
             return Optional.of(registeredEntities.get(entity).getFirst());
         } else {
@@ -128,13 +133,13 @@ public class EntityManager {
     }
 
     public void activateEntity(Entity entity) {
-        Component<ProtoEntity, Configuration> component = registeredEntities.remove(entity);
+        Component<ProtoEntity<?>, Configuration> component = registeredEntities.remove(entity);
         if (component != null) {
             activeEntities.put(entity, component);
         }
     }
 
-    public void registerEntity(LivingEntity entity, ProtoEntity protoEntity, Configuration configuration) {
+    public void registerEntity(LivingEntity entity, ProtoEntity<?> protoEntity, Configuration configuration) {
         registeredEntities.put(entity, new Component<>(protoEntity, configuration));
     }
 

@@ -13,7 +13,6 @@ import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.potion.PotionEffect;
 
@@ -22,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CustomProtoEntity implements ProtoEntity {
+public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
 
-    private StrategyManager strategyManager;
+    private StrategyManager<T> strategyManager;
     private Map<Attribute, Double> attributes;
     private Equipment equipment;
     private Set<PotionEffect> potionEffects;
@@ -32,7 +31,7 @@ public class CustomProtoEntity implements ProtoEntity {
     private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Set<DeathDrop> deathDrops;
     private NameUpdater nameUpdater;
-    private EntityType entityType;
+    private CustomType<T> entityType;
     private int level;
     private String name;
     private boolean shouldBurnInDay;
@@ -108,7 +107,7 @@ public class CustomProtoEntity implements ProtoEntity {
 
     @Nonnull
     @Override
-    public EntityType getEntityType() {
+    public CustomType<T> getCustomType() {
         return entityType;
     }
 
@@ -123,31 +122,31 @@ public class CustomProtoEntity implements ProtoEntity {
     }
 
     @Override
-    public void onEntityTick(TickEvent event) {
-        strategyManager.getTickStrategies().forEach(strategy -> strategy.play(event));
+    public void onEntityTick(TickEvent event, T mob) {
+        strategyManager.getTickStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntityDamage(DamageEvent event) {
-        strategyManager.getDamageStrategies().forEach(strategy -> strategy.play(event));
+    public void onEntityDamage(DamageEvent event, T mob) {
+        strategyManager.getDamageStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntityDeath(DeathEvent event) {
-        strategyManager.getDeathStrategies().forEach(strategy -> strategy.play(event));
+    public void onEntityDeath(DeathEvent event, T mob) {
+        strategyManager.getDeathStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntitySpawn(SpawnEvent event) {
-        strategyManager.getSpawnStrategies().forEach(strategy -> strategy.play(event));
+    public void onEntitySpawn(SpawnEvent event, T mob) {
+        strategyManager.getSpawnStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onItemDrop(ItemDropEvent event) {
-        strategyManager.getItemDropStrategies().forEach(strategy -> strategy.play(event));
+    public void onItemDrop(ItemDropEvent event, T mob) {
+        strategyManager.getItemDropStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
-    public void setEntityType(EntityType entityType) {
+    public void setEntityType(CustomType<T> entityType) {
         this.entityType = entityType;
     }
 
@@ -171,7 +170,7 @@ public class CustomProtoEntity implements ProtoEntity {
         this.name = name;
     }
 
-    public void setStrategyManager(StrategyManager strategyManager) {
+    public void setStrategyManager(StrategyManager<T> strategyManager) {
         this.strategyManager = strategyManager;
     }
 }

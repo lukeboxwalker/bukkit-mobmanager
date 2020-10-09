@@ -1,6 +1,5 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
-import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
@@ -8,12 +7,12 @@ import de.dicecraft.dicemobmanager.entity.enchatment.EnchantmentHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.KnockBackHandler;
 import de.dicecraft.dicemobmanager.entity.enchatment.LootingHandler;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
-import net.minecraft.server.v1_16_R2.EntityPhantom;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -47,11 +46,11 @@ public final class EntityEventListener implements Listener {
      * Listens to the EntityDeathEvent to identify when a
      * custom entity died.
      * <p>
-     * Whenever a custom entity dies the {@link ProtoEntity#onEntityDeath(DeathEvent)}
+     * Whenever a custom entity dies the {@link ProtoEntity#onEntityDeath(DeathEvent, Mob)}
      * method is called to notify the entity.
      * If the entity Death isn't canceled the configured item drops will
      * spawn according to there drop chance. Each time an item Drops the entity
-     * which dropped the item, will be notified by the {@link ProtoEntity#onItemDrop(ItemDropEvent)}
+     * which dropped the item, will be notified by the {@link ProtoEntity#onItemDrop(ItemDropEvent, Mob)}
      * The item drop can't be canceled.
      *
      * @param event the EntityDeathEvent
@@ -61,10 +60,10 @@ public final class EntityEventListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             LivingEntity entity = event.getEntity();
-            protoEntity.onEntityDeath(new DeathEvent(entity, protoEntity, event));
+            callDeathEvent(protoEntity, event);
             if (!event.isCancelled()) {
                 Player player = event.getEntity().getKiller();
                 event.getDrops().clear();
@@ -73,11 +72,16 @@ public final class EntityEventListener implements Listener {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private <T extends Mob> void callDeathEvent(final ProtoEntity<T> protoEntity, final EntityDeathEvent event) {
+        protoEntity.onEntityDeath(new DeathEvent(event.getEntity(), protoEntity, event), (T) event.getEntity());
+    }
+
     /**
      * Listens to the EntityDeathEvent to identify when a
      * custom entity spawns.
      * <p>
-     * Whenever a custom entity spawns the {@link ProtoEntity#onEntitySpawn(SpawnEvent)}
+     * Whenever a custom entity spawns the {@link ProtoEntity#onEntitySpawn(SpawnEvent, Mob)}
      * method is called to notify the entity.
      * Activates the entity so it can be ticked by the scheduler.
      *
@@ -88,14 +92,19 @@ public final class EntityEventListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity> optional = manager.canActivateEntity(event.getEntity());
+        Optional<ProtoEntity<?>> optional = manager.canActivateEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             Entity entity = event.getEntity();
-            protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) entity, protoEntity, event));
+            callSpawnEvent(protoEntity, event);
             if (!event.isCancelled()) {
                 manager.activateEntity(entity);
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Mob> void callSpawnEvent(final ProtoEntity<T> protoEntity, final EntitySpawnEvent event) {
+        protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) event.getEntity(), protoEntity, event), (T) event.getEntity());
     }
 
     /**
@@ -112,7 +121,7 @@ public final class EntityEventListener implements Listener {
         if (!event.isCancelled() && EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
             final Projectile projectile = event.getEntity();
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
-            Optional<ProtoEntity> optional = manager.getProtoEntity(shooter);
+            Optional<ProtoEntity<?>> optional = manager.getProtoEntity(shooter);
             optional.ifPresent(protoEntity -> manager.watchProjectile(projectile, shooter));
         }
     }
@@ -122,7 +131,7 @@ public final class EntityEventListener implements Listener {
      * Listens to the EntityDamageEvent to identify when a
      * custom entity takes damage.
      * <p>
-     * Whenever a custom entity takes damage the {@link ProtoEntity#onEntityDamage(DamageEvent)}
+     * Whenever a custom entity takes damage the {@link ProtoEntity#onEntityDamage(DamageEvent, Mob)}
      * method is called to notify the entity.
      * Updates the custom name of the entity if the name is not null and not empty.
      *
@@ -133,10 +142,10 @@ public final class EntityEventListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             final LivingEntity entity = (LivingEntity) event.getEntity();
-            protoEntity.onEntityDamage(new DamageEvent(entity, protoEntity, event));
+            callDamageEvent(protoEntity, event);
             if (!event.isCancelled()) {
                 if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
                     double finalHealth = (entity.getHealth() - event.getFinalDamage());
@@ -146,12 +155,17 @@ public final class EntityEventListener implements Listener {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private <T extends Mob> void callDamageEvent(final ProtoEntity<T> protoEntity, final EntityDamageEvent event) {
+        protoEntity.onEntityDamage(new DamageEvent((LivingEntity) event.getEntity(), protoEntity, event), (T) event.getEntity());
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity> optional = manager.getProtoEntity(event.getEntity());
+        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             if (EntityType.PLAYER.equals(event.getDamager().getType())) {
                 Player player = (Player) event.getDamager();

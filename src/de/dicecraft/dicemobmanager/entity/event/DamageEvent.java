@@ -12,7 +12,7 @@ public class DamageEvent extends Event implements BukkitEventHolder<EntityDamage
         this(event.getEntity(), event.getProtoEntity(), damageEvent);
     }
 
-    public DamageEvent(LivingEntity entity, ProtoEntity protoEntity, EntityDamageEvent damageEvent) {
+    public DamageEvent(LivingEntity entity, ProtoEntity<?> protoEntity, EntityDamageEvent damageEvent) {
         super(entity, protoEntity);
         this.damageEvent = damageEvent;
     }

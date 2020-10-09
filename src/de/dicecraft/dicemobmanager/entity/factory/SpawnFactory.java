@@ -53,16 +53,16 @@ public class SpawnFactory implements EntitySpawnFactory {
     }
 
     @Override
-    public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation) {
+    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location spawnLocation) {
         return spawnEntity(protoEntity, spawnLocation, (entity) -> {
         });
     }
 
     @Override
-    public LivingEntity spawnEntity(ProtoEntity protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
+    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
         final Map<Attribute, Double> attributes = protoEntity.getAttributeMap();
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, DEFAULT_MAX_HEALTH);
-        final EntityType type = protoEntity.getEntityType();
+        final EntityType type = protoEntity.getCustomType().getEntityType();
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
             return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, SPAWN_REASON, entity -> {
                 Mob mob = (Mob) entity;
@@ -71,7 +71,7 @@ public class SpawnFactory implements EntitySpawnFactory {
                 this.prepareGoals(mob, protoEntity);
                 this.preparePotionEffects(mob, protoEntity);
 
-                switch (protoEntity.getEntityType()) {
+                switch (type) {
                     case ZOMBIE:
                         prepareZombie((Zombie) mob, protoEntity);
                         break;
@@ -98,18 +98,18 @@ public class SpawnFactory implements EntitySpawnFactory {
         }
     }
 
-    private void prepareZombie(Zombie zombie, ProtoEntity protoEntity) {
+    private void prepareZombie(Zombie zombie, ProtoEntity<? extends Mob> protoEntity) {
         zombie.setShouldBurnInDay(protoEntity.shouldBurnInDay());
         zombie.setAdult();
     }
 
-    private void preparePotionEffects(Mob mob, ProtoEntity protoEntity) {
+    private void preparePotionEffects(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
         for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {
             mob.addPotionEffect(potionEffect);
         }
     }
 
-    private void prepareGoals(Mob mob, ProtoEntity protoEntity) {
+    private void prepareGoals(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
         final Set<GoalKey<Mob>> goalKeys = new HashSet<>();
         for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
             final Goal<Mob> goal = entry.getEntry().supply(mob);
@@ -135,7 +135,7 @@ public class SpawnFactory implements EntitySpawnFactory {
         }
     }
 
-    private void prepareAttributes(Mob mob, ProtoEntity protoEntity, Map<Attribute, Double> attributes) {
+    private void prepareAttributes(Mob mob, ProtoEntity<? extends Mob> protoEntity, Map<Attribute, Double> attributes) {
         // disables baby zombies on chickens
         attributes.put(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
 
@@ -148,7 +148,7 @@ public class SpawnFactory implements EntitySpawnFactory {
         mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
     }
 
-    private void prepareCustomName(Mob mob, ProtoEntity protoEntity) {
+    private void prepareCustomName(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
         if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
             mob.setCustomNameVisible(true);
             protoEntity.getNameUpdater().updateName(mob);

@@ -4,6 +4,7 @@ import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 
 public class ItemDropEvent extends Event {
 
@@ -14,7 +15,7 @@ public class ItemDropEvent extends Event {
         this(event.getEntity(), event.getProtoEntity(), deathDrop, item);
     }
 
-    public ItemDropEvent(LivingEntity entity, ProtoEntity protoEntity, DeathDrop deathDrop, Item item) {
+    public ItemDropEvent(LivingEntity entity, ProtoEntity<?> protoEntity, DeathDrop deathDrop, Item item) {
         super(entity, protoEntity);
         this.deathDrop = deathDrop;
         this.item = item;

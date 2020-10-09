@@ -26,24 +26,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ProtoEntityBuilder implements ProtoBuilder {
+public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
 
     private final Map<Attribute, Double> attributes = new HashMap<>();
     private final Equipment equipment = new CustomEquipment();
     private final Set<PotionEffect> potionEffects = new HashSet<>();
     private final Set<GoalKey<? extends Mob>> ignoredGoals = new HashSet<>();
     private final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals = new ArrayList<>();
-    private final List<Strategy> strategies = new ArrayList<>();
+    private final List<Strategy<? super T>> strategies = new ArrayList<>();
+    private final CustomType<T> entityType;
 
     private Set<DeathDrop> deathDrops = new HashSet<>();
-    private EntityType entityType = EntityType.ZOMBIE;
     private NameUpdater nameUpdater;
     private int level;
     private String name;
     private boolean shouldBurnInDay = true;
 
+    public ProtoEntityBuilder(final CustomType<T> customType) {
+        this.entityType = customType;
+    }
+
     @Override
-    public ProtoBuilder setShouldBurnInDay(boolean shouldBurnInDay) {
+    public ProtoBuilder<T> setShouldBurnInDay(boolean shouldBurnInDay) {
         this.shouldBurnInDay = shouldBurnInDay;
         return this;
     }
@@ -61,7 +65,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder setAttribute(@Nonnull Attribute attribute, double value) {
+    public ProtoBuilder<T> setAttribute(@Nonnull Attribute attribute, double value) {
         attributes.put(attribute, value);
         return this;
     }
@@ -75,24 +79,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder addEffect(@Nonnull PotionEffect potionEffect) {
+    public ProtoBuilder<T> addEffect(@Nonnull PotionEffect potionEffect) {
         potionEffects.add(potionEffect);
-        return this;
-    }
-
-    /**
-     * Specifies the type for the entity.
-     * <p>
-     * The entity type determines the entity model, as
-     * well as the specific class to instantiate when building.
-     * See also {@link EntityType}
-     *
-     * @param entityType type of the entity
-     * @return builder to continue
-     */
-    @Override
-    public ProtoBuilder setType(@Nonnull EntityType entityType) {
-        this.entityType = entityType;
         return this;
     }
 
@@ -110,7 +98,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier) {
+    public ProtoBuilder<T> addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, supplier));
         return this;
     }
@@ -123,7 +111,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey) {
+    public ProtoBuilder<T> ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey) {
         ignoredGoals.add(goalKey);
         return this;
     }
@@ -136,7 +124,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder addEquipment(@Nonnull EquipmentSlot slot, @Nonnull ItemStack itemStack) {
+    public ProtoBuilder<T> addEquipment(@Nonnull EquipmentSlot slot, @Nonnull ItemStack itemStack) {
         switch (slot) {
             case FEET:
                 equipment.setBoots(itemStack);
@@ -169,7 +157,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder setName(String name) {
+    public ProtoBuilder<T> setName(String name) {
         this.name = name;
         return this;
     }
@@ -182,13 +170,13 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder setLevel(int level) {
+    public ProtoBuilder<T> setLevel(int level) {
         this.level = level;
         return this;
     }
 
     @Override
-    public ProtoBuilder setDeathDrops(@Nonnull Set<DeathDrop> deathDrops) {
+    public ProtoBuilder<T> setDeathDrops(@Nonnull Set<DeathDrop> deathDrops) {
         this.deathDrops = deathDrops;
         return this;
     }
@@ -205,7 +193,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder setNameSupplier(@Nonnull NameUpdater nameUpdater) {
+    public ProtoBuilder<T> setNameSupplier(@Nonnull NameUpdater nameUpdater) {
         this.nameUpdater = nameUpdater;
         return this;
     }
@@ -219,7 +207,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder addStrategy(@Nonnull Strategy strategy) {
+    public ProtoBuilder<T> addStrategy(@Nonnull Strategy<? super T> strategy) {
         this.strategies.add(strategy);
         return this;
     }
@@ -233,8 +221,8 @@ public class ProtoEntityBuilder implements ProtoBuilder {
      * @return new ProtoEntity
      */
     @Override
-    public ProtoEntity build() {
-        final CustomProtoEntity protoEntity = new CustomProtoEntity();
+    public ProtoEntity<T> build() {
+        final CustomProtoEntity<T> protoEntity = new CustomProtoEntity<>();
         protoEntity.setAttributeMap(attributes);
         protoEntity.setDeathDrops(deathDrops);
         protoEntity.setEquipment(equipment);
@@ -247,7 +235,7 @@ public class ProtoEntityBuilder implements ProtoBuilder {
         protoEntity.setGoals(pathfinderGoals);
         protoEntity.setShouldBurnInDay(shouldBurnInDay);
 
-        final StrategyManager strategyManager = new SimpleStrategyManager();
+        final StrategyManager<T> strategyManager = new SimpleStrategyManager<>();
         strategyManager.addStrategies(this.strategies);
 
         protoEntity.setStrategyManager(strategyManager);

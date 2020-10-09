@@ -5,6 +5,7 @@ import de.dicecraft.dicemobmanager.command.Command;
 import de.dicecraft.dicemobmanager.command.CommandManager;
 import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
+import de.dicecraft.dicemobmanager.entity.builder.CustomType;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
@@ -17,8 +18,12 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -70,15 +75,14 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
                                     DeathDrop.Rarity.LEGENDARY);
 
-                            ProtoEntity protoEntity = DiceMobManager.builder()
-                                    .setType(EntityType.CREEPER)
+                            ProtoEntity<Zombie> protoEntity = DiceMobManager.builder(CustomType.ZOMBIE)
                                     .setDeathDrops(Collections.singleton(deathDrop))
                                     .setAttribute(Attribute.GENERIC_MAX_HEALTH, 2500000D)
                                     .setName("Super BOOM Creeper")
                                     .setLevel(100)
-                                    .addStrategy(new TickStrategy() {
+                                    .addStrategy(new TickStrategy<Mob>() {
                                         @Override
-                                        public void play(TickEvent tickEvent) {
+                                        public void play(TickEvent tickEvent, Mob zombie) {
                                             System.out.println("test");
                                         }
 
@@ -109,14 +113,14 @@ public class SpawnEntityCommand implements Command {
                                             MULTI_SPAWN,
                                             protoEntity.getName(),
                                             protoEntity.getLevel(),
-                                            protoEntity.getEntityType().name().toLowerCase(),
+                                            protoEntity.getCustomType().getEntityType().name().toLowerCase(),
                                             finalAmount);
                                 } else {
                                     CommandManager.messageFormatter().sendMessage(sender,
                                             SINGLE_SPAWN,
                                             protoEntity.getName(),
                                             protoEntity.getLevel(),
-                                            protoEntity.getEntityType().name().toLowerCase());
+                                            protoEntity.getCustomType().getEntityType().name().toLowerCase());
                                 }
                             }
                         } catch (EntityCreationException e) {

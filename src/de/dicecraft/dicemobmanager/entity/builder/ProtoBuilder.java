@@ -6,7 +6,6 @@ import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.Strategy;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -15,9 +14,9 @@ import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public interface ProtoBuilder {
+public interface ProtoBuilder<T extends Mob> {
 
-    ProtoBuilder setShouldBurnInDay(boolean shouldBurnInDay);
+    ProtoBuilder<T> setShouldBurnInDay(boolean shouldBurnInDay);
 
     /**
      * Specifies an attribute for the entity.
@@ -31,7 +30,7 @@ public interface ProtoBuilder {
      * @param value     the value for the given attribute
      * @return builder to continue
      */
-    ProtoBuilder setAttribute(@Nonnull Attribute attribute, double value);
+    ProtoBuilder<T> setAttribute(@Nonnull Attribute attribute, double value);
 
     /**
      * Specifies an potion effect for the entity.
@@ -41,19 +40,7 @@ public interface ProtoBuilder {
      * @param potionEffect the potion effect to add
      * @return builder to continue
      */
-    ProtoBuilder addEffect(@Nonnull PotionEffect potionEffect);
-
-    /**
-     * Specifies the type for the entity.
-     * <p>
-     * The entity type determines the entity model, as
-     * well as the specific class to instantiate when building.
-     * See also {@link EntityType}
-     *
-     * @param entityType type of the entity
-     * @return builder to continue
-     */
-    ProtoBuilder setType(@Nonnull EntityType entityType);
+    ProtoBuilder<T> addEffect(@Nonnull PotionEffect potionEffect);
 
     /**
      * Specifies a pathfinder goal.
@@ -68,7 +55,7 @@ public interface ProtoBuilder {
      * @param supplier to supply pathfinder goals
      * @return builder to continue
      */
-    ProtoBuilder addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier);
+    ProtoBuilder<T> addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier);
 
     /**
      * Specifies a goal which need
@@ -77,7 +64,7 @@ public interface ProtoBuilder {
      * @param goalKey to ignore
      * @return builder to continue
      */
-    ProtoBuilder ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey);
+    ProtoBuilder<T> ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey);
 
     /**
      * Specifies the equipment for the entity.
@@ -86,7 +73,7 @@ public interface ProtoBuilder {
      * @param itemStack the equipment for the entity
      * @return builder to continue
      */
-    ProtoBuilder addEquipment(@Nonnull EquipmentSlot slot, @Nonnull ItemStack itemStack);
+    ProtoBuilder<T> addEquipment(@Nonnull EquipmentSlot slot, @Nonnull ItemStack itemStack);
 
     /**
      * Sets the custom name of the entity.
@@ -94,7 +81,7 @@ public interface ProtoBuilder {
      * @param name the custom name string
      * @return builder to continue
      */
-    ProtoBuilder setName(String name);
+    ProtoBuilder<T> setName(String name);
 
     /**
      * Sets the custom level of
@@ -103,7 +90,7 @@ public interface ProtoBuilder {
      * @param level the custom level
      * @return builder to continue
      */
-    ProtoBuilder setLevel(int level);
+    ProtoBuilder<T> setLevel(int level);
 
     /**
      * Sets the entity deathDrops.
@@ -111,7 +98,7 @@ public interface ProtoBuilder {
      * @param deathDrops the death loot
      * @return builder to continue
      */
-    ProtoBuilder setDeathDrops(@Nonnull Set<DeathDrop> deathDrops);
+    ProtoBuilder<T> setDeathDrops(@Nonnull Set<DeathDrop> deathDrops);
 
     /**
      * Sets the name supplier.
@@ -123,7 +110,7 @@ public interface ProtoBuilder {
      * @param nameUpdater the name supplier
      * @return builder to continue
      */
-    ProtoBuilder setNameSupplier(@Nonnull NameUpdater nameUpdater);
+    ProtoBuilder<T> setNameSupplier(@Nonnull NameUpdater nameUpdater);
 
     /**
      * Sets an entity strategy.
@@ -131,9 +118,10 @@ public interface ProtoBuilder {
      * The {@link Strategy} defines a behavior
      * for the entity
      *
+     * @param strategy the strategy
      * @return builder to continue
      */
-    ProtoBuilder addStrategy(@Nonnull Strategy strategy);
+    ProtoBuilder<T> addStrategy(@Nonnull Strategy<? super T> strategy);
 
     /**
      * Builds the ProtoEntity.
@@ -143,6 +131,6 @@ public interface ProtoBuilder {
      *
      * @return new ProtoEntity
      */
-    ProtoEntity build();
+    ProtoEntity<T> build();
 
 }

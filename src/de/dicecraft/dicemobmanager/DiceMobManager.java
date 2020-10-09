@@ -8,6 +8,7 @@ import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.configuration.CustomConfigBuilder;
 import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
+import de.dicecraft.dicemobmanager.entity.builder.CustomType;
 import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;
@@ -15,6 +16,7 @@ import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Mob;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
@@ -75,8 +77,8 @@ public class DiceMobManager extends JavaPlugin {
         return new SpawnFactory(entityManager, configBuilder().build());
     }
 
-    public static ProtoBuilder builder() {
-        return new ProtoEntityBuilder();
+    public static <T extends Mob> ProtoBuilder<T> builder(final CustomType<T> customType) {
+        return new ProtoEntityBuilder<>(customType);
     }
 
     public static NamespacedKey createNameSpacedKey(String key) {

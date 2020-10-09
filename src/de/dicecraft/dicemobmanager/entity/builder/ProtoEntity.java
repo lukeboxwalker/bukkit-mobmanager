@@ -8,7 +8,7 @@ import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.Set;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
+public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalEntity {
 
     /**
      * Defines whether the entity should
@@ -58,7 +58,7 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
     Equipment getEquipment();
 
     @Nonnull
-    EntityType getEntityType();
+    CustomType<T> getCustomType();
 
     /**
      * Gets all attributes the entity
@@ -76,14 +76,14 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntityTick(TickEvent event);
+    void onEntityTick(TickEvent event, T mob);
 
     /**
      * Called when the entity is damaged.
      *
      * @param event the bukkit event.
      */
-    void onEntityDamage(DamageEvent event);
+    void onEntityDamage(DamageEvent event, T mob);
 
     /**
      * Called when the entity dies
@@ -91,7 +91,7 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntityDeath(DeathEvent event);
+    void onEntityDeath(DeathEvent event, T mob);
 
     /**
      * Called when the entity dies
@@ -99,12 +99,12 @@ public interface ProtoEntity extends ProtoNamedEntity, ProtoGoalEntity {
      *
      * @param event the bukkit event.
      */
-    void onEntitySpawn(SpawnEvent event);
+    void onEntitySpawn(SpawnEvent event, T mob);
 
     /**
      * Called when the entity drops an item.
      *
      * @param event the loot drop event.
      */
-    void onItemDrop(ItemDropEvent event);
+    void onItemDrop(ItemDropEvent event, T mob);
 }

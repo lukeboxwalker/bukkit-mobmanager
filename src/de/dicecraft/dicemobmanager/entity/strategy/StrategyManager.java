@@ -1,32 +1,33 @@
 package de.dicecraft.dicemobmanager.entity.strategy;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Mob;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface StrategyManager {
+public interface StrategyManager<T extends Mob> {
 
     void removeAllStrategies();
 
     void removeStrategy(@Nonnull NamespacedKey key);
 
-    void addStrategy(@Nonnull Strategy strategy);
+    void addStrategy(@Nonnull Strategy<? super T> strategy);
 
-    void addStrategies(@Nonnull List<Strategy> strategies);
-
-    @Nonnull
-    List<DamageStrategy> getDamageStrategies();
+    void addStrategies(@Nonnull List<Strategy<? super T>> strategies);
 
     @Nonnull
-    List<DeathStrategy> getDeathStrategies();
+    List<DamageStrategy<? super T>> getDamageStrategies();
 
     @Nonnull
-    List<ItemDropStrategy> getItemDropStrategies();
+    List<DeathStrategy<? super T>> getDeathStrategies();
 
     @Nonnull
-    List<SpawnStrategy> getSpawnStrategies();
+    List<ItemDropStrategy<? super T>> getItemDropStrategies();
 
     @Nonnull
-    List<TickStrategy> getTickStrategies();
+    List<SpawnStrategy<? super T>> getSpawnStrategies();
+
+    @Nonnull
+    List<TickStrategy<? super T>> getTickStrategies();
 }

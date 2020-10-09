@@ -6,9 +6,9 @@ import org.bukkit.entity.LivingEntity;
 public abstract class Event {
 
     private final LivingEntity entity;
-    private final ProtoEntity protoEntity;
+    private final ProtoEntity<?> protoEntity;
 
-    public Event(LivingEntity entity, ProtoEntity protoEntity) {
+    public Event(LivingEntity entity, ProtoEntity<?> protoEntity) {
         this.entity = entity;
         this.protoEntity = protoEntity;
     }
@@ -17,7 +17,7 @@ public abstract class Event {
         return entity;
     }
 
-    public ProtoEntity getProtoEntity() {
+    public ProtoEntity<?> getProtoEntity() {
         return protoEntity;
     }
 }

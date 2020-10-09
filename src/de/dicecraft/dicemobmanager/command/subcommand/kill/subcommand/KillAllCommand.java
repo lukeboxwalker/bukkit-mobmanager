@@ -34,7 +34,7 @@ public class KillAllCommand implements Command {
     @Override
     public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
         if (args.length == 0) {
-            Map<Entity, ProtoEntity> entities = manager.getAllEntities();
+            Map<Entity, ProtoEntity<?>> entities = manager.getAllEntities();
             entities.forEach((entity, protoEntity) -> {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 livingEntity.damage(livingEntity.getHealth() * 2);
@@ -44,7 +44,7 @@ public class KillAllCommand implements Command {
 
             return true;
         } else if (args.length == 1 && args[0].equals(SILENT)) {
-            Map<Entity, ProtoEntity> entities = manager.getAllEntities();
+            Map<Entity, ProtoEntity<?>> entities = manager.getAllEntities();
             manager.setItemsDrop(false);
             entities.forEach((entity, protoEntity) -> {
                 LivingEntity livingEntity = (LivingEntity) entity;

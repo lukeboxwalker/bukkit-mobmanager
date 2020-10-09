@@ -6,6 +6,6 @@ import org.bukkit.entity.Player;
 
 public interface EnchantmentHandler {
 
-    void handle(LivingEntity attacked, ProtoEntity attackedProtoEntity, Player attacker);
+    void handle(LivingEntity attacked, ProtoEntity<?> attackedProtoEntity, Player attacker);
 
 }

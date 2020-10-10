@@ -10,7 +10,9 @@ import de.dicecraft.dicemobmanager.entity.event.DeathEvent;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.event.TickEvent;
+import de.dicecraft.dicemobmanager.entity.goals.GoalManager;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
+import de.dicecraft.dicemobmanager.entity.goals.MobGoalManager;
 import de.dicecraft.dicemobmanager.entity.name.NameUpdater;
 import de.dicecraft.dicemobmanager.entity.strategy.StrategyManager;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
@@ -25,18 +27,22 @@ import java.util.Set;
 
 public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
 
+    private final GoalManager goalManager;
+
     private StrategyManager<T> strategyManager;
     private Map<Attribute, Double> attributes;
     private Equipment equipment;
     private Set<PotionEffect> potionEffects;
-    private Set<GoalKey<? extends Mob>> ignoredGoals;
-    private List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals;
     private Set<DeathDrop> deathDrops;
     private NameUpdater nameUpdater;
     private CustomType<T> entityType;
     private int level;
     private String name;
     private boolean shouldBurnInDay;
+
+    public CustomProtoEntity() {
+        this.goalManager = new MobGoalManager();
+    }
 
     @Override
     public boolean shouldBurnInDay() {
@@ -80,21 +86,21 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
     @Nonnull
     @Override
     public Set<GoalKey<? extends Mob>> getIgnoredGoals() {
-        return ignoredGoals;
+        return goalManager.getIgnoredGoals();
     }
 
     public void setIgnoredGoals(Set<GoalKey<? extends Mob>> ignoredGoals) {
-        this.ignoredGoals = ignoredGoals;
+        goalManager.ignoreAllGoals(ignoredGoals);
     }
 
     @Nonnull
     @Override
     public List<PriorityEntry<GoalSupplier<Mob>>> getGoals() {
-        return pathfinderGoals;
+        return goalManager.getCustomGoals();
     }
 
     public void setGoals(List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals) {
-        this.pathfinderGoals = pathfinderGoals;
+        goalManager.addAllCustomGoal(pathfinderGoals);
     }
 
     @Nonnull

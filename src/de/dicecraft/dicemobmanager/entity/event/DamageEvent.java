@@ -1,7 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.event;
 
 import de.dicecraft.dicemobmanager.entity.ProtoEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class DamageEvent extends Event implements BukkitEventHolder<EntityDamageEvent> {
@@ -9,11 +8,11 @@ public class DamageEvent extends Event implements BukkitEventHolder<EntityDamage
     private final EntityDamageEvent damageEvent;
 
     public DamageEvent(Event event, EntityDamageEvent damageEvent) {
-        this(event.getEntity(), event.getProtoEntity(), damageEvent);
+        this(event.getProtoEntity(), damageEvent);
     }
 
-    public DamageEvent(LivingEntity entity, ProtoEntity<?> protoEntity, EntityDamageEvent damageEvent) {
-        super(entity, protoEntity);
+    public DamageEvent(ProtoEntity<?> protoEntity, EntityDamageEvent damageEvent) {
+        super(protoEntity);
         this.damageEvent = damageEvent;
     }
 

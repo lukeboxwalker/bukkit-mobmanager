@@ -6,6 +6,7 @@ import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
 import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -22,7 +23,7 @@ public class LootingHandler implements EnchantmentHandler {
     }
 
     @Override
-    public void handle(LivingEntity attacked, ProtoEntity<?> attackedProtoEntity, Player attacker) {
+    public void handle(LivingEntity attacked, ProtoEntity<?> protoEntity, Player attacker) {
         int lootBonus = 0;
         if (attacker != null) {
             Map<Enchantment, Integer> enchantments = attacker.getInventory()
@@ -30,18 +31,18 @@ public class LootingHandler implements EnchantmentHandler {
             lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
         }
         if (manager.canItemsDrop()) {
-            for (DeathDrop deathDrop : attackedProtoEntity.getDeathDrops()) {
+            for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
                 if (deathDrop.shouldDrop(lootBonus)) {
                     Location location = attacked.getLocation();
                     Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-                    callItemDrop(attackedProtoEntity, new ItemDropEvent(attacked, attackedProtoEntity, deathDrop, item));
+                    callItemDrop(protoEntity, new ItemDropEvent(protoEntity, deathDrop, item), attacked);
                 }
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Mob> void callItemDrop(final ProtoEntity<T> protoEntity, final ItemDropEvent event) {
-        protoEntity.onItemDrop(event, (T) event.getEntity());
+    private <T extends Mob> void callItemDrop(ProtoEntity<T> protoEntity, ItemDropEvent event, Entity entity) {
+        protoEntity.onItemDrop(event, (T) entity);
     }
 }

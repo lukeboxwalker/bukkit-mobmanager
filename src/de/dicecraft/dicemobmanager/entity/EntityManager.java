@@ -30,7 +30,7 @@ public class EntityManager {
 
     private final List<LivingEntity> deathEntities = new ArrayList<>();
     private final Function<Map.Entry<Entity, Component<ProtoEntity<?>, Configuration>>, TickEvent> toTickEvent =
-            entry -> new TickEvent((LivingEntity) entry.getKey(), entry.getValue().getFirst());
+            entry -> new TickEvent(entry.getValue().getFirst());
 
     private boolean canItemsDrop = true;
 
@@ -88,24 +88,24 @@ public class EntityManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Mob> void tickEntity(final TickEvent tickEvent, final ProtoEntity<T> protoEntity) {
-        protoEntity.onEntityTick(tickEvent, (T) tickEvent.getEntity());
+    public <T extends Mob> void tickEntity(final ProtoEntity<T> protoEntity, final Entity entity) {
+        protoEntity.onEntityTick(tickedEntities.get(entity).getFirst(), (T) entity);
     }
 
     public void tickEntities() {
-        tickedEntities.values().forEach(component -> {
-            TickEvent tickEvent = component.getFirst();
-            LivingEntity entity = tickEvent.getEntity();
+        tickedEntities.forEach((key, value) -> {
+            TickEvent tickEvent = value.getFirst();
+            LivingEntity entity = (LivingEntity) key;
             if (entity.isDead()) {
                 // only remove entity on tick if entity is not a slimes with size > 1
                 // because the slime will be removed when the slime split event
                 // of this entity was called.
                 if (!(EntitySelector.IS_SLIME_ENTITY.test(entity) && ((Slime) entity).getSize() > 1)) {
-                    deathEntities.add(tickEvent.getEntity());
+                    deathEntities.add(entity);
                 }
             } else {
                 // ticking the entity
-                tickEntity(tickEvent, tickEvent.getProtoEntity());
+                tickEntity(tickEvent.getProtoEntity(), entity);
             }
         });
 
@@ -115,7 +115,6 @@ public class EntityManager {
 
         // add waiting entities to ticking map so they can be
         // ticked by this method
-
         tickedEntities.putAll(activeEntities.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry ->
                         new Component<>(toTickEvent.apply(entry), entry.getValue().getSecond()))));

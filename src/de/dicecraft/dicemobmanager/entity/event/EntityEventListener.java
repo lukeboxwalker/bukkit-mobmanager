@@ -74,7 +74,7 @@ public final class EntityEventListener implements Listener {
 
     @SuppressWarnings("unchecked")
     private <T extends Mob> void callDeathEvent(final ProtoEntity<T> protoEntity, final EntityDeathEvent event) {
-        protoEntity.onEntityDeath(new DeathEvent(event.getEntity(), protoEntity, event), (T) event.getEntity());
+        protoEntity.onEntityDeath(new DeathEvent(protoEntity, event), (T) event.getEntity());
     }
 
     /**
@@ -104,7 +104,7 @@ public final class EntityEventListener implements Listener {
 
     @SuppressWarnings("unchecked")
     private <T extends Mob> void callSpawnEvent(final ProtoEntity<T> protoEntity, final EntitySpawnEvent event) {
-        protoEntity.onEntitySpawn(new SpawnEvent((LivingEntity) event.getEntity(), protoEntity, event), (T) event.getEntity());
+        protoEntity.onEntitySpawn(new SpawnEvent(protoEntity, event), (T) event.getEntity());
     }
 
     /**
@@ -157,7 +157,7 @@ public final class EntityEventListener implements Listener {
 
     @SuppressWarnings("unchecked")
     private <T extends Mob> void callDamageEvent(final ProtoEntity<T> protoEntity, final EntityDamageEvent event) {
-        protoEntity.onEntityDamage(new DamageEvent((LivingEntity) event.getEntity(), protoEntity, event), (T) event.getEntity());
+        protoEntity.onEntityDamage(new DamageEvent(protoEntity, event), (T) event.getEntity());
     }
 
     @EventHandler(priority = EventPriority.HIGH)

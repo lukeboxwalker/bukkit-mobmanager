@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.enchatment;
 
+import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
@@ -12,7 +13,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class LootingHandler implements EnchantmentHandler {
 
@@ -31,12 +35,20 @@ public class LootingHandler implements EnchantmentHandler {
             lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
         }
         if (manager.canItemsDrop()) {
+            List<DeathDrop> drops = new ArrayList<>();
             for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
                 if (deathDrop.shouldDrop(lootBonus)) {
-                    Location location = attacked.getLocation();
-                    Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-                    callItemDrop(protoEntity, new ItemDropEvent(protoEntity, deathDrop, item), attacked);
+                    drops.add(deathDrop);
                 }
+            }
+            final Optional<Configuration> configuration = manager.getEntityConfig(attacked);
+            if (configuration.isPresent()) {
+                drops = configuration.get().getItemDropHandler().handleDrops(drops);
+            }
+            for (DeathDrop deathDrop : drops) {
+                Location location = attacked.getLocation();
+                Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+                callItemDrop(protoEntity, new ItemDropEvent(protoEntity, deathDrop, item), attacked);
             }
         }
     }

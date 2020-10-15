@@ -24,13 +24,17 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 public final class EntityEventListener implements Listener {
 
     private static final int MAX_PARTICLE = 10;
     private static final int MIN_PARTICLE = 2;
     private static final double PARTICLE_MULTIPLIER = 0.1D;
+    private final Set<UUID> entityDamagedByEntity;
 
     private final EntityManager manager;
     private final EnchantmentHandler lootingHandler;
@@ -38,6 +42,7 @@ public final class EntityEventListener implements Listener {
 
     public EntityEventListener(final EntityManager manager) {
         this.manager = manager;
+        this.entityDamagedByEntity = new HashSet<>();
         this.lootingHandler = new LootingHandler(manager);
         this.knockBackHandler = new KnockBackHandler();
     }
@@ -165,6 +170,11 @@ public final class EntityEventListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+        if (entityDamagedByEntity.remove(event.getEntity().getUniqueId())) {
+            return;
+        } else {
+            entityDamagedByEntity.add(event.getEntity().getUniqueId());
+        }
         Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             if (EntityType.PLAYER.equals(event.getDamager().getType())) {
@@ -172,8 +182,7 @@ public final class EntityEventListener implements Listener {
                 double finalDamage = event.getFinalDamage();
                 event.setCancelled(true);
                 final LivingEntity entity = (LivingEntity) event.getEntity();
-                entity.setLastDamageCause(event);
-                entity.damage(finalDamage);
+                entity.damage(finalDamage, player);
                 Location loc = entity.getLocation();
                 int particleCount = DiceMobManager.randomIntBetween(MIN_PARTICLE, MAX_PARTICLE);
                 entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),

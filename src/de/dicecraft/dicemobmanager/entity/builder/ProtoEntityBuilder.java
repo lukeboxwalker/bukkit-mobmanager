@@ -41,7 +41,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
     private NameUpdater nameUpdater;
     private int level;
     private String name;
-    private boolean shouldBurnInDay = true;
+    private boolean shouldBurnInDay = false;
 
     public ProtoEntityBuilder(final CustomType<T> customType) {
         this.entityType = customType;

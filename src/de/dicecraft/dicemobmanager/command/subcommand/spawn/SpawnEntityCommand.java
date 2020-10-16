@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.command.subcommand.spawn;
 
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.command.Command;
 import de.dicecraft.dicemobmanager.command.CommandManager;
@@ -9,17 +10,15 @@ import de.dicecraft.dicemobmanager.entity.CustomType;
 import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.drops.CustomDeathDrop;
 import de.dicecraft.dicemobmanager.entity.drops.DeathDrop;
-import de.dicecraft.dicemobmanager.entity.event.SpawnEvent;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.builder.EntityCreationException;
-import de.dicecraft.dicemobmanager.entity.strategy.SpawnStrategy;
-import de.dicecraft.dicemobmanager.entity.strategy.StrategyRegistrationVisitor;
+import de.dicecraft.dicemobmanager.entity.goals.GoalHurtByTarget;
+
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -71,28 +70,14 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
                                     DeathDrop.Rarity.LEGENDARY);
 
-                            ProtoEntity<Slime> protoEntity = DiceMobManager.builder(CustomType.SLIME)
+                            ProtoEntity<Zombie> protoEntity = DiceMobManager.builder(CustomType.ZOMBIE)
                                     .setDeathDrops(Collections.singleton(deathDrop))
                                     .setAttribute(Attribute.GENERIC_MAX_HEALTH, 10D)
                                     .setName("Super BOOM Creeper")
                                     .setLevel(100)
-                                    .addStrategy(new SpawnStrategy<Slime>() {
-                                        @Override
-                                        public void play(SpawnEvent spawnEvent, Slime slime) {
-                                            slime.setSize(5);
-                                        }
-
-                                        @Nonnull
-                                        @Override
-                                        public NamespacedKey getKey() {
-                                            return DiceMobManager.createNameSpacedKey("test");
-                                        }
-
-                                        @Override
-                                        public void accept(StrategyRegistrationVisitor registrationVisitor) {
-                                            registrationVisitor.registerSpawnStrategy(this);
-                                        }
-                                    })
+                                    .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
+                                    .ignoreGoal(VanillaGoal.HURT_BY_TARGET)
+                                    .addGoal(1, mob -> new GoalHurtByTarget(mob, Player.class))
                                     .build();
 
                             Configuration configuration = DiceMobManager.configBuilder()

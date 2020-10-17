@@ -71,14 +71,10 @@ public class SpawnFactory implements EntitySpawnFactory {
                 this.prepareGoals(mob, protoEntity);
                 this.preparePotionEffects(mob, protoEntity);
 
-                switch (type) {
-                    case ZOMBIE:
-                        prepareZombie((Zombie) mob, protoEntity);
-                        break;
-                    case WITHER:
-                        prepareWither((Wither) mob);
-                        break;
-                    default:
+                if (mob instanceof Zombie) {
+                    prepareZombie((Zombie) mob, protoEntity);
+                } else if (mob instanceof Wither) {
+                    prepareWither((Wither) mob);
                 }
 
                 protoEntity.getEquipment().equip(mob);
@@ -100,7 +96,6 @@ public class SpawnFactory implements EntitySpawnFactory {
 
     private void prepareZombie(Zombie zombie, ProtoEntity<? extends Mob> protoEntity) {
         zombie.setShouldBurnInDay(protoEntity.shouldBurnInDay());
-        zombie.setAdult();
     }
 
     private void preparePotionEffects(Mob mob, ProtoEntity<? extends Mob> protoEntity) {

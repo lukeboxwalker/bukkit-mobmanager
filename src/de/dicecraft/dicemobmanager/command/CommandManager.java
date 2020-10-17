@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.command;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.message.MessageFormatter;
 import de.dicecraft.dicemobmanager.message.PluginMessageFormatter;
+import de.dicecraft.dicemobmanager.message.TextComponentBuilder;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,5 +35,9 @@ public final class CommandManager {
 
     public static MessageFormatter messageFormatter() {
         return MESSAGE_FORMATTER;
+    }
+
+    public static TextComponentBuilder componentBuilder() {
+        return new TextComponentBuilder();
     }
 }

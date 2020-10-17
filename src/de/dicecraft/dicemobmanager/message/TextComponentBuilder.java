@@ -6,8 +6,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
 
-import static net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT;
-
 public class TextComponentBuilder {
 
     private String text;
@@ -42,10 +40,10 @@ public class TextComponentBuilder {
 
     public TextComponent build() {
         TextComponent textComponent = new TextComponent();
-        textComponent.setText(ChatColor.COLOR_CHAR + color.getChar() + this.text);
+        textComponent.setText("" + ChatColor.COLOR_CHAR + color.getChar() + this.text);
         if (this.click != null && (this.action != null)) {
             textComponent.setClickEvent(new ClickEvent(action, this.click));
-            textComponent.setHoverEvent(new HoverEvent(SHOW_TEXT, new Text(this.click)));
+            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§b" + this.click)));
         }
         return textComponent;
     }

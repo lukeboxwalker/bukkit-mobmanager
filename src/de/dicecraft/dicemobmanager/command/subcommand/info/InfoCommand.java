@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class InfoCommand implements Command {
 
     private static final String SPACE = " ";
-    private static final String TP_COMMAND = "/tp";
+    private static final String TP_COMMAND = "/minecraft:tp";
     private static final String MESSAGE = "§7Entity '{0}§7' at location: §8[{1}§8]§7.";
     private static final String NOT_ALIVE = "§7No entities alive.";
     private static final Function<Entity, TextComponentBuilder.RunnableCommand> ON_CLICK = entity -> () -> {

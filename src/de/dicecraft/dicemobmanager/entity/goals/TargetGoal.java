@@ -8,7 +8,7 @@ import org.bukkit.entity.Mob;
 
 public abstract class TargetGoal<T extends Mob> implements CustomGoal<T> {
 
-    private final T mob;
+    protected final T mob;
     private LivingEntity target;
 
     public TargetGoal(T mob) {
@@ -46,7 +46,7 @@ public abstract class TargetGoal<T extends Mob> implements CustomGoal<T> {
         this.target = target;
     }
 
-    private double positionSquared(final T mob, final LivingEntity target) {
+    protected double positionSquared(final T mob, final LivingEntity target) {
         final Location mobLoc = mob.getLocation();
         final Location targetLoc = target.getLocation();
         final double x = mobLoc.getX() - targetLoc.getX();

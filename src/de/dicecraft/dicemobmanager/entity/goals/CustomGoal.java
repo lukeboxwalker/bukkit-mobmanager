@@ -15,6 +15,7 @@ public interface CustomGoal<T extends Mob> extends Goal<T> {
     GoalKey<Mob> WALK_TO_LOCATION = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("walk_to_location"));
     GoalKey<Mob> AVOID_TARGET = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("avoid_target"));
     GoalKey<Mob> HURT_BY_TARGET = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("hurt_by_target"));
+    GoalKey<Mob> NEAREST_TARGET = GoalKey.of(Mob.class, DiceMobManager.createNameSpacedKey("nearest_target"));
 
     static GoalSupplier<Mob> hurtByTarget(final Class<? extends LivingEntity> attackedClass) {
         return (mob) -> new GoalHurtByTarget(mob, attackedClass);
@@ -28,11 +29,11 @@ public interface CustomGoal<T extends Mob> extends Goal<T> {
         return (mob) -> new GoalWalkToLocation(mob, goals);
     }
 
-    static GoalSupplier<Mob> avoidTarget(final List<Location> goals) {
-        return (mob) -> new GoalWalkToLocation(mob, goals);
-    }
-
     static GoalSupplier<Mob> avoidTarget(final Class<Entity> entityClass, final float radius, final double speed) {
         return (mob) -> new GoalAvoidTarget<>(mob, entityClass, radius, speed);
+    }
+
+    static GoalSupplier<Mob> nearestTarget(final Class<? extends LivingEntity> targetClass, final double radius) {
+        return (mob) -> new GoalNearestTarget<>(mob, targetClass, radius);
     }
 }

@@ -25,7 +25,6 @@ import java.util.Set;
 
 public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
 
-    private final Mob mob;
     private final Set<Class<? extends LivingEntity>> attackedClasses;
 
     private long lastHit;
@@ -34,7 +33,6 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
     @SafeVarargs
     public GoalHurtByTarget(Mob mob, Class<? extends LivingEntity>... attackedClasses) {
         super(mob);
-        this.mob = mob;
         this.lastHit = System.currentTimeMillis();
         this.lastActivation = System.currentTimeMillis();
         this.attackedClasses = new HashSet<>(Arrays.asList(attackedClasses));

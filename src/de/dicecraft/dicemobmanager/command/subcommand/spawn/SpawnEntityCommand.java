@@ -69,13 +69,13 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
                                     DeathDrop.Rarity.LEGENDARY);
 
-                            ProtoEntity<? extends Mob> protoEntity = DiceMobManager.builder(CustomType.BLAZE)
+                            ProtoEntity<? extends Mob> protoEntity = DiceMobManager.builder(CustomType.WITHER)
                                     .setDeathDrops(Collections.singleton(deathDrop))
                                     .setAttribute(Attribute.GENERIC_MAX_HEALTH, 10D)
                                     .setName("Test Mob")
                                     .setLevel(100)
-                                    .ignoreGoal(VanillaGoal.HURT_BY_TARGET)
-                                    .addGoal(1, CustomGoal.hurtByTarget(Player.class))
+                                    .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)
+                                    .addGoal(1, CustomGoal.nearestTarget(Player.class, 10))
                                     .build();
 
                             Configuration configuration = DiceMobManager.configBuilder().denyAllFlags().build();

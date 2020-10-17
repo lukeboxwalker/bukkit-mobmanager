@@ -35,7 +35,7 @@ public class InfoCommand implements Command {
             Function<Entity, TextComponentBuilder.RunnableCommand> onClick = entity -> () -> {
                 final Location location = entity.getLocation();
                 final String empty = " ";
-                return  "/tp " + location.getX() + empty + location.getY() + empty + location.getZ();
+                return "/tp " + location.getX() + empty + location.getY() + empty + location.getZ();
             };
             final Set<Entity> entities = entityManager.getAllEntities().keySet();
             if (entities.isEmpty()) {
@@ -44,7 +44,9 @@ public class InfoCommand implements Command {
             entities.forEach(entity -> {
                 Location location = entity.getLocation();
                 CommandManager.messageFormatter().sendMessage(player,
-                        "§7Entity at location: §5{0} {1} {2}§7.",
+                        "§7Entity '{0}§7' at location: '{1} {2} {3}§7'.",
+                        CommandManager.componentBuilder().setText("§5" + entity.getType().name().toLowerCase())
+                                .build(),
                         CommandManager.componentBuilder().setText("§5" + (int) location.getX())
                                 .addClickCommand(onClick.apply(entity)).build(),
                         CommandManager.componentBuilder().setText("§5" + (int) location.getY())

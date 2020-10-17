@@ -2,6 +2,7 @@ package de.dicecraft.dicemobmanager.configuration;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
+import net.minecraft.server.v1_16_R2.EntityBlaze;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;

@@ -27,6 +27,7 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
 
     private final Mob mob;
     private final Set<Class<? extends LivingEntity>> attackedClasses;
+
     private long lastHit;
     private long lastActivation;
 

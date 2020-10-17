@@ -28,5 +28,11 @@ public class CustomConfiguration implements Configuration {
         return handler;
     }
 
-
+    @Override
+    public String toString() {
+        return "CustomConfiguration{" +
+                "configFlags=" + configFlags +
+                ", handler=" + handler +
+                '}';
+    }
 }

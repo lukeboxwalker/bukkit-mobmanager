@@ -1,6 +1,7 @@
 package de.dicecraft.dicemobmanager.configuration;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,30 @@ public class CustomConfigBuilder implements ConfigBuilder {
     @Override
     public ConfigBuilder setBooleanFlag(ConfigFlag configFlag, boolean flag) {
         configFlags.put(configFlag, flag);
+        return this;
+    }
+
+    @Override
+    public ConfigBuilder allowFlag(ConfigFlag configFlag) {
+        configFlags.put(configFlag, true);
+        return this;
+    }
+
+    @Override
+    public ConfigBuilder allowAllFlags() {
+        Arrays.stream(ConfigFlag.values()).forEach(flag -> configFlags.put(flag, true));
+        return this;
+    }
+
+    @Override
+    public ConfigBuilder denyFlag(ConfigFlag configFlag) {
+        configFlags.put(configFlag, false);
+        return this;
+    }
+
+    @Override
+    public ConfigBuilder denyAllFlags() {
+        Arrays.stream(ConfigFlag.values()).forEach(flag -> configFlags.put(flag, false));
         return this;
     }
 

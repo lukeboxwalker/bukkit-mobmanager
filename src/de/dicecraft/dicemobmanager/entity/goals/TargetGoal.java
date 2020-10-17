@@ -27,8 +27,8 @@ public abstract class TargetGoal<T extends Mob> implements CustomGoal<T> {
         } else if (target.isDead()) {
             return false;
         } else {
-            double d0 = this.getFollowRange();
-            if (positionSquared(mob, target) > d0 * d0) {
+            final double followRange = this.getFollowRange();
+            if (positionSquared(mob, target) > followRange * followRange) {
                 return false;
             } else {
                 if (target.isInvulnerable()) {
@@ -42,21 +42,21 @@ public abstract class TargetGoal<T extends Mob> implements CustomGoal<T> {
         }
     }
 
-    public void setTarget(LivingEntity target) {
+    public void setTarget(final LivingEntity target) {
         this.target = target;
     }
 
-    private double positionSquared(T mob, LivingEntity target) {
-        Location mobLoc = mob.getLocation();
-        Location targetLoc = target.getLocation();
-        double d0 = mobLoc.getX() - targetLoc.getX();
-        double d1 = mobLoc.getY() - targetLoc.getY();
-        double d2 = mobLoc.getZ() - targetLoc.getZ();
-        return d0 * d0 + d1 * d1 + d2 * d2;
+    private double positionSquared(final T mob, final LivingEntity target) {
+        final Location mobLoc = mob.getLocation();
+        final Location targetLoc = target.getLocation();
+        final double x = mobLoc.getX() - targetLoc.getX();
+        final double y = mobLoc.getY() - targetLoc.getY();
+        final double z = mobLoc.getZ() - targetLoc.getZ();
+        return x * x + y * y + z * z;
     }
 
     private double getFollowRange() {
-        AttributeInstance instance = mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
+        final AttributeInstance instance = mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
         if (instance != null) {
             return instance.getValue();
         } else {

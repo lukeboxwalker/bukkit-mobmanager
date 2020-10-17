@@ -32,10 +32,11 @@ public class InfoCommand implements Command {
     public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            final String empty = " ";
             Function<Entity, TextComponentBuilder.RunnableCommand> onClick = entity -> () -> {
                 final Location location = entity.getLocation();
-                final String empty = " ";
-                return "/tp " + location.getX() + empty + location.getY() + empty + location.getZ();
+
+                return "/tp " + (int) location.getX() + empty + (int) location.getY() + empty + (int) location.getZ();
             };
             final Set<Entity> entities = entityManager.getAllEntities().keySet();
             if (entities.isEmpty()) {
@@ -44,14 +45,10 @@ public class InfoCommand implements Command {
             entities.forEach(entity -> {
                 Location location = entity.getLocation();
                 CommandManager.messageFormatter().sendMessage(player,
-                        "§7Entity '{0}§7' at location: '{1} {2} {3}§7'.",
+                        "§7Entity '{0}§7' at location: §8[{1}§8]§7.",
                         CommandManager.componentBuilder().setText("§5" + entity.getType().name().toLowerCase())
                                 .build(),
-                        CommandManager.componentBuilder().setText("§5" + (int) location.getX())
-                                .addClickCommand(onClick.apply(entity)).build(),
-                        CommandManager.componentBuilder().setText("§5" + (int) location.getY())
-                                .addClickCommand(onClick.apply(entity)).build(),
-                        CommandManager.componentBuilder().setText("§5" + (int) location.getZ())
+                        CommandManager.componentBuilder().setText("§5" + (int) location.getX() + empty + (int) location.getY() + empty + (int) location.getZ())
                                 .addClickCommand(onClick.apply(entity)).build());
             });
             return true;

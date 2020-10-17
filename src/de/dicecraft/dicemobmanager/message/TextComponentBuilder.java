@@ -1,7 +1,11 @@
 package de.dicecraft.dicemobmanager.message;
 
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+
+import static net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT;
 
 public class TextComponentBuilder {
 
@@ -34,6 +38,7 @@ public class TextComponentBuilder {
         textComponent.setText(this.text);
         if (this.click != null && (this.action != null)) {
             textComponent.setClickEvent(new ClickEvent(action, this.click));
+            textComponent.setHoverEvent(new HoverEvent(SHOW_TEXT, new Text(this.click)));
         }
         return textComponent;
     }

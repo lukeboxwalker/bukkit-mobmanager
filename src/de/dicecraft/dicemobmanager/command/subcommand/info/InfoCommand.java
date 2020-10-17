@@ -4,10 +4,10 @@ import de.dicecraft.dicemobmanager.command.Command;
 import de.dicecraft.dicemobmanager.command.CommandManager;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.message.TextComponentBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -16,6 +16,15 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class InfoCommand implements Command {
+
+    private static final String SPACE = " ";
+    private static final String TP_COMMAND = "/tp";
+    private static final String MESSAGE = "§7Entity '{0}§7' at location: §8[{1}§8]§7.";
+    private static final String NOT_ALIVE = "§7No entities alive.";
+    private static final Function<Entity, TextComponentBuilder.RunnableCommand> ON_CLICK = entity -> () -> {
+        final Location location = entity.getLocation();
+        return TP_COMMAND + SPACE + formatLocation(location);
+    };
 
     private final EntityManager entityManager;
 
@@ -30,30 +39,28 @@ public class InfoCommand implements Command {
 
     @Override
     public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            final String empty = " ";
-            Function<Entity, TextComponentBuilder.RunnableCommand> onClick = entity -> () -> {
-                final Location location = entity.getLocation();
-
-                return "/tp " + (int) location.getX() + empty + (int) location.getY() + empty + (int) location.getZ();
-            };
-            final Set<Entity> entities = entityManager.getAllEntities().keySet();
-            if (entities.isEmpty()) {
-                CommandManager.messageFormatter().sendMessage(sender, "§7No entities alive.");
-            }
+        final Set<Entity> entities = entityManager.getAllEntities().keySet();
+        if (entities.isEmpty()) {
+            CommandManager.messageFormatter().sendMessage(sender, NOT_ALIVE);
+        } else {
             entities.forEach(entity -> {
                 Location location = entity.getLocation();
-                CommandManager.messageFormatter().sendMessage(player,
-                        "§7Entity '{0}§7' at location: §8[{1}§8]§7.",
-                        CommandManager.componentBuilder().setText("§5" + entity.getType().name().toLowerCase())
+                CommandManager.messageFormatter().sendMessage(sender, MESSAGE,
+                        CommandManager.componentBuilder()
+                                .setColor(ChatColor.DARK_PURPLE)
+                                .setText(entity.getType().name().toLowerCase())
                                 .build(),
-                        CommandManager.componentBuilder().setText("§5" + (int) location.getX() + empty + (int) location.getY() + empty + (int) location.getZ())
-                                .addClickCommand(onClick.apply(entity)).build());
+                        CommandManager.componentBuilder()
+                                .setColor(ChatColor.DARK_PURPLE)
+                                .setText(formatLocation(location))
+                                .addClickCommand(ON_CLICK.apply(entity)).build());
             });
-            return true;
         }
-        return false;
+        return true;
+    }
+
+    private static String formatLocation(final Location location) {
+        return (int) location.getX() + SPACE + (int) location.getY() + SPACE + (int) location.getZ();
     }
 
     @Override

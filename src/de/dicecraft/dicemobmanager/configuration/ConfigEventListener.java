@@ -2,8 +2,8 @@ package de.dicecraft.dicemobmanager.configuration;
 
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
-import net.minecraft.server.v1_16_R2.EntityBlaze;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.Optional;
 
@@ -45,6 +46,21 @@ public class ConfigEventListener implements Listener {
                 manager.removeEntity(event.getEntity());
                 event.setCancelled(configuration.shouldCancel(ConfigFlag.SLIME_SPLIT));
             });
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityMount(EntityMountEvent event) {
+        if (!event.isCancelled()) {
+            if (event.getEntity().getType() == EntityType.ZOMBIE && event.getMount().getType() == EntityType.CHICKEN) {
+                Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+                if (optional.isPresent() && !manager.getProtoEntity(event.getMount()).isPresent()) {
+                    if (optional.get().shouldCancel(ConfigFlag.SPAWN_NATURAL_CHICKEN_JOCKEY)) {
+                        event.setCancelled(true);
+                        event.getMount().remove();
+                    }
+                }
+            }
         }
     }
 

@@ -43,6 +43,16 @@ public class MobGoalManager implements GoalManager {
     }
 
     @Override
+    public void changePriority(int priority, GoalKey<? extends Mob> goalKey) {
+        for (final PriorityEntry<GoalSupplier<Mob>> entry : pathfinderGoals) {
+            if (entry.getEntry().supply(null).getKey().equals(goalKey)) {
+                entry.setPriority(priority);
+                break;
+            }
+        }
+    }
+
+    @Override
     public void addCustomGoal(int priority, GoalSupplier<Mob> goalSupplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, goalSupplier));
     }

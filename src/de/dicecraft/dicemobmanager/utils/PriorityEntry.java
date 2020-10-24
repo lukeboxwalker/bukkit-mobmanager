@@ -10,7 +10,7 @@ package de.dicecraft.dicemobmanager.utils;
 public class PriorityEntry<T> {
 
     // priority of the entry
-    private final int priority;
+    private int priority;
     private final T entry;
 
     /**
@@ -22,6 +22,10 @@ public class PriorityEntry<T> {
     public PriorityEntry(final int priority, final T entry) {
         this.priority = priority;
         this.entry = entry;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public int getPriority() {

@@ -18,6 +18,8 @@ public interface GoalManager {
 
     void allowAllGoals(Collection<GoalKey<? extends Mob>> goalKeys);
 
+    void changePriority(int priority, GoalKey<? extends Mob> goalKey);
+
     void addCustomGoal(int priority, GoalSupplier<Mob> goalSupplier);
 
     void addAllCustomGoal(List<PriorityEntry<GoalSupplier<Mob>>> goals);

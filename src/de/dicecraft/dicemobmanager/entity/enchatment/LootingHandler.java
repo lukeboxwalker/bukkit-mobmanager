@@ -9,6 +9,7 @@ import de.dicecraft.dicemobmanager.entity.event.ItemDropEvent;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -50,8 +51,8 @@ public class LootingHandler implements EnchantmentHandler {
                     Location location = attacked.getLocation();
                     Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
                     item.setCanMobPickup(false);
-                    if (configuration.shouldCancel(ConfigFlag.DROP_PICKUP_BY_EVERYONE)) {
-                        assert attacker != null;
+                    if (attacker != null && attacker.getType() == EntityType.PLAYER
+                            && configuration.shouldCancel(ConfigFlag.DROP_PICKUP_BY_EVERYONE)) {
                         item.setOwner(attacker.getUniqueId());
                         manager.watchItem(item);
                     }

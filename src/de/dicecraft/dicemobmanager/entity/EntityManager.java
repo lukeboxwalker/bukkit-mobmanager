@@ -6,6 +6,7 @@ import de.dicecraft.dicemobmanager.entity.event.TickEvent;
 import de.dicecraft.dicemobmanager.entity.goals.EntitySelector;
 import de.dicecraft.dicemobmanager.utils.Component;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Projectile;
@@ -15,18 +16,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EntityManager {
 
+    private static final int TICK_MINUTE = 1200;
+
     private final Map<Entity, Component<ProtoEntity<?>, Configuration>> registeredEntities = new HashMap<>();
     private final Map<Entity, Component<ProtoEntity<?>, Configuration>> activeEntities = new HashMap<>();
     private final Map<Entity, Component<TickEvent, Configuration>> tickedEntities = new HashMap<>();
     private final Map<Entity, Entity> projectileMap = new HashMap<>();
+    private final Set<Item> droppedItems = new HashSet<>();
 
     private final List<LivingEntity> deathEntities = new ArrayList<>();
     private final Function<Map.Entry<Entity, Component<ProtoEntity<?>, Configuration>>, TickEvent> toTickEvent =
@@ -119,6 +126,24 @@ public class EntityManager {
                 .collect(Collectors.toMap(Map.Entry::getKey, entry ->
                         new Component<>(toTickEvent.apply(entry), entry.getValue().getSecond()))));
         activeEntities.clear();
+
+        synchronized (droppedItems) {
+            for (Iterator<Item> iterator = droppedItems.iterator(); iterator.hasNext();) {
+                final Item item = iterator.next();
+                if (item.isDead()) {
+                    iterator.remove();
+                } else if (item.getTicksLived() > TICK_MINUTE) {
+                    item.setOwner(null);
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    public void watchItem(final Item item) {
+        synchronized (droppedItems) {
+            droppedItems.add(item);
+        }
     }
 
 

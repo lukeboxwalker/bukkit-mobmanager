@@ -1,5 +1,6 @@
 package de.dicecraft.dicemobmanager.entity.enchatment;
 
+import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.ProtoEntity;
@@ -41,14 +42,21 @@ public class LootingHandler implements EnchantmentHandler {
                     drops.add(deathDrop);
                 }
             }
-            final Optional<Configuration> configuration = manager.getEntityConfig(attacked);
-            if (configuration.isPresent()) {
-                drops = configuration.get().getItemDropHandler().handleDrops(drops);
-            }
-            for (DeathDrop deathDrop : drops) {
-                Location location = attacked.getLocation();
-                Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
-                callItemDrop(protoEntity, new ItemDropEvent(protoEntity, deathDrop, item), attacked);
+            final Optional<Configuration> optional = manager.getEntityConfig(attacked);
+            if (optional.isPresent()) {
+                Configuration configuration = optional.get();
+                drops = configuration.getItemDropHandler().handleDrops(drops);
+                for (DeathDrop deathDrop : drops) {
+                    Location location = attacked.getLocation();
+                    Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+                    item.setCanMobPickup(false);
+                    if (configuration.shouldCancel(ConfigFlag.DROP_PICKUP_BY_EVERYONE)) {
+                        assert attacker != null;
+                        item.setOwner(attacker.getUniqueId());
+                        manager.watchItem(item);
+                    }
+                    callItemDrop(protoEntity, new ItemDropEvent(protoEntity, deathDrop, item), attacked);
+                }
             }
         }
     }

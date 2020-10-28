@@ -33,7 +33,7 @@ public class SpawnEntityCommand implements Command {
     private static final String MULTI_SPAWN =
             "§7Entity '§8[§7Lv§5{1}§8]§7' '§5{0}§7' with spawned as a '§5{2}§7' mob, §5{3} §7times";
 
-    private static final double DROP_CHANCE = 0.5;
+    private static final double DROP_CHANCE = 1;
     private static final int PERIOD = 1;
 
     @Override
@@ -69,9 +69,9 @@ public class SpawnEntityCommand implements Command {
                             DeathDrop deathDrop = new CustomDeathDrop(itemStack, DROP_CHANCE,
                                     DeathDrop.Rarity.LEGENDARY);
 
-                            ProtoEntity<? extends Mob> protoEntity = DiceMobManager.builder(CustomType.WITHER)
+                            ProtoEntity<? extends Mob> protoEntity = DiceMobManager.builder(CustomType.ZOMBIE)
                                     .setDeathDrops(Collections.singleton(deathDrop))
-                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 10D)
+                                    .setAttribute(Attribute.GENERIC_MAX_HEALTH, 1D)
                                     .setName("Test Mob")
                                     .setLevel(100)
                                     .ignoreGoal(VanillaGoal.NEAREST_ATTACKABLE_TARGET)

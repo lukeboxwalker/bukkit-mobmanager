@@ -24,7 +24,7 @@ public class TickScheduler {
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                manager.tickEntities();
+                manager.tick();
             }
         };
         runnable.runTaskTimer(plugin, 0, ticks);

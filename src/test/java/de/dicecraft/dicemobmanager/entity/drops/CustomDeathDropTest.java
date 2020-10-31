@@ -112,4 +112,12 @@ class CustomDeathDropTest {
         // test if deathDrop should drop
         assertThat(deathDrop.shouldDrop(0)).isTrue();
     }
+
+    @Test
+    void testToString() {
+        final ItemStack itemStack = new ItemStack(Material.DIAMOND);
+        final DeathDrop deathDrop = new CustomDeathDrop(itemStack, 1, DeathDrop.Rarity.RARE);
+
+        assertThat(deathDrop.toString().isEmpty()).isFalse();
+    }
 }

@@ -3,7 +3,6 @@ package de.dicecraft.dicemobmanager.entity.factory;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.MobGoals;
-import com.destroystokyo.paper.entity.ai.PaperMobGoals;
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.configuration.ConfigFlag;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
@@ -13,6 +12,7 @@ import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 import de.dicecraft.dicemobmanager.entity.goals.GoalSupplier;
 import de.dicecraft.dicemobmanager.utils.PriorityEntry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -38,7 +38,7 @@ public class SpawnFactory implements EntitySpawnFactory {
     private static final CreatureSpawnEvent.SpawnReason SPAWN_REASON = CreatureSpawnEvent.SpawnReason.CUSTOM;
 
     private static final Logger LOGGER = DiceMobManager.logging();
-    private static final MobGoals MOB_GOALS = new PaperMobGoals();
+    private static final MobGoals MOB_GOALS = Bukkit.getMobGoals();
     private static final Function<String, String> WARN_MSG = string ->
             "Trying to add a goal with goal key: " + string + " which already exist!";
 

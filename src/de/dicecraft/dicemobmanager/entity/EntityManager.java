@@ -48,9 +48,20 @@ public class EntityManager {
         this.itemsDrop = itemsDrop;
     }
 
+    /**
+     * Destroys all entities by using {@link Entity#remove()}.
+     * <p>
+     * Dropping all entities from maps as well as all items and projectiles.
+     */
     public void destroyAll() {
         registeredEntities.keySet().forEach(Entity::remove);
+        activeEntities.keySet().forEach(Entity::remove);
         tickedEntities.keySet().forEach(Entity::remove);
+        registeredEntities.clear();
+        activeEntities.clear();
+        tickedEntities.clear();
+        projectileMap.clear();
+        droppedItems.clear();
     }
 
     /**

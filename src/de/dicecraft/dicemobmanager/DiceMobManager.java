@@ -26,27 +26,27 @@ public class DiceMobManager extends JavaPlugin {
 
     private static final Random RANDOM = new Random();
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
+    private static final EntityManager ENTITY_MANAGER = new EntityManager();
     private static final int DEFAULT_TICK_SPEED = 1;
 
     private static DiceMobManager instance;
-    private static EntityManager entityManager;
+
     private static TickScheduler scheduler;
 
     @Override
     public void onEnable() {
         super.onEnable();
         instance = this;
-        entityManager = new EntityManager();
 
         // register events
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(entityManager), instance);
-        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), instance);
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), instance);
+        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), instance);
 
         // register commands
-        CommandUtils.registerCommands(instance, entityManager);
+        CommandUtils.registerCommands(instance, ENTITY_MANAGER);
 
         // starting tick scheduler
-        scheduler = new TickScheduler(entityManager, instance);
+        scheduler = new TickScheduler(ENTITY_MANAGER, instance);
         scheduler.restart(DEFAULT_TICK_SPEED);
     }
 
@@ -54,7 +54,7 @@ public class DiceMobManager extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
         scheduler.cancel();
-        entityManager.destroyAll();
+        ENTITY_MANAGER.destroyAll();
     }
 
     public static DiceMobManager getInstance() {
@@ -70,11 +70,11 @@ public class DiceMobManager extends JavaPlugin {
     }
 
     public static EntitySpawnFactory createSpawnFactory(final Configuration configuration) {
-        return new SpawnFactory(entityManager, configuration);
+        return new SpawnFactory(ENTITY_MANAGER, configuration);
     }
 
     public static EntitySpawnFactory createSpawnFactory() {
-        return new SpawnFactory(entityManager, configBuilder().build());
+        return new SpawnFactory(ENTITY_MANAGER, configBuilder().build());
     }
 
     public static <T extends Mob> ProtoBuilder<T> builder(final CustomType<T> customType) {

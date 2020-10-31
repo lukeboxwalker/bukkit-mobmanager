@@ -29,9 +29,10 @@ public final class CommandUtils {
     public static void registerCommands(final JavaPlugin plugin, final EntityManager manager) {
         final BasePluginCommand baseCommand = new BasePluginCommand(manager);
         final PluginCommand command = plugin.getCommand(baseCommand.getName());
-        assert command != null;
-        command.setExecutor(baseCommand);
-        command.setTabCompleter(baseCommand);
+        if (command != null) {
+            command.setExecutor(baseCommand);
+            command.setTabCompleter(baseCommand);
+        }
     }
 
     public static MessageFormatter messageFormatter() {

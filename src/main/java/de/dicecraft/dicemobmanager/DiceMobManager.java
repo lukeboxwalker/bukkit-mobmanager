@@ -17,8 +17,11 @@ import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Mob;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
+import java.io.File;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -31,9 +34,15 @@ public class DiceMobManager extends JavaPlugin {
     private static DiceMobManager instance;
     private static TickScheduler scheduler;
 
+    public DiceMobManager(final JavaPluginLoader loader, final PluginDescriptionFile description,
+                           final File dataFolder, final File file) {
+        super(loader, description, dataFolder, file);
+    }
+
     @Override
     public void onEnable() {
         super.onEnable();
+        instance = this;
         // register events
         Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), getInstance());
         Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), getInstance());
@@ -51,16 +60,8 @@ public class DiceMobManager extends JavaPlugin {
         scheduler.cancel();
         ENTITY_MANAGER.destroyAll();
     }
-
-    /**
-     * Gets the singleton instance of this plugin.
-     *
-     * @return the singleton instance
-     */
+    
     public static DiceMobManager getInstance() {
-        if (instance == null) {
-            instance = JavaPlugin.getPlugin(DiceMobManager.class);
-        }
         return instance;
     }
 

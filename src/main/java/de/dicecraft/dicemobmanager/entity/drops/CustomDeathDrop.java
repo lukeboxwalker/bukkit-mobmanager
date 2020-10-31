@@ -38,7 +38,7 @@ public class CustomDeathDrop implements DeathDrop {
      */
     public CustomDeathDrop(final ItemStack itemStack, final double dropChance, final DeathDrop.Rarity rarity) {
         this.setDropChance(dropChance);
-        this.itemStack = itemStack.clone();
+        this.setItemStack(itemStack);
         this.rarity = rarity;
     }
 
@@ -74,7 +74,7 @@ public class CustomDeathDrop implements DeathDrop {
 
     @Override
     public void setItemStack(final @Nonnull ItemStack itemStack) {
-        this.itemStack = itemStack;
+        this.itemStack = itemStack.clone();
     }
 
     @Override

@@ -7,7 +7,7 @@ public abstract class Event {
 
     private final ProtoEntity<? extends Mob> protoEntity;
 
-    public Event(ProtoEntity<? extends Mob> protoEntity) {
+    public Event(final ProtoEntity<? extends Mob> protoEntity) {
         this.protoEntity = protoEntity;
     }
 

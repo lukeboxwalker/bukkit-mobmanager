@@ -20,7 +20,12 @@ public class TickScheduler {
         this.plugin = plugin;
     }
 
-    public void restart(int ticks) {
+    /**
+     * Restarts the scheduler with given tick period.
+     *
+     * @param ticks the tick period.
+     */
+    public void restart(final int ticks) {
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -30,6 +35,9 @@ public class TickScheduler {
         runnable.runTaskTimer(plugin, 0, ticks);
     }
 
+    /**
+     * Cancels the scheduler.
+     */
     public void cancel() {
         if (runnable != null) {
             runnable.cancel();

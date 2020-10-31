@@ -126,10 +126,6 @@
             </property>
         </properties>
     </rule>
-    <rule ref="category/java/design.xml/DataClass">
-        <priority>5</priority>
-    </rule>
-
 
     <rule ref="category/java/errorprone.xml">
         <exclude name="JUnitSpelling"/>

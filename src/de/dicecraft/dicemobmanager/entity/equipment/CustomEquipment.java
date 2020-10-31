@@ -30,7 +30,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setItemInMainHand(ItemStack itemStack) {
+    public void setItemInMainHand(final ItemStack itemStack) {
         this.mainHand = itemStack;
     }
 
@@ -40,7 +40,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setItemInOffHand(ItemStack itemStack) {
+    public void setItemInOffHand(final ItemStack itemStack) {
         this.offHand = itemStack;
     }
 
@@ -50,7 +50,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setHelmet(ItemStack itemStack) {
+    public void setHelmet(final ItemStack itemStack) {
         this.helmet = itemStack;
     }
 
@@ -60,7 +60,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setChestPlate(ItemStack itemStack) {
+    public void setChestPlate(final ItemStack itemStack) {
         this.chestPlate = itemStack;
     }
 
@@ -70,7 +70,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setLeggings(ItemStack itemStack) {
+    public void setLeggings(final ItemStack itemStack) {
         this.leggings = itemStack;
     }
 
@@ -80,7 +80,7 @@ public class CustomEquipment implements Equipment {
      * @param itemStack to equip
      */
     @Override
-    public void setBoots(ItemStack itemStack) {
+    public void setBoots(final ItemStack itemStack) {
         this.boots = itemStack;
     }
 
@@ -97,8 +97,8 @@ public class CustomEquipment implements Equipment {
      * @param entity to equip
      */
     @Override
-    public void equip(LivingEntity entity) {
-        EntityEquipment equipment = entity.getEquipment();
+    public void equip(final LivingEntity entity) {
+        final EntityEquipment equipment = entity.getEquipment();
         if (equipment != null) {
             // clear the previous equipment
             equipment.clear();

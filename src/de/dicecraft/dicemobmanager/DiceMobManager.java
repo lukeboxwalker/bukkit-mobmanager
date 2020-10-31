@@ -1,6 +1,6 @@
 package de.dicecraft.dicemobmanager;
 
-import de.dicecraft.dicemobmanager.command.CommandManager;
+import de.dicecraft.dicemobmanager.command.CommandUtils;
 
 import de.dicecraft.dicemobmanager.configuration.ConfigBuilder;
 import de.dicecraft.dicemobmanager.configuration.ConfigEventListener;
@@ -43,7 +43,7 @@ public class DiceMobManager extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ConfigEventListener(entityManager), instance);
 
         // register commands
-        CommandManager.registerCommands(instance, entityManager);
+        CommandUtils.registerCommands(instance, entityManager);
 
         // starting tick scheduler
         scheduler = new TickScheduler(entityManager, instance);
@@ -61,7 +61,7 @@ public class DiceMobManager extends JavaPlugin {
         return instance;
     }
 
-    public static void restartScheduler(int ticks) {
+    public static void restartScheduler(final int ticks) {
         scheduler.restart(ticks);
     }
 
@@ -69,7 +69,7 @@ public class DiceMobManager extends JavaPlugin {
         return new CustomConfigBuilder();
     }
 
-    public static EntitySpawnFactory createSpawnFactory(Configuration configuration) {
+    public static EntitySpawnFactory createSpawnFactory(final Configuration configuration) {
         return new SpawnFactory(entityManager, configuration);
     }
 
@@ -81,11 +81,11 @@ public class DiceMobManager extends JavaPlugin {
         return new ProtoEntityBuilder<>(customType);
     }
 
-    public static NamespacedKey createNameSpacedKey(String key) {
+    public static NamespacedKey createNameSpacedKey(final String key) {
         return new NamespacedKey(instance, key);
     }
 
-    public static Logger logger() {
+    public static Logger logging() {
         return LOGGER;
     }
 
@@ -93,7 +93,7 @@ public class DiceMobManager extends JavaPlugin {
         return RANDOM;
     }
 
-    public static int randomIntBetween(int min, int max) {
+    public static int randomIntBetween(final int min, final int max) {
         return RANDOM.nextInt((max - min) + 1) + min;
     }
 }

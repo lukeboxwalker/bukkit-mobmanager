@@ -4,7 +4,7 @@ import de.dicecraft.dicemobmanager.entity.ProtoEntity;
 
 public class TickEvent extends Event {
 
-    public TickEvent(ProtoEntity<?> protoEntity) {
+    public TickEvent(final ProtoEntity<?> protoEntity) {
         super(protoEntity);
     }
 }

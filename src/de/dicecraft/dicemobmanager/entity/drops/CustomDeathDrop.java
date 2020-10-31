@@ -36,7 +36,7 @@ public class CustomDeathDrop implements DeathDrop {
      * @param dropChance the drop chance of the item
      * @param rarity     the rarity of the drop
      */
-    public CustomDeathDrop(ItemStack itemStack, double dropChance, DeathDrop.Rarity rarity) {
+    public CustomDeathDrop(final ItemStack itemStack, final double dropChance, final DeathDrop.Rarity rarity) {
         this.setDropChance(dropChance);
         this.itemStack = itemStack.clone();
         this.rarity = rarity;
@@ -73,17 +73,17 @@ public class CustomDeathDrop implements DeathDrop {
     }
 
     @Override
-    public void setItemStack(@Nonnull ItemStack itemStack) {
+    public void setItemStack(final @Nonnull ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
     @Override
-    public void setDropChance(double dropChance) {
-        this.dropChance = (dropChance > 1) ? 1.0 : (Math.max(dropChance, MIN_DROP_CHANCE));
+    public void setDropChance(final double dropChance) {
+        this.dropChance = dropChance > 1 ? 1.0 : Math.max(dropChance, MIN_DROP_CHANCE);
     }
 
     @Override
-    public void setRarity(@Nonnull Rarity rarity) {
+    public void setRarity(final @Nonnull Rarity rarity) {
         this.rarity = rarity;
     }
 
@@ -96,9 +96,9 @@ public class CustomDeathDrop implements DeathDrop {
      * @return if the item should drop
      */
     @Override
-    public boolean shouldDrop(int lootBonus) {
-        int dropChance = (int) (getDropChance() * DROP_MULTIPLIER + lootBonus * LOOT_MULTIPLIER * getDropChance());
-        return (DiceMobManager.randomIntBetween(0, DROP_MULTIPLIER) < dropChance);
+    public boolean shouldDrop(final int lootBonus) {
+        final double dropChance = getDropChance() * DROP_MULTIPLIER + lootBonus * LOOT_MULTIPLIER * getDropChance();
+        return DiceMobManager.randomIntBetween(0, DROP_MULTIPLIER) < (int) dropChance;
     }
 
     @Override

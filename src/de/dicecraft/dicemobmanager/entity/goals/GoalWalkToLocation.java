@@ -68,7 +68,7 @@ public class GoalWalkToLocation implements CustomGoal<Mob> {
      * @param speed the speed of which the entity is walking
      * @param goal  the goal location
      */
-    public GoalWalkToLocation(final Mob mob, final Location goal, float speed) {
+    public GoalWalkToLocation(final Mob mob, final Location goal, final float speed) {
         this(mob, new LinkedList<>(Collections.singletonList(goal)), speed);
     }
 
@@ -80,7 +80,7 @@ public class GoalWalkToLocation implements CustomGoal<Mob> {
      * @param speed the speed of which the entity is walking
      * @param goals to walk to one by one
      */
-    public GoalWalkToLocation(final Mob mob, final List<Location> goals, float speed) {
+    public GoalWalkToLocation(final Mob mob, final List<Location> goals, final float speed) {
         this.locationQueue = goals == null ? new LinkedList<>() : new LinkedList<>(goals);
         this.mob = mob;
         this.speed = speed;
@@ -118,7 +118,7 @@ public class GoalWalkToLocation implements CustomGoal<Mob> {
      */
     @Override
     public boolean shouldStayActive() {
-        Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
+        final Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
         if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex()
                 && !locationQueue.isEmpty()) {
             this.nextGoal = null;

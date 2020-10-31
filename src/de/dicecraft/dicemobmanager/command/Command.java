@@ -16,7 +16,7 @@ public interface Command {
      * @param args the arguments for the command
      * @return if command executes successful
      */
-    boolean execute(@Nonnull final CommandSender sender, @Nonnull final String[] args);
+    boolean execute(@Nonnull final CommandSender sender, @Nonnull final String... args);
 
     /**
      * Provides tab completion.
@@ -29,5 +29,5 @@ public interface Command {
      * @param args current arguments of the command
      * @return list of possible tab completions
      */
-    List<String> tabComplete(@Nonnull final CommandSender sender, @Nonnull final String[] args);
+    List<String> tabComplete(@Nonnull final CommandSender sender, @Nonnull final String... args);
 }

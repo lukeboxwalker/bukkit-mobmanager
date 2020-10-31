@@ -9,11 +9,18 @@ public class ItemDropEvent extends Event {
     private final DeathDrop deathDrop;
     private final Item item;
 
-    public ItemDropEvent(Event event, DeathDrop deathDrop, Item item) {
+    public ItemDropEvent(final Event event, final DeathDrop deathDrop, final Item item) {
         this(event.getProtoEntity(), deathDrop, item);
     }
 
-    public ItemDropEvent(ProtoEntity<?> protoEntity, DeathDrop deathDrop, Item item) {
+    /**
+     * Creates a new ItemDropEvent.
+     *
+     * @param protoEntity the ProtoEntity that dropped an item.
+     * @param deathDrop   the deathDrop that was dropped by the entity
+     * @param item        the item that dropped.
+     */
+    public ItemDropEvent(final ProtoEntity<?> protoEntity, final DeathDrop deathDrop, final Item item) {
         super(protoEntity);
         this.deathDrop = deathDrop;
         this.item = item;

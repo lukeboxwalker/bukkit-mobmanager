@@ -30,8 +30,16 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
     private long lastHit;
     private long lastActivation;
 
+    /**
+     * Creates a new GoalHurtByTarget.
+     * <p>
+     * Selecting the target that hit the mob which uses this goal.
+     *
+     * @param mob             the mob that uses the goal.
+     * @param attackedClasses the entity class types the goal is targeting.
+     */
     @SafeVarargs
-    public GoalHurtByTarget(Mob mob, Class<? extends LivingEntity>... attackedClasses) {
+    public GoalHurtByTarget(final Mob mob, final Class<? extends LivingEntity>... attackedClasses) {
         super(mob);
         this.lastHit = System.currentTimeMillis();
         this.lastActivation = System.currentTimeMillis();
@@ -39,15 +47,29 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
         Bukkit.getPluginManager().registerEvents(this, DiceMobManager.getInstance());
     }
 
+    /**
+     * Listens on EntityDamageByEntityEvent event.
+     * <p>
+     * Used to reset the lastHit time.
+     *
+     * @param event the EntityDamageByEntityEvent
+     */
     @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
+    public void onEntityDamage(final EntityDamageByEntityEvent event) {
         if (!event.isCancelled() && event.getEntity().equals(mob)) {
             this.lastHit = System.currentTimeMillis();
         }
     }
 
+    /**
+     * Listens on EntityDeath event.
+     * <p>
+     * Used to unregister this listener.
+     *
+     * @param event the EntityDeathEvent
+     */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onEntityDeath(final EntityDeathEvent event) {
         if (!event.isCancelled() && event.getEntity().equals(mob)) {
             HandlerList.unregisterAll(this);
         }
@@ -55,16 +77,16 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
 
     @Override
     public boolean shouldActivate() {
-        EntityDamageEvent entityDamageEvent = this.mob.getLastDamageCause();
+        final EntityDamageEvent entityDamageEvent = this.mob.getLastDamageCause();
         if (lastHit != lastActivation && entityDamageEvent instanceof EntityDamageByEntityEvent) {
-            Entity attacker = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
+            final Entity attacker = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
             if (attacker instanceof LivingEntity) {
                 final Boolean gameRule = mob.getWorld().getGameRuleValue(GameRule.UNIVERSAL_ANGER);
                 if (attacker.getType() == EntityType.PLAYER && gameRule != null && gameRule) {
                     return false;
                 } else {
                     boolean isAttackAble = false;
-                    for (Class<? extends LivingEntity> clazz : attackedClasses) {
+                    for (final Class<? extends LivingEntity> clazz : attackedClasses) {
                         if (clazz.isAssignableFrom(attacker.getClass())) {
                             isAttackAble = true;
                         }
@@ -81,9 +103,9 @@ public class GoalHurtByTarget extends TargetGoal<Mob> implements Listener {
 
     @Override
     public void start() {
-        EntityDamageEvent entityDamageEvent = this.mob.getLastDamageCause();
+        final EntityDamageEvent entityDamageEvent = this.mob.getLastDamageCause();
         if (entityDamageEvent instanceof EntityDamageByEntityEvent) {
-            Entity attacker = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
+            final Entity attacker = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
             if (attacker instanceof LivingEntity) {
                 mob.setTarget((LivingEntity) attacker);
                 setTarget(mob.getTarget());

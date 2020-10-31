@@ -5,19 +5,19 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class SpawnEvent extends Event implements BukkitEventHolder<EntitySpawnEvent> {
 
-    private final EntitySpawnEvent spawnEvent;
+    private final EntitySpawnEvent bukkitSpawnEvent;
 
-    public SpawnEvent(Event event, EntitySpawnEvent spawnEvent) {
+    public SpawnEvent(final Event event, final EntitySpawnEvent spawnEvent) {
         this(event.getProtoEntity(), spawnEvent);
     }
 
-    public SpawnEvent(ProtoEntity<?> protoEntity, EntitySpawnEvent spawnEvent) {
+    public SpawnEvent(final ProtoEntity<?> protoEntity, final EntitySpawnEvent spawnEvent) {
         super(protoEntity);
-        this.spawnEvent = spawnEvent;
+        this.bukkitSpawnEvent = spawnEvent;
     }
 
     @Override
     public EntitySpawnEvent getBukkitEvent() {
-        return spawnEvent;
+        return bukkitSpawnEvent;
     }
 }

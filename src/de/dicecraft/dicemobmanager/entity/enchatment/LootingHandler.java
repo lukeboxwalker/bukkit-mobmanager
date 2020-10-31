@@ -29,27 +29,27 @@ public class LootingHandler implements EnchantmentHandler {
     }
 
     @Override
-    public void handle(LivingEntity attacked, ProtoEntity<?> protoEntity, Player attacker) {
+    public void handle(final LivingEntity attacked, final ProtoEntity<?> protoEntity, final Player attacker) {
         int lootBonus = 0;
         if (attacker != null) {
-            Map<Enchantment, Integer> enchantments = attacker.getInventory()
+            final Map<Enchantment, Integer> enchantments = attacker.getInventory()
                     .getItemInMainHand().getEnchantments();
             lootBonus = enchantments.getOrDefault(Enchantment.LOOT_BONUS_MOBS, 0);
         }
         if (manager.canItemsDrop()) {
             List<DeathDrop> drops = new ArrayList<>();
-            for (DeathDrop deathDrop : protoEntity.getDeathDrops()) {
+            for (final DeathDrop deathDrop : protoEntity.getDeathDrops()) {
                 if (deathDrop.shouldDrop(lootBonus)) {
                     drops.add(deathDrop);
                 }
             }
             final Optional<Configuration> optional = manager.getEntityConfig(attacked);
             if (optional.isPresent()) {
-                Configuration configuration = optional.get();
+                final Configuration configuration = optional.get();
                 drops = configuration.getItemDropHandler().handleDrops(drops);
-                for (DeathDrop deathDrop : drops) {
-                    Location location = attacked.getLocation();
-                    Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
+                for (final DeathDrop deathDrop : drops) {
+                    final Location location = attacked.getLocation();
+                    final Item item = location.getWorld().dropItemNaturally(location, deathDrop.getItemStack().clone());
                     item.setCanMobPickup(false);
                     if (attacker != null && attacker.getType() == EntityType.PLAYER
                             && configuration.shouldCancel(ConfigFlag.DROP_PICKUP_BY_EVERYONE)) {
@@ -63,7 +63,8 @@ public class LootingHandler implements EnchantmentHandler {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Mob> void callItemDrop(ProtoEntity<T> protoEntity, ItemDropEvent event, Entity entity) {
+    private <T extends Mob> void callItemDrop(final ProtoEntity<T> protoEntity, final ItemDropEvent event,
+                                              final Entity entity) {
         protoEntity.onItemDrop(event, (T) entity);
     }
 }

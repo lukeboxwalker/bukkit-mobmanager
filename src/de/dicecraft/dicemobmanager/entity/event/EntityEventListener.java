@@ -40,6 +40,13 @@ public final class EntityEventListener implements Listener {
     private final EnchantmentHandler lootingHandler;
     private final EnchantmentHandler knockBackHandler;
 
+    /**
+     * Creates a new EntityEventListener.
+     * <p>
+     * Listening to events the entity manager will be effected by
+     *
+     * @param manager the entity manager.
+     */
     public EntityEventListener(final EntityManager manager) {
         this.manager = manager;
         this.entityDamagedByEntity = new HashSet<>();
@@ -61,16 +68,16 @@ public final class EntityEventListener implements Listener {
      * @param event the EntityDeathEvent
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onEntityDeath(final EntityDeathEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
+        final Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            LivingEntity entity = event.getEntity();
+            final LivingEntity entity = event.getEntity();
             callDeathEvent(protoEntity, event);
             if (!event.isCancelled()) {
-                Player player = event.getEntity().getKiller();
+                final Player player = event.getEntity().getKiller();
                 event.getDrops().clear();
                 lootingHandler.handle(entity, protoEntity, player);
             }
@@ -93,13 +100,13 @@ public final class EntityEventListener implements Listener {
      * @param event the EntityDeathEvent
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntitySpawn(EntitySpawnEvent event) {
+    public void onEntitySpawn(final EntitySpawnEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity<?>> optional = manager.canActivateEntity(event.getEntity());
+        final Optional<ProtoEntity<?>> optional = manager.canActivateEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
-            Entity entity = event.getEntity();
+            final Entity entity = event.getEntity();
             callSpawnEvent(protoEntity, event);
             if (!event.isCancelled()) {
                 manager.activateEntity(entity);
@@ -122,11 +129,11 @@ public final class EntityEventListener implements Listener {
      * @param event the ProjectileLaunchEvent
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+    public void onProjectileLaunch(final ProjectileLaunchEvent event) {
         if (!event.isCancelled() && EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
             final Projectile projectile = event.getEntity();
-            LivingEntity shooter = (LivingEntity) projectile.getShooter();
-            Optional<ProtoEntity<?>> optional = manager.getProtoEntity(shooter);
+            final LivingEntity shooter = (LivingEntity) projectile.getShooter();
+            final Optional<ProtoEntity<?>> optional = manager.getProtoEntity(shooter);
             optional.ifPresent(protoEntity -> manager.watchProjectile(projectile, shooter));
         }
     }
@@ -143,19 +150,17 @@ public final class EntityEventListener implements Listener {
      * @param event the EntityDamageEvent
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onEntityDamage(final EntityDamageEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
+        final Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             final LivingEntity entity = (LivingEntity) event.getEntity();
             callDamageEvent(protoEntity, event);
-            if (!event.isCancelled()) {
-                if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
-                    double finalHealth = (entity.getHealth() - event.getFinalDamage());
-                    protoEntity.getNameUpdater().updateName(entity, finalHealth);
-                }
+            if (!event.isCancelled() && protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
+                final double finalHealth = entity.getHealth() - event.getFinalDamage();
+                protoEntity.getNameUpdater().updateName(entity, finalHealth);
             }
         });
     }
@@ -165,8 +170,17 @@ public final class EntityEventListener implements Listener {
         protoEntity.onEntityDamage(new DamageEvent(protoEntity, event), (T) event.getEntity());
     }
 
+    /**
+     * Listens to the EntityDamageByEntityEvent to identify when a
+     * custom entity takes damage by a player.
+     * <p>
+     * The event fakes the actual hit on the entity due to wrong particle
+     * calculation when dealing with hit damage values.
+     *
+     * @param event the EntityDamageByEntityEvent event.
+     */
     @EventHandler(priority = EventPriority.HIGH)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -175,16 +189,16 @@ public final class EntityEventListener implements Listener {
         } else {
             entityDamagedByEntity.add(event.getEntity().getUniqueId());
         }
-        Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
+        final Optional<ProtoEntity<?>> optional = manager.getProtoEntity(event.getEntity());
         optional.ifPresent(protoEntity -> {
             if (EntityType.PLAYER.equals(event.getDamager().getType())) {
-                Player player = (Player) event.getDamager();
-                double finalDamage = event.getFinalDamage();
+                final Player player = (Player) event.getDamager();
+                final double finalDamage = event.getFinalDamage();
                 event.setCancelled(true);
                 final LivingEntity entity = (LivingEntity) event.getEntity();
                 entity.damage(finalDamage, player);
-                Location loc = entity.getLocation();
-                int particleCount = DiceMobManager.randomIntBetween(MIN_PARTICLE, MAX_PARTICLE);
+                final Location loc = entity.getLocation();
+                final int particleCount = DiceMobManager.randomIntBetween(MIN_PARTICLE, MAX_PARTICLE);
                 entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, loc.getX(), loc.getY(), loc.getZ(),
                         particleCount, 0D, 0D, 0D, PARTICLE_MULTIPLIER);
 

@@ -8,7 +8,7 @@ package de.dicecraft.dicemobmanager.entity.builder;
  */
 public class EntityCreationException extends RuntimeException {
 
-    static final long serialVersionUID = -3387516993124229948L;
+    private static final long serialVersionUID = -3387516993124229948L;
 
     /**
      * Constructs a new exception with the specified detail message and
@@ -17,7 +17,7 @@ public class EntityCreationException extends RuntimeException {
      * @param message the detail message
      * @param cause   the cause
      */
-    public EntityCreationException(String message, Throwable cause) {
+    public EntityCreationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -26,7 +26,7 @@ public class EntityCreationException extends RuntimeException {
      *
      * @param message the detail message
      */
-    public EntityCreationException(String message) {
+    public EntityCreationException(final String message) {
         super(message);
     }
 }

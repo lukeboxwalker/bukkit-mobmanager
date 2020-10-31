@@ -9,16 +9,16 @@ public class CustomConfiguration implements Configuration {
     private Map<ConfigFlag, Boolean> configFlags = new HashMap<>();
     private ItemDropHandler handler = drops -> drops;
 
-    public void setConfigFlags(Map<ConfigFlag, Boolean> configFlags) {
+    public void setConfigFlags(final Map<ConfigFlag, Boolean> configFlags) {
         this.configFlags = configFlags;
     }
 
     @Override
-    public boolean shouldCancel(ConfigFlag flag) {
+    public boolean shouldCancel(final ConfigFlag flag) {
         return !configFlags.getOrDefault(flag, true);
     }
 
-    public void setHandler(@Nonnull ItemDropHandler handler) {
+    public void setHandler(final @Nonnull ItemDropHandler handler) {
         this.handler = handler;
     }
 

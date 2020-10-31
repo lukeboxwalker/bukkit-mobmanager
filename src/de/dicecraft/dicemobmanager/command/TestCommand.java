@@ -13,12 +13,12 @@ public class TestCommand implements Command {
     }
 
     @Override
-    public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
+    public boolean execute(final @Nonnull CommandSender sender, final @Nonnull String[] args) {
         return true;
     }
 
     @Override
-    public List<String> tabComplete(@Nonnull CommandSender sender, @Nonnull String[] args) {
+    public List<String> tabComplete(final @Nonnull CommandSender sender, final @Nonnull String[] args) {
         return new ArrayList<>();
     }
 }

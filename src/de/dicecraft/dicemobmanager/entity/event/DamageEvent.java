@@ -5,19 +5,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class DamageEvent extends Event implements BukkitEventHolder<EntityDamageEvent> {
 
-    private final EntityDamageEvent damageEvent;
+    private final EntityDamageEvent bukkitDamageEvent;
 
-    public DamageEvent(Event event, EntityDamageEvent damageEvent) {
+    public DamageEvent(final Event event, final EntityDamageEvent damageEvent) {
         this(event.getProtoEntity(), damageEvent);
     }
 
-    public DamageEvent(ProtoEntity<?> protoEntity, EntityDamageEvent damageEvent) {
+    public DamageEvent(final ProtoEntity<?> protoEntity, final EntityDamageEvent damageEvent) {
         super(protoEntity);
-        this.damageEvent = damageEvent;
+        this.bukkitDamageEvent = damageEvent;
     }
 
     @Override
     public EntityDamageEvent getBukkitEvent() {
-        return damageEvent;
+        return bukkitDamageEvent;
     }
 }

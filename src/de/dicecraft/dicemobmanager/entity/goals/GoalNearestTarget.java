@@ -3,6 +3,7 @@ package de.dicecraft.dicemobmanager.entity.goals;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.dicecraft.dicemobmanager.DiceMobManager;
+import de.dicecraft.dicemobmanager.utils.PositionUtils;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 
@@ -17,7 +18,16 @@ public class GoalNearestTarget<T extends LivingEntity> extends TargetGoal<Mob> {
     private final double radius;
     private T target;
 
-    public GoalNearestTarget(Mob mob, Class<T> targetClass, double radius) {
+    /**
+     * Creates a new GoalNearestTarget.
+     * <p>
+     * Selecting a target around the mob that uses this goal.
+     *
+     * @param mob         the mob that uses the goal.
+     * @param targetClass the entity class types the goal will target.
+     * @param radius      the radius in which the goal will search for a target.
+     */
+    public GoalNearestTarget(final Mob mob, final Class<T> targetClass, final double radius) {
         super(mob);
         this.targetClass = targetClass;
         this.radius = radius;
@@ -26,13 +36,12 @@ public class GoalNearestTarget<T extends LivingEntity> extends TargetGoal<Mob> {
 
     @Override
     public boolean shouldActivate() {
-        if (DiceMobManager.getRandom().nextInt(1) != 0) {
-            return false;
-        } else {
-            Collection<T> entities = mob.getWorld().getNearbyEntitiesByType(targetClass, mob.getLocation(), radius);
+        if (DiceMobManager.getRandom().nextInt(1) == 0) {
+            final Collection<T> entities = mob.getWorld()
+                    .getNearbyEntitiesByType(targetClass, mob.getLocation(), radius);
             double minDistance = radius;
-            for (T entity : entities) {
-                double distance = positionSquared(mob, entity);
+            for (final T entity : entities) {
+                final double distance = PositionUtils.distanceSquared(mob, entity);
                 if (distance < minDistance) {
                     minDistance = distance;
                     target = entity;
@@ -40,6 +49,8 @@ public class GoalNearestTarget<T extends LivingEntity> extends TargetGoal<Mob> {
             }
             setTarget(target);
             return target != null;
+        } else {
+            return false;
         }
     }
 

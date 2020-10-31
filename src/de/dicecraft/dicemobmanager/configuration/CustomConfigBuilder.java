@@ -11,13 +11,13 @@ public class CustomConfigBuilder implements ConfigBuilder {
     private ItemDropHandler itemDropHandler = drops -> drops;
 
     @Override
-    public ConfigBuilder setBooleanFlag(ConfigFlag configFlag, boolean flag) {
+    public ConfigBuilder setBooleanFlag(final ConfigFlag configFlag, final boolean flag) {
         configFlags.put(configFlag, flag);
         return this;
     }
 
     @Override
-    public ConfigBuilder allowFlag(ConfigFlag configFlag) {
+    public ConfigBuilder allowFlag(final ConfigFlag configFlag) {
         configFlags.put(configFlag, true);
         return this;
     }
@@ -29,7 +29,7 @@ public class CustomConfigBuilder implements ConfigBuilder {
     }
 
     @Override
-    public ConfigBuilder denyFlag(ConfigFlag configFlag) {
+    public ConfigBuilder denyFlag(final ConfigFlag configFlag) {
         configFlags.put(configFlag, false);
         return this;
     }
@@ -41,14 +41,14 @@ public class CustomConfigBuilder implements ConfigBuilder {
     }
 
     @Override
-    public ConfigBuilder setItemDropHandler(@Nonnull ItemDropHandler itemDropHandler) {
+    public ConfigBuilder setItemDropHandler(final @Nonnull ItemDropHandler itemDropHandler) {
         this.itemDropHandler = itemDropHandler;
         return this;
     }
 
     @Override
     public Configuration build() {
-        CustomConfiguration configuration = new CustomConfiguration();
+        final CustomConfiguration configuration = new CustomConfiguration();
         configuration.setConfigFlags(configFlags);
         configuration.setHandler(itemDropHandler);
         return configuration;

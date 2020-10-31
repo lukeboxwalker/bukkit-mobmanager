@@ -22,6 +22,7 @@ import java.util.Set;
  * For example the level, the custom name, the name
  * supplier and the death loot.
  *
+ * @param <T> the type of the mob
  * @author Walkehorst Lukas
  * @since 1.0
  */
@@ -75,6 +76,7 @@ public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalE
      * by the mob manager.
      *
      * @param event the bukkit event.
+     * @param mob   the mob
      */
     void onEntityTick(TickEvent event, T mob);
 
@@ -82,6 +84,7 @@ public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalE
      * Called when the entity is damaged.
      *
      * @param event the bukkit event.
+     * @param mob   the mob
      */
     void onEntityDamage(DamageEvent event, T mob);
 
@@ -90,6 +93,7 @@ public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalE
      * by the mob manager.
      *
      * @param event the bukkit event.
+     * @param mob   the mob
      */
     void onEntityDeath(DeathEvent event, T mob);
 
@@ -98,6 +102,7 @@ public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalE
      * by the mob manager.
      *
      * @param event the bukkit event.
+     * @param mob   the mob
      */
     void onEntitySpawn(SpawnEvent event, T mob);
 
@@ -105,6 +110,7 @@ public interface ProtoEntity<T extends Mob> extends ProtoNamedEntity, ProtoGoalE
      * Called when the entity drops an item.
      *
      * @param event the loot drop event.
+     * @param mob   the mob
      */
     void onItemDrop(ItemDropEvent event, T mob);
 }

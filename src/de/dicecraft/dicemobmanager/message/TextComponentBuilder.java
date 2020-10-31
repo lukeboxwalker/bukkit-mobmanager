@@ -13,35 +13,52 @@ public class TextComponentBuilder {
     private ClickEvent.Action action;
     private ChatColor color = ChatColor.WHITE;
 
-    public TextComponentBuilder() {
-    }
-
-    public TextComponentBuilder setText(String text) {
+    public TextComponentBuilder setText(final String text) {
         this.text = text;
         return this;
     }
 
-    public TextComponentBuilder setColor(ChatColor color) {
+    public TextComponentBuilder setColor(final ChatColor color) {
         this.color = color;
         return this;
     }
 
-    public TextComponentBuilder addClickEvent(ClickEvent.Action clickEventAction, String value) {
+    /**
+     * Adding a click event to the text.
+     *
+     * @param clickEventAction the click event action.
+     * @param value            the value when clicking
+     * @return this builder to continue.
+     */
+    public TextComponentBuilder addClickEvent(final ClickEvent.Action clickEventAction, final String value) {
         this.action = clickEventAction;
         this.click = value;
         return this;
     }
 
-    public TextComponentBuilder addClickCommand(RunnableCommand runnableCommand) {
+    /**
+     * Adding a click event to the text that performs a command.
+     *
+     * @param runnableCommand the runnable that returns the command string.
+     * @return this builder to continue.
+     */
+    public TextComponentBuilder addClickCommand(final RunnableCommand runnableCommand) {
         this.action = ClickEvent.Action.RUN_COMMAND;
         this.click = runnableCommand.runCommand();
         return this;
     }
 
+    /**
+     * Builds the TextComponent.
+     * <p>
+     * Setting the text as well as color, click events and hover events.
+     *
+     * @return the new TextComponent.
+     */
     public TextComponent build() {
-        TextComponent textComponent = new TextComponent();
-        textComponent.setText("" + ChatColor.COLOR_CHAR + color.getChar() + this.text);
-        if (this.click != null && (this.action != null)) {
+        final TextComponent textComponent = new TextComponent();
+        textComponent.setText(ChatColor.COLOR_CHAR + color.getChar() + this.text);
+        if (this.click != null && this.action != null) {
             textComponent.setClickEvent(new ClickEvent(action, this.click));
             textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§b" + this.click)));
         }

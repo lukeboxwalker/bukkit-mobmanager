@@ -11,7 +11,7 @@ public final class EntitySelector {
 
     public static final Predicate<Entity> IS_PLAYER_IN_SURVIVAL = (entity) -> {
         if (EntityType.PLAYER.equals(entity.getType())) {
-            GameMode gameMode = ((Player) entity).getGameMode();
+            final GameMode gameMode = ((Player) entity).getGameMode();
             return gameMode != GameMode.SPECTATOR && gameMode != GameMode.CREATIVE;
         } else {
             return false;

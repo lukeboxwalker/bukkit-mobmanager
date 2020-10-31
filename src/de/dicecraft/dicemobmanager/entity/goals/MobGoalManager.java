@@ -23,27 +23,27 @@ public class MobGoalManager implements GoalManager {
     }
 
     @Override
-    public void ignoreGoal(GoalKey<? extends Mob> goalKey) {
+    public void ignoreGoal(final GoalKey<? extends Mob> goalKey) {
         ignoredGoals.add(goalKey);
     }
 
     @Override
-    public void ignoreAllGoals(Collection<GoalKey<? extends Mob>> goalKeys) {
+    public void ignoreAllGoals(final Collection<GoalKey<? extends Mob>> goalKeys) {
         ignoredGoals.addAll(goalKeys);
     }
 
     @Override
-    public void allowGoal(GoalKey<? extends Mob> goalKey) {
+    public void allowGoal(final GoalKey<? extends Mob> goalKey) {
         ignoredGoals.remove(goalKey);
     }
 
     @Override
-    public void allowAllGoals(Collection<GoalKey<? extends Mob>> goalKeys) {
+    public void allowAllGoals(final Collection<GoalKey<? extends Mob>> goalKeys) {
         ignoredGoals.removeAll(goalKeys);
     }
 
     @Override
-    public void changePriority(int priority, GoalKey<? extends Mob> goalKey) {
+    public void changePriority(final int priority, final GoalKey<? extends Mob> goalKey) {
         for (final PriorityEntry<GoalSupplier<Mob>> entry : pathfinderGoals) {
             if (entry.getEntry().supply(null).getKey().equals(goalKey)) {
                 entry.setPriority(priority);
@@ -53,12 +53,12 @@ public class MobGoalManager implements GoalManager {
     }
 
     @Override
-    public void addCustomGoal(int priority, GoalSupplier<Mob> goalSupplier) {
+    public void addCustomGoal(final int priority, final GoalSupplier<Mob> goalSupplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, goalSupplier));
     }
 
     @Override
-    public void addAllCustomGoal(List<PriorityEntry<GoalSupplier<Mob>>> goals) {
+    public void addAllCustomGoal(final List<PriorityEntry<GoalSupplier<Mob>>> goals) {
         pathfinderGoals.addAll(goals);
     }
 

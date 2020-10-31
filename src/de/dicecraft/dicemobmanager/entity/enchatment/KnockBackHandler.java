@@ -18,31 +18,31 @@ public class KnockBackHandler implements EnchantmentHandler {
     private static final double KNOCK_BACK_MULTIPLIER = 0.5D;
 
     @Override
-    public void handle(LivingEntity attacked, ProtoEntity attackedProtoEntity, Player attacker) {
-        Map<Enchantment, Integer> enchantments = attacker.getInventory()
+    public void handle(final LivingEntity attacked, final ProtoEntity<?> attackedProtoEntity, final Player attacker) {
+        final Map<Enchantment, Integer> enchantments = attacker.getInventory()
                 .getItemInMainHand().getEnchantments();
-        double knockBack = enchantments.getOrDefault(Enchantment.KNOCKBACK, 0);
+        final double knockBack = enchantments.getOrDefault(Enchantment.KNOCKBACK, 0);
 
-        Location playerLoc = attacker.getLocation();
+        final Location playerLoc = attacker.getLocation();
         doKnockBack(knockBack, playerLoc.getYaw(), attacked);
     }
 
-    private void doKnockBack(double knockBack, float yaw, LivingEntity livingEntity) {
-        knockBack = Math.max(knockBack * KNOCK_BACK_MULTIPLIER, DEFAULT_STRENGTH);
-        AttributeInstance instance = livingEntity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+    private void doKnockBack(final double knockBack, final float yaw, final LivingEntity livingEntity) {
+        double actualKnockBack = Math.max(knockBack * KNOCK_BACK_MULTIPLIER, DEFAULT_STRENGTH);
+        final AttributeInstance instance = livingEntity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
         if (instance != null) {
-            knockBack = knockBack * (1.0D - instance.getBaseValue());
+            actualKnockBack = actualKnockBack * (1.0D - instance.getBaseValue());
         }
-        if (knockBack > 0.0D) {
-            Vector velocity = livingEntity.getVelocity();
-            Vector direction = new Vector(-Math.sin(yaw * DEG_TO_RAD), 0.0D, Math.cos(yaw * DEG_TO_RAD));
-            direction.normalize().multiply(knockBack);
+        if (actualKnockBack > 0) {
+            final Vector velocity = livingEntity.getVelocity();
+            final Vector direction = new Vector(-Math.sin(yaw * DEG_TO_RAD), 0.0D, Math.cos(yaw * DEG_TO_RAD));
+            direction.normalize().multiply(actualKnockBack);
 
-            double x = velocity.getX() / 2.0D + direction.getX();
-            double minY = Math.min(DEFAULT_STRENGTH, velocity.getY() / 2.0D + knockBack);
-            double y = livingEntity.isOnGround() ? minY : velocity.getY();
-            double z = velocity.getZ() / 2.0D + direction.getZ();
-            livingEntity.setVelocity(new Vector(x, y, z));
+            final double posX = velocity.getX() / 2.0D + direction.getX();
+            final double minY = Math.min(DEFAULT_STRENGTH, velocity.getY() / 2.0D + actualKnockBack);
+            final double posY = livingEntity.isOnGround() ? minY : velocity.getY();
+            final double posZ = velocity.getZ() / 2.0D + direction.getZ();
+            livingEntity.setVelocity(new Vector(posX, posY, posZ));
         }
 
     }

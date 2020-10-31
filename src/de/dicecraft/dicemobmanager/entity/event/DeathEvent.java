@@ -5,19 +5,19 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 public class DeathEvent extends Event implements BukkitEventHolder<EntityDeathEvent> {
 
-    private final EntityDeathEvent deathEvent;
+    private final EntityDeathEvent bukkitDeathEvent;
 
-    public DeathEvent(Event event, EntityDeathEvent deathEvent) {
+    public DeathEvent(final Event event, final EntityDeathEvent deathEvent) {
         this(event.getProtoEntity(), deathEvent);
     }
 
-    public DeathEvent(ProtoEntity<?> protoEntity, EntityDeathEvent deathEvent) {
+    public DeathEvent(final ProtoEntity<?> protoEntity, final EntityDeathEvent deathEvent) {
         super(protoEntity);
-        this.deathEvent = deathEvent;
+        this.bukkitDeathEvent = deathEvent;
     }
 
     @Override
     public EntityDeathEvent getBukkitEvent() {
-        return deathEvent;
+        return bukkitDeathEvent;
     }
 }

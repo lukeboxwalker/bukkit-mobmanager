@@ -38,14 +38,14 @@ public class EntityManager {
     private final Function<Map.Entry<Entity, ManagedEntity>, TickEvent> toTickEvent =
             entry -> new TickEvent(entry.getValue().protoEntity);
 
-    private boolean canItemsDrop = true;
+    private boolean itemsDrop = true;
 
     public boolean canItemsDrop() {
-        return canItemsDrop;
+        return itemsDrop;
     }
 
-    public void setItemsDrop(boolean canItemsDrop) {
-        this.canItemsDrop = canItemsDrop;
+    public void setItemsDrop(final boolean itemsDrop) {
+        this.itemsDrop = itemsDrop;
     }
 
     public void destroyAll() {
@@ -53,8 +53,17 @@ public class EntityManager {
         tickedEntities.keySet().forEach(Entity::remove);
     }
 
-    public Map<Entity, ProtoEntity<?>> getAllEntities(Entity... entities) {
-        Map<Entity, ProtoEntity<?>> result = new HashMap<>();
+    /**
+     * Collects all active entities.
+     * <p>
+     * Notice that an entity in the result map may or may not has been ticked for
+     * the first time in there life span.
+     *
+     * @param entities the entities to filter when collecting to the result map.
+     * @return a map of entities in relation to there ProtoEntity.
+     */
+    public Map<Entity, ProtoEntity<?>> getAllEntities(final Entity... entities) {
+        final Map<Entity, ProtoEntity<?>> result = new HashMap<>();
         if (entities.length == 0) {
             activeEntities.forEach((entity, managedEntity) ->
                     result.put(entity, managedEntity.protoEntity));
@@ -73,9 +82,19 @@ public class EntityManager {
         return result;
     }
 
-    public Optional<ProtoEntity<?>> getProtoEntity(Entity entity) {
+    /**
+     * Gets the stored ProtoEntity for given Entity.
+     * <p>
+     * The ProtoEntity for the given entity may or may not be present.
+     * Notice that an ProtoEntity in the result map may or may not has been ticked for
+     * the first time in there life span.
+     *
+     * @param entity the entity to lookup.
+     * @return an optional of the ProtoEntity. It will ne empty when the ProtoEntity did not exist.
+     */
+    public Optional<ProtoEntity<?>> getProtoEntity(final Entity entity) {
         if (tickedEntities.containsKey(entity)) {
-            TickedEntity tickedEntity = tickedEntities.get(entity);
+            final TickedEntity tickedEntity = tickedEntities.get(entity);
             return Optional.of(tickedEntity.tickEvent.getProtoEntity());
         } else if (activeEntities.containsKey(entity)) {
             return Optional.of(activeEntities.get(entity).protoEntity);
@@ -84,9 +103,18 @@ public class EntityManager {
         }
     }
 
-    public Optional<Configuration> getEntityConfig(Entity entity) {
+    /**
+     * Gets the stored ProtoEntity for given Entity.
+     * <p>
+     * The Configuration for the given entity may or may not be present.
+     * Notice that an Configuration may effect multiple entities.
+     *
+     * @param entity the entity to lookup.
+     * @return an optional of the Configuration. It will ne empty when the ProtoEntity did not exist.
+     */
+    public Optional<Configuration> getEntityConfig(final Entity entity) {
         if (tickedEntities.containsKey(entity)) {
-            TickedEntity tickedEntity = tickedEntities.get(entity);
+            final TickedEntity tickedEntity = tickedEntities.get(entity);
             return Optional.of(tickedEntity.configuration);
         } else if (activeEntities.containsKey(entity)) {
             return Optional.of(activeEntities.get(entity).configuration);
@@ -100,10 +128,16 @@ public class EntityManager {
         protoEntity.onEntityTick(tickedEntities.get(entity).tickEvent, (T) entity);
     }
 
+    /**
+     * Ticks the EntityManager.
+     * <p>
+     * Ticking all entities that can be ticked and ticking dropped items
+     * to check when to free item from owner.
+     */
     public void tick() {
         tickedEntities.forEach((key, tickedEntity) -> {
-            TickEvent tickEvent = tickedEntity.tickEvent;
-            LivingEntity entity = (LivingEntity) key;
+            final TickEvent tickEvent = tickedEntity.tickEvent;
+            final LivingEntity entity = (LivingEntity) key;
             if (entity.isDead()) {
                 // only remove entity on tick if entity is not a slimes with size > 1
                 // because the slime will be removed when the slime split event
@@ -128,8 +162,9 @@ public class EntityManager {
                         new TickedEntity(toTickEvent.apply(entry), entry.getValue().configuration))));
         activeEntities.clear();
 
+        // tick dropped items
         synchronized (droppedItems) {
-            for (Iterator<Item> iterator = droppedItems.iterator(); iterator.hasNext(); ) {
+            for (final Iterator<Item> iterator = droppedItems.iterator(); iterator.hasNext(); ) {
                 final Item item = iterator.next();
                 if (item.isDead()) {
                     iterator.remove();
@@ -141,14 +176,24 @@ public class EntityManager {
         }
     }
 
+    /**
+     * Adds an item the manager should be watching.
+     *
+     * @param item the item to watch.
+     */
     public void watchItem(final Item item) {
         synchronized (droppedItems) {
             droppedItems.add(item);
         }
     }
 
-
-    public Optional<ProtoEntity<?>> canActivateEntity(Entity entity) {
+    /**
+     * Checks if the entity can be activated.
+     *
+     * @param entity the entity to check
+     * @return an optional of the ProtoEntity that can be activated.
+     */
+    public Optional<ProtoEntity<?>> canActivateEntity(final Entity entity) {
         if (registeredEntities.containsKey(entity)) {
             return Optional.of(registeredEntities.get(entity).protoEntity);
         } else {
@@ -156,36 +201,49 @@ public class EntityManager {
         }
     }
 
-    public void activateEntity(Entity entity) {
-        ManagedEntity managedEntity = registeredEntities.remove(entity);
+    /**
+     * Activates an entity.
+     * <p>
+     * Should be called when entity spawns into world.
+     *
+     * @param entity the entity to activate.
+     */
+    public void activateEntity(final Entity entity) {
+        final ManagedEntity managedEntity = registeredEntities.remove(entity);
         if (managedEntity != null) {
             activeEntities.put(entity, managedEntity);
         }
     }
 
-    public void registerEntity(LivingEntity entity, ProtoEntity<?> protoEntity, Configuration configuration) {
+    public void registerEntity(final LivingEntity entity, final ProtoEntity<?> protoEntity,
+                               final Configuration configuration) {
         registeredEntities.put(entity, new ManagedEntity(protoEntity, configuration));
     }
 
-    public void removeEntity(Entity entity) {
+    /**
+     * Removes an entity that is managed by this manager.
+     *
+     * @param entity to remove
+     */
+    public void removeEntity(final Entity entity) {
         registeredEntities.remove(entity);
         tickedEntities.remove(entity);
         activeEntities.remove(entity);
     }
 
-    public void watchProjectile(Projectile projectile, Entity livingEntity) {
+    public void watchProjectile(final Projectile projectile, final Entity livingEntity) {
         projectileMap.put(projectile, livingEntity);
     }
 
-    public boolean isWatchingProjectile(Projectile projectile) {
+    public boolean isWatchingProjectile(final Projectile projectile) {
         return projectileMap.containsKey(projectile);
     }
 
-    public void unWatchProjectile(Projectile projectile) {
+    public void unWatchProjectile(final Projectile projectile) {
         projectileMap.remove(projectile);
     }
 
-    public Entity getProjectileShooter(Projectile projectile) {
+    public Entity getProjectileShooter(final Projectile projectile) {
         return projectileMap.get(projectile);
     }
 

@@ -24,7 +24,7 @@ public class PriorityEntry<T> {
         this.entry = entry;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(final int priority) {
         this.priority = priority;
     }
 

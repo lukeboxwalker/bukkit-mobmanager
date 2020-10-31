@@ -2,7 +2,7 @@ package de.dicecraft.dicemobmanager.command.subcommand.tick;
 
 import de.dicecraft.dicemobmanager.DiceMobManager;
 import de.dicecraft.dicemobmanager.command.Command;
-import de.dicecraft.dicemobmanager.command.CommandManager;
+import de.dicecraft.dicemobmanager.command.CommandUtils;
 import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nonnull;
@@ -20,15 +20,15 @@ public class ChangeEntityTickCommand implements Command {
     public boolean execute(@Nonnull final CommandSender sender, @Nonnull final String[] args) {
         if (args.length == 1) {
             try {
-                int ticks = Integer.parseInt(args[0]);
+                final int ticks = Integer.parseInt(args[0]);
                 DiceMobManager.restartScheduler(ticks);
-                CommandManager.messageFormatter().sendMessage(sender,
+                CommandUtils.messageFormatter().sendMessage(sender,
                         "§7Scheduler restarted, entities will now get a mob tick every §5{0} §7game tick(s).",
                         ticks);
 
                 return true;
             } catch (NumberFormatException e) {
-                CommandManager.messageFormatter().sendMessage(sender,
+                CommandUtils.messageFormatter().sendMessage(sender,
                         "§7Argument '§5{0}§7' is not numeric!",
                         args[0]);
                 return false;

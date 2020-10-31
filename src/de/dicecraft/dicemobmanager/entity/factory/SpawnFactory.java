@@ -37,7 +37,7 @@ public class SpawnFactory implements EntitySpawnFactory {
     private static final double DEFAULT_MAX_HEALTH = 20D;
     private static final CreatureSpawnEvent.SpawnReason SPAWN_REASON = CreatureSpawnEvent.SpawnReason.CUSTOM;
 
-    private static final Logger LOGGER = DiceMobManager.logger();
+    private static final Logger LOGGER = DiceMobManager.logging();
     private static final MobGoals MOB_GOALS = new PaperMobGoals();
     private static final Function<String, String> WARN_MSG = string ->
             "Trying to add a goal with goal key: " + string + " which already exist!";
@@ -51,13 +51,13 @@ public class SpawnFactory implements EntitySpawnFactory {
     }
 
     @Override
-    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location location) {
+    public <T extends Mob> LivingEntity spawnEntity(final ProtoEntity<T> protoEntity, final Location location) {
         final Map<Attribute, Double> attributes = protoEntity.getAttributeMap();
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, DEFAULT_MAX_HEALTH);
         final EntityType type = protoEntity.getCustomType().getEntityType();
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
             return (LivingEntity) location.getWorld().spawnEntity(location, type, SPAWN_REASON, entity -> {
-                Mob mob = (Mob) entity;
+                final Mob mob = (Mob) entity;
                 this.prepareAttributes(mob, protoEntity, attributes);
                 this.prepareCustomName(mob, protoEntity);
                 this.prepareGoals(mob, protoEntity);
@@ -77,38 +77,38 @@ public class SpawnFactory implements EntitySpawnFactory {
         }
     }
 
-    private void prepareWither(Wither wither) {
+    private void prepareWither(final Wither wither) {
         if (configuration.shouldCancel(ConfigFlag.SHOW_WITHER_BOSS_BAR)) {
-            BossBar bossBar = wither.getBossBar();
+            final BossBar bossBar = wither.getBossBar();
             if (bossBar != null) {
                 bossBar.setVisible(false);
             }
         }
     }
 
-    private void prepareZombie(Zombie zombie, ProtoEntity<? extends Mob> protoEntity) {
+    private void prepareZombie(final Zombie zombie, final ProtoEntity<? extends Mob> protoEntity) {
         zombie.setShouldBurnInDay(protoEntity.shouldBurnInDay());
     }
 
-    private void preparePotionEffects(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
-        for (PotionEffect potionEffect : protoEntity.getPotionEffects()) {
+    private void preparePotionEffects(final Mob mob, final ProtoEntity<? extends Mob> protoEntity) {
+        for (final PotionEffect potionEffect : protoEntity.getPotionEffects()) {
             mob.addPotionEffect(potionEffect);
         }
     }
 
-    private void prepareGoals(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
+    private void prepareGoals(final Mob mob, final ProtoEntity<? extends Mob> protoEntity) {
         final Set<GoalKey<Mob>> goalKeys = new HashSet<>();
-        for (PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
+        for (final PriorityEntry<GoalSupplier<Mob>> entry : protoEntity.getGoals()) {
             final Goal<Mob> goal = entry.getEntry().supply(mob);
-            if (!goalKeys.contains(goal.getKey())) {
+            if (goalKeys.contains(goal.getKey())) {
+                LOGGER.warning(WARN_MSG.apply(goal.getKey().toString()));
+            } else {
                 MOB_GOALS.addGoal(mob, entry.getPriority(), goal);
                 goalKeys.add(goal.getKey());
-            } else {
-                LOGGER.warning(WARN_MSG.apply(goal.getKey().toString()));
             }
         }
 
-        for (GoalKey<? extends Mob> goalKey : protoEntity.getIgnoredGoals()) {
+        for (final GoalKey<? extends Mob> goalKey : protoEntity.getIgnoredGoals()) {
             if (goalKey.getEntityClass().isAssignableFrom(mob.getClass())) {
                 removeGoal(mob, goalKey);
             }
@@ -116,18 +116,19 @@ public class SpawnFactory implements EntitySpawnFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Mob> void removeGoal(Mob mob, GoalKey<T> goalKey) {
+    private <T extends Mob> void removeGoal(final Mob mob, final GoalKey<T> goalKey) {
         if (goalKey.getEntityClass().isAssignableFrom(mob.getClass())) {
             MOB_GOALS.removeGoal((T) mob, goalKey);
         }
     }
 
-    private void prepareAttributes(Mob mob, ProtoEntity<? extends Mob> protoEntity, Map<Attribute, Double> attributes) {
+    private void prepareAttributes(final Mob mob, final ProtoEntity<? extends Mob> protoEntity,
+                                   final Map<Attribute, Double> attributes) {
         // disables baby zombies on chickens
         attributes.put(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
 
         protoEntity.getAttributeMap().forEach((attribute, value) -> {
-            AttributeInstance instance = mob.getAttribute(attribute);
+            final AttributeInstance instance = mob.getAttribute(attribute);
             if (instance != null) {
                 instance.setBaseValue(value);
             }
@@ -135,7 +136,7 @@ public class SpawnFactory implements EntitySpawnFactory {
         mob.setHealth(attributes.get(Attribute.GENERIC_MAX_HEALTH));
     }
 
-    private void prepareCustomName(Mob mob, ProtoEntity<? extends Mob> protoEntity) {
+    private void prepareCustomName(final Mob mob, final ProtoEntity<? extends Mob> protoEntity) {
         if (protoEntity.getName() != null && !protoEntity.getName().isEmpty()) {
             mob.setCustomNameVisible(true);
             protoEntity.getNameUpdater().updateName(mob);

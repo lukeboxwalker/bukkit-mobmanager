@@ -38,7 +38,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
     private CustomType<T> entityType;
     private int level;
     private String name;
-    private boolean shouldBurnInDay;
+    private boolean burnInDay;
 
     public CustomProtoEntity() {
         this.goalManager = new MobGoalManager();
@@ -46,11 +46,11 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
 
     @Override
     public boolean shouldBurnInDay() {
-        return shouldBurnInDay;
+        return burnInDay;
     }
 
-    public void setShouldBurnInDay(boolean shouldBurnInDay) {
-        this.shouldBurnInDay = shouldBurnInDay;
+    public void setShouldBurnInDay(final boolean burnInDay) {
+        this.burnInDay = burnInDay;
     }
 
     @Nonnull
@@ -59,7 +59,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return equipment;
     }
 
-    public void setEquipment(Equipment equipment) {
+    public void setEquipment(final Equipment equipment) {
         this.equipment = equipment;
     }
 
@@ -69,7 +69,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return deathDrops;
     }
 
-    public void setDeathDrops(Set<DeathDrop> deathDrops) {
+    public void setDeathDrops(final Set<DeathDrop> deathDrops) {
         this.deathDrops = deathDrops;
     }
 
@@ -79,7 +79,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return potionEffects;
     }
 
-    public void setPotionEffects(Set<PotionEffect> potionEffects) {
+    public void setPotionEffects(final Set<PotionEffect> potionEffects) {
         this.potionEffects = potionEffects;
     }
 
@@ -89,7 +89,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return goalManager.getIgnoredGoals();
     }
 
-    public void setIgnoredGoals(Set<GoalKey<? extends Mob>> ignoredGoals) {
+    public void setIgnoredGoals(final Set<GoalKey<? extends Mob>> ignoredGoals) {
         goalManager.ignoreAllGoals(ignoredGoals);
     }
 
@@ -99,7 +99,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return goalManager.getCustomGoals();
     }
 
-    public void setGoals(List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals) {
+    public void setGoals(final List<PriorityEntry<GoalSupplier<Mob>>> pathfinderGoals) {
         goalManager.addAllCustomGoal(pathfinderGoals);
     }
 
@@ -109,7 +109,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return nameUpdater;
     }
 
-    public void setNameUpdater(NameUpdater nameUpdater) {
+    public void setNameUpdater(final NameUpdater nameUpdater) {
         this.nameUpdater = nameUpdater;
     }
 
@@ -125,36 +125,36 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
         return attributes;
     }
 
-    public void setAttributeMap(Map<Attribute, Double> attributes) {
+    public void setAttributeMap(final Map<Attribute, Double> attributes) {
         this.attributes = attributes;
     }
 
     @Override
-    public void onEntityTick(TickEvent event, T mob) {
+    public void onEntityTick(final TickEvent event, final T mob) {
         strategyManager.getTickStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntityDamage(DamageEvent event, T mob) {
+    public void onEntityDamage(final DamageEvent event, final T mob) {
         strategyManager.getDamageStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntityDeath(DeathEvent event, T mob) {
+    public void onEntityDeath(final DeathEvent event, final T mob) {
         strategyManager.getDeathStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onEntitySpawn(SpawnEvent event, T mob) {
+    public void onEntitySpawn(final SpawnEvent event, final T mob) {
         strategyManager.getSpawnStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
     @Override
-    public void onItemDrop(ItemDropEvent event, T mob) {
+    public void onItemDrop(final ItemDropEvent event, final T mob) {
         strategyManager.getItemDropStrategies().forEach(strategy -> strategy.play(event, mob));
     }
 
-    public void setEntityType(CustomType<T> entityType) {
+    public void setEntityType(final CustomType<T> entityType) {
         this.entityType = entityType;
     }
 
@@ -164,7 +164,7 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setLevel(final int level) {
         this.level = level;
     }
 
@@ -174,11 +174,11 @@ public class CustomProtoEntity<T extends Mob> implements ProtoEntity<T> {
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public void setStrategyManager(StrategyManager<T> strategyManager) {
+    public void setStrategyManager(final StrategyManager<T> strategyManager) {
         this.strategyManager = strategyManager;
     }
 }

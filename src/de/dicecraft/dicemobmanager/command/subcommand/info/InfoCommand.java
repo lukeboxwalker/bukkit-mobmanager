@@ -1,7 +1,7 @@
 package de.dicecraft.dicemobmanager.command.subcommand.info;
 
 import de.dicecraft.dicemobmanager.command.Command;
-import de.dicecraft.dicemobmanager.command.CommandManager;
+import de.dicecraft.dicemobmanager.command.CommandUtils;
 import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.message.TextComponentBuilder;
 import org.bukkit.ChatColor;
@@ -38,19 +38,19 @@ public class InfoCommand implements Command {
     }
 
     @Override
-    public boolean execute(@Nonnull CommandSender sender, @Nonnull String[] args) {
+    public boolean execute(final @Nonnull CommandSender sender, final @Nonnull String[] args) {
         final Set<Entity> entities = entityManager.getAllEntities().keySet();
         if (entities.isEmpty()) {
-            CommandManager.messageFormatter().sendMessage(sender, NOT_ALIVE);
+            CommandUtils.messageFormatter().sendMessage(sender, NOT_ALIVE);
         } else {
             entities.forEach(entity -> {
-                Location location = entity.getLocation();
-                CommandManager.messageFormatter().sendMessage(sender, MESSAGE,
-                        CommandManager.componentBuilder()
+                final Location location = entity.getLocation();
+                CommandUtils.messageFormatter().sendMessage(sender, MESSAGE,
+                        CommandUtils.componentBuilder()
                                 .setColor(ChatColor.DARK_PURPLE)
                                 .setText(entity.getType().name().toLowerCase())
                                 .build(),
-                        CommandManager.componentBuilder()
+                        CommandUtils.componentBuilder()
                                 .setColor(ChatColor.DARK_PURPLE)
                                 .setText(formatLocation(location))
                                 .addClickCommand(ON_CLICK.apply(entity)).build());
@@ -64,7 +64,7 @@ public class InfoCommand implements Command {
     }
 
     @Override
-    public List<String> tabComplete(@Nonnull CommandSender sender, @Nonnull String[] args) {
+    public List<String> tabComplete(final @Nonnull CommandSender sender, final @Nonnull String[] args) {
         return new ArrayList<>();
     }
 }

@@ -48,7 +48,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
     }
 
     @Override
-    public ProtoBuilder<T> setShouldBurnInDay(boolean shouldBurnInDay) {
+    public ProtoBuilder<T> setShouldBurnInDay(final boolean shouldBurnInDay) {
         this.shouldBurnInDay = shouldBurnInDay;
         return this;
     }
@@ -66,7 +66,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> setAttribute(@Nonnull Attribute attribute, double value) {
+    public ProtoBuilder<T> setAttribute(final @Nonnull Attribute attribute, final  double value) {
         attributes.put(attribute, value);
         return this;
     }
@@ -80,7 +80,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> addEffect(@Nonnull PotionEffect potionEffect) {
+    public ProtoBuilder<T> addEffect(final @Nonnull PotionEffect potionEffect) {
         potionEffects.add(potionEffect);
         return this;
     }
@@ -99,7 +99,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> addGoal(int priority, @Nonnull GoalSupplier<Mob> supplier) {
+    public ProtoBuilder<T> addGoal(final int priority, final @Nonnull GoalSupplier<Mob> supplier) {
         pathfinderGoals.add(new PriorityEntry<>(priority, supplier));
         return this;
     }
@@ -112,7 +112,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> ignoreGoal(@Nonnull GoalKey<? extends Mob> goalKey) {
+    public ProtoBuilder<T> ignoreGoal(final @Nonnull GoalKey<? extends Mob> goalKey) {
         ignoredGoals.add(goalKey);
         return this;
     }
@@ -125,7 +125,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> addEquipment(@Nonnull EquipmentSlot slot, @Nonnull ItemStack itemStack) {
+    public ProtoBuilder<T> addEquipment(final @Nonnull EquipmentSlot slot, final @Nonnull ItemStack itemStack) {
         switch (slot) {
             case FEET:
                 equipment.setBoots(itemStack);
@@ -158,7 +158,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> setName(String name) {
+    public ProtoBuilder<T> setName(final String name) {
         this.name = name;
         return this;
     }
@@ -171,13 +171,13 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> setLevel(int level) {
+    public ProtoBuilder<T> setLevel(final int level) {
         this.level = level;
         return this;
     }
 
     @Override
-    public ProtoBuilder<T> setDeathDrops(@Nonnull Set<DeathDrop> deathDrops) {
+    public ProtoBuilder<T> setDeathDrops(final @Nonnull Set<DeathDrop> deathDrops) {
         this.deathDrops = deathDrops;
         return this;
     }
@@ -194,7 +194,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> setNameSupplier(@Nonnull NameUpdater nameUpdater) {
+    public ProtoBuilder<T> setNameSupplier(final @Nonnull NameUpdater nameUpdater) {
         this.nameUpdater = nameUpdater;
         return this;
     }
@@ -208,7 +208,7 @@ public class ProtoEntityBuilder<T extends Mob> implements ProtoBuilder<T> {
      * @return builder to continue
      */
     @Override
-    public ProtoBuilder<T> addStrategy(@Nonnull Strategy<? super T> strategy) {
+    public ProtoBuilder<T> addStrategy(final @Nonnull Strategy<? super T> strategy) {
         this.strategies.add(strategy);
         return this;
     }

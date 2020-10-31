@@ -7,8 +7,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>, StrategyRegistrationVisitor {
+
+    private static final String UNCHECKED = "unchecked";
 
     private final List<SpawnStrategy<? super T>> onSpawnStrategies = new ArrayList<>();
     private final List<DamageStrategy<? super T>> onDamageStrategies = new ArrayList<>();
@@ -16,7 +19,7 @@ public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>,
     private final List<ItemDropStrategy<? super T>> onItemDropStrategies = new ArrayList<>();
     private final List<TickStrategy<? super T>> onTickStrategies = new ArrayList<>();
 
-    private final HashMap<NamespacedKey, List<? extends Strategy<?>>> keyMap = new HashMap<>();
+    private final Map<NamespacedKey, List<? extends Strategy<?>>> keyMap = new HashMap<>();
 
     @Override
     public void removeAllStrategies() {
@@ -29,7 +32,7 @@ public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>,
     }
 
     @Override
-    public void removeStrategy(@Nonnull NamespacedKey key) {
+    public void removeStrategy(final @Nonnull NamespacedKey key) {
         if (keyMap.containsKey(key)) {
             keyMap.get(key).removeIf(strategy -> key.equals(strategy.getKey()));
             keyMap.remove(key);
@@ -37,7 +40,7 @@ public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>,
     }
 
     @Override
-    public void addStrategy(@Nonnull Strategy<? super T> strategy) {
+    public void addStrategy(final @Nonnull Strategy<? super T> strategy) {
         if (keyMap.containsKey(strategy.getKey())) {
             keyMap.get(strategy.getKey()).removeIf(entry -> entry.getKey().equals(strategy.getKey()));
         }
@@ -45,7 +48,7 @@ public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>,
     }
 
     @Override
-    public void addStrategies(@Nonnull List<Strategy<? super T>> strategies) {
+    public void addStrategies(final @Nonnull List<Strategy<? super T>> strategies) {
         strategies.forEach(this::addStrategy);
     }
 
@@ -80,36 +83,36 @@ public class SimpleStrategyManager<T extends Mob> implements StrategyManager<T>,
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void registerDeathStrategy(@Nonnull DeathStrategy<? extends Mob> strategy) {
+    @SuppressWarnings(UNCHECKED)
+    public void registerDeathStrategy(final @Nonnull DeathStrategy<? extends Mob> strategy) {
         onDeathStrategies.add((DeathStrategy<? super T>) strategy);
         keyMap.put(strategy.getKey(), onDeathStrategies);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void registerSpawnStrategy(@Nonnull SpawnStrategy<? extends Mob> strategy) {
+    @SuppressWarnings(UNCHECKED)
+    public void registerSpawnStrategy(final @Nonnull SpawnStrategy<? extends Mob> strategy) {
         onSpawnStrategies.add((SpawnStrategy<? super T>) strategy);
         keyMap.put(strategy.getKey(), onSpawnStrategies);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void registerDamageStrategy(@Nonnull DamageStrategy<? extends Mob> strategy) {
+    @SuppressWarnings(UNCHECKED)
+    public void registerDamageStrategy(final @Nonnull DamageStrategy<? extends Mob> strategy) {
         onDamageStrategies.add((DamageStrategy<? super T>) strategy);
         keyMap.put(strategy.getKey(), onDamageStrategies);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void registerItemDropStrategy(@Nonnull ItemDropStrategy<? extends Mob> strategy) {
+    @SuppressWarnings(UNCHECKED)
+    public void registerItemDropStrategy(final @Nonnull ItemDropStrategy<? extends Mob> strategy) {
         onItemDropStrategies.add((ItemDropStrategy<? super T>) strategy);
         keyMap.put(strategy.getKey(), onItemDropStrategies);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void registerTickStrategy(@Nonnull TickStrategy<? extends Mob> strategy) {
+    @SuppressWarnings(UNCHECKED)
+    public void registerTickStrategy(final @Nonnull TickStrategy<? extends Mob> strategy) {
         onTickStrategies.add((TickStrategy<? super T>) strategy);
         keyMap.put(strategy.getKey(), onTickStrategies);
     }

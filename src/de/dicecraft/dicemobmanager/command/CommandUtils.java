@@ -13,17 +13,18 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Walkehorst Lukas
  * @since 1.0
  */
-public final class CommandManager {
+public final class CommandUtils {
 
     private static final MessageFormatter MESSAGE_FORMATTER = new PluginMessageFormatter();
 
-    private CommandManager() {
+    private CommandUtils() {
     }
 
     /**
      * Registers the base plugin command.
      *
-     * @param plugin to register commands
+     * @param plugin  to register commands
+     * @param manager the entity manager
      */
     public static void registerCommands(final JavaPlugin plugin, final EntityManager manager) {
         final BasePluginCommand baseCommand = new BasePluginCommand(manager);

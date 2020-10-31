@@ -4,6 +4,7 @@ import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
+import de.dicecraft.dicemobmanager.utils.PositionUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -33,6 +34,19 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
         this(mob, avoidEntityClass, radius, speed, EntitySelector.IS_PLAYER_IN_SURVIVAL);
     }
 
+    /**
+     * Creates new GoalAvoidTarget.
+     * <p>
+     * The Goal is used to avoid a specific entity type.
+     * It will calculate a spot so the entity that uses this goal can avoid
+     * the target type.
+     *
+     * @param mob              the mob that uses the goal
+     * @param avoidEntityClass the entity class type to avoid
+     * @param radius           the radius in which the mob will avoid the type
+     * @param speed            the speed the mob will run away
+     * @param entityPredicate  the predicate to check to find nearby entites
+     */
     public GoalAvoidTarget(final Mob mob, final Class<T> avoidEntityClass, final float radius,
                            final double speed, final Predicate<Entity> entityPredicate) {
         this.mob = mob;
@@ -44,16 +58,18 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
-        Optional<T> nearestEntity = getNearestAvoidableEntity();
+        final Optional<T> nearestEntity = getNearestAvoidableEntity();
         if (nearestEntity.isPresent()) {
             avoidTarget = nearestEntity.get();
-            Vector avoidTargetVector = avoidTarget.getLocation().toVector();
-            Vector vector = RandomPositionGenerator.getRandomVector(mob, XYZ_RADIUS, XYZ_RADIUS, avoidTargetVector);
+            final Vector avoidTargetVector = avoidTarget.getLocation().toVector();
+            final Vector vector = RandomPositionGenerator
+                    .getRandomVector(mob, XYZ_RADIUS, XYZ_RADIUS, avoidTargetVector);
             if (vector == null) {
                 return false;
             }
-            double avoidTargetToVector = distanceSquared(avoidTargetVector, vector);
-            double avoidTargetToMob = distanceSquared(avoidTargetVector, mob.getLocation().toVector());
+            final double avoidTargetToVector = PositionUtils.distanceSquared(avoidTargetVector, vector);
+            final Vector mobVector = mob.getLocation().toVector();
+            final double avoidTargetToMob = PositionUtils.distanceSquared(avoidTargetVector, mobVector);
             if (avoidTargetToVector < avoidTargetToMob) {
                 return false;
             } else {
@@ -68,14 +84,14 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
     @SuppressWarnings("unchecked")
     private Optional<T> getNearestAvoidableEntity() {
         Optional<T> result = Optional.empty();
-        Location mobLocation = mob.getLocation();
-        Collection<T> nearByEntities = (Collection<T>) mob.getWorld()
+        final Location mobLocation = mob.getLocation();
+        final Collection<T> nearByEntities = (Collection<T>) mob.getWorld()
                 .getNearbyEntitiesByType(avoidEntityClass, mobLocation, radius, Y_RADIUS, radius, entityPredicate);
         double shortestDistance = radius * radius * radius;
-        Vector vector1 = mob.getLocation().toVector();
-        for (T entity : nearByEntities) {
-            Vector vector2 = entity.getLocation().toVector();
-            double distance = distanceSquared(vector1, vector2);
+        final Vector vector1 = mob.getLocation().toVector();
+        for (final T entity : nearByEntities) {
+            final Vector vector2 = entity.getLocation().toVector();
+            final double distance = PositionUtils.distanceSquared(vector1, vector2);
             if (distance < shortestDistance && entityPredicate.test(entity)) {
                 shortestDistance = distance;
                 result = Optional.of(entity);
@@ -84,16 +100,10 @@ public class GoalAvoidTarget<T extends Entity> implements Goal<Mob> {
         return result;
     }
 
-    private double distanceSquared(Vector vector1, Vector vector2) {
-        double x = vector1.getX() - vector2.getX();
-        double y = vector1.getY() - vector2.getY();
-        double z = vector1.getZ() - vector2.getZ();
-        return x * x + y * y + z * z;
-    }
 
     @Override
     public boolean shouldStayActive() {
-        Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
+        final Pathfinder.PathResult pathResult = mob.getPathfinder().getCurrentPath();
         if (pathResult != null && pathResult.getPoints().size() == pathResult.getNextPointIndex()) {
             avoidTarget = null;
             if (this.shouldActivate()) {

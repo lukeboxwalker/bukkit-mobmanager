@@ -39,9 +39,9 @@ public class ConfigEventListener implements Listener {
      * @param event the slime split event
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onSlimeSplit(SlimeSplitEvent event) {
+    public void onSlimeSplit(final SlimeSplitEvent event) {
         if (!event.isCancelled()) {
-            Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            final Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
             optional.ifPresent(configuration -> {
                 manager.removeEntity(event.getEntity());
                 event.setCancelled(configuration.shouldCancel(ConfigFlag.SLIME_SPLIT));
@@ -49,17 +49,24 @@ public class ConfigEventListener implements Listener {
         }
     }
 
+    /**
+     * Listening to EntityMountEvent.
+     * <p>
+     * Cancels the event if a zombie is rinding a chicken and the
+     * SPAWN_NATURAL_CHICKEN_JOCKEY flag is false.
+     * The chicken will be removed if the event is canceled.
+     *
+     * @param event the mount event
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityMount(EntityMountEvent event) {
-        if (!event.isCancelled()) {
-            if (event.getEntity().getType() == EntityType.ZOMBIE && event.getMount().getType() == EntityType.CHICKEN) {
-                Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
-                if (optional.isPresent() && !manager.getProtoEntity(event.getMount()).isPresent()) {
-                    if (optional.get().shouldCancel(ConfigFlag.SPAWN_NATURAL_CHICKEN_JOCKEY)) {
-                        event.setCancelled(true);
-                        event.getMount().remove();
-                    }
-                }
+    public void onEntityMount(final EntityMountEvent event) {
+        if (!event.isCancelled() && event.getEntity().getType() == EntityType.ZOMBIE
+                && event.getMount().getType() == EntityType.CHICKEN) {
+            final Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            if (optional.isPresent() && !manager.getProtoEntity(event.getMount()).isPresent() &&
+                    optional.get().shouldCancel(ConfigFlag.SPAWN_NATURAL_CHICKEN_JOCKEY)) {
+                event.setCancelled(true);
+                event.getMount().remove();
             }
         }
     }
@@ -74,24 +81,24 @@ public class ConfigEventListener implements Listener {
      * @param event the explosion event
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onExplodeDamage(ExplosionPrimeEvent event) {
+    public void onExplodeDamage(final ExplosionPrimeEvent event) {
         if (!event.isCancelled()) {
             Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
             optional.ifPresent(configuration -> {
                 if (configuration.shouldCancel(ConfigFlag.CREEPER_EXPLOSION_DAMAGE)) {
-                    Entity entity = event.getEntity();
+                    final Entity entity = event.getEntity();
                     entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
                     event.setCancelled(true);
                 }
             });
             if (EntitySelector.IS_PROJECTILE.test(event.getEntity())) {
-                Projectile projectile = (Projectile) event.getEntity();
+                final Projectile projectile = (Projectile) event.getEntity();
                 if (manager.isWatchingProjectile(projectile)) {
                     optional = manager.getEntityConfig(manager.getProjectileShooter(projectile));
                     optional.ifPresent(configuration -> {
                         manager.unWatchProjectile(projectile);
                         if (configuration.shouldCancel(ConfigFlag.PROJECTILE_BLOCK_DAMAGE)) {
-                            Entity entity = event.getEntity();
+                            final Entity entity = event.getEntity();
                             entity.getWorld().createExplosion(entity.getLocation(), event.getRadius(), false, false);
                             event.setCancelled(true);
                         }
@@ -101,15 +108,22 @@ public class ConfigEventListener implements Listener {
         }
     }
 
+    /**
+     * Listening to PlayerShearEntityEvent.
+     * <p>
+     * Cancels the event if a player tries to shear a sheep and the
+     * CAN_SHEAR_SHEEP flag is false.
+     *
+     * @param event the mount event
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onSheepShear(PlayerShearEntityEvent event) {
+    public void onSheepShear(final PlayerShearEntityEvent event) {
         if (!event.isCancelled()) {
-            Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
+            final Optional<Configuration> optional = manager.getEntityConfig(event.getEntity());
             optional.ifPresent(configuration -> {
                 event.setCancelled(configuration.shouldCancel(ConfigFlag.CAN_SHEAR_SHEEP));
             });
         }
     }
-
 }
 

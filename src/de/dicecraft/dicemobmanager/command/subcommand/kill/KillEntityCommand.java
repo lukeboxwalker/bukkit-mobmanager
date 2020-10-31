@@ -7,7 +7,7 @@ import de.dicecraft.dicemobmanager.entity.EntityManager;
 
 public class KillEntityCommand extends BaseCommand {
 
-    public KillEntityCommand(EntityManager manager) {
-        super("kill", new KillAllCommand(manager), new KillRadiusCommand(manager));
+    public KillEntityCommand(final EntityManager manager) {
+        super("kill", new KillAllCommand(manager), new KillRadiusCommand());
     }
 }

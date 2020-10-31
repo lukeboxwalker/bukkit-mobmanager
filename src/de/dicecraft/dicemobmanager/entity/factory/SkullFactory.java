@@ -14,18 +14,26 @@ public class SkullFactory {
 
     private static final int RANDOM_ALPHANUMERIC = 10;
 
+    /**
+     * Creates a skull ItemStack.
+     *
+     * @param texture    the texture to set.
+     * @param sessionKey the session key.
+     * @param uuid       the uuid for the skull.
+     * @return a skull ItemStack
+     */
     public ItemStack createSkull(final String texture, final String sessionKey, final UUID uuid) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-        ItemMeta headMeta = skull.getItemMeta();
+        final ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        final ItemMeta headMeta = skull.getItemMeta();
 
-        GameProfile profile = new GameProfile(uuid, sessionKey);
-        Property textures = new Property(
+        final GameProfile profile = new GameProfile(uuid, sessionKey);
+        final Property textures = new Property(
                 "textures", texture
         );
         profile.getProperties().put(textures.getName(), textures);
 
         try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
+            final Field profileField = headMeta.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);
             profileField.set(headMeta, profile);
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
@@ -36,7 +44,7 @@ public class SkullFactory {
     }
 
     public ItemStack createSkull(final String texture) {
-        String generatedString = RandomStringUtils.randomAlphanumeric(RANDOM_ALPHANUMERIC);
+        final String generatedString = RandomStringUtils.randomAlphanumeric(RANDOM_ALPHANUMERIC);
         return createSkull(texture, generatedString, UUID.randomUUID());
     }
 }

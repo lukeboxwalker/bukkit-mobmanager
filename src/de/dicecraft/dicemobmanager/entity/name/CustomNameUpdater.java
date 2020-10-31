@@ -21,12 +21,13 @@ public class CustomNameUpdater implements NameUpdater {
     private static final int HUNDRED = 100;
     private static final int FIFTY = 50;
 
-    private static final String DARK_GRAY = "" + ChatColor.COLOR_CHAR + ChatColor.DARK_GRAY.getChar();
-    private static final String LIGHT_GRAY = "" + ChatColor.COLOR_CHAR + ChatColor.GRAY.getChar();
-    private static final String LIGHT_RED = "" + ChatColor.COLOR_CHAR + ChatColor.RED.getChar();
-    private static final String WHITE = "" + ChatColor.COLOR_CHAR + ChatColor.WHITE.getChar();
-    private static final String LIGHT_GREEN = "" + ChatColor.COLOR_CHAR + ChatColor.GREEN.getChar();
-    private static final String YELLOW = "" + ChatColor.COLOR_CHAR + ChatColor.YELLOW.getChar();
+    private static final String COLOR_PREFIX = String.valueOf(ChatColor.COLOR_CHAR);
+    private static final String DARK_GRAY = COLOR_PREFIX + ChatColor.DARK_GRAY.getChar();
+    private static final String LIGHT_GRAY = COLOR_PREFIX + ChatColor.GRAY.getChar();
+    private static final String LIGHT_RED = COLOR_PREFIX + ChatColor.RED.getChar();
+    private static final String WHITE = COLOR_PREFIX + ChatColor.WHITE.getChar();
+    private static final String LIGHT_GREEN = COLOR_PREFIX + ChatColor.GREEN.getChar();
+    private static final String YELLOW = COLOR_PREFIX + ChatColor.YELLOW.getChar();
 
     private final ProtoNamedEntity protoEntity;
 
@@ -50,15 +51,15 @@ public class CustomNameUpdater implements NameUpdater {
      */
     @Override
     public String buildName(final LivingEntity entity, final double currentHealth) {
-        AttributeInstance instance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        double health = currentHealth < 1 ? currentHealth < 0 ? 0 : 1 : currentHealth;
+        final AttributeInstance instance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        final double health = currentHealth < 1 ? currentHealth < 0 ? 0 : 1 : currentHealth;
         if (instance != null) {
             final double maxHealth = instance.getBaseValue();
 
-            StringBuilder builder = new StringBuilder()
-                    .append(DARK_GRAY).append("[").append(LIGHT_GRAY).append("Lv").append(protoEntity.getLevel())
-                    .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(protoEntity.getName()).append(" ");
-            double percent = health / maxHealth * HUNDRED;
+            final StringBuilder builder = new StringBuilder()
+                    .append(DARK_GRAY).append('[').append(LIGHT_GRAY).append("Lv").append(protoEntity.getLevel())
+                    .append(DARK_GRAY).append("] ").append(LIGHT_RED).append(protoEntity.getName()).append(' ');
+            final double percent = health / maxHealth * HUNDRED;
             if (percent > FIFTY) {
                 builder.append(LIGHT_GREEN).append(formatHealth((int) health));
             } else {
@@ -73,7 +74,18 @@ public class CustomNameUpdater implements NameUpdater {
         return entity.getCustomName();
     }
 
-    public String formatHealth(int number) {
+    /**
+     * Formats the given health.
+     * <p>
+     * Examples:
+     * 1000 -> 1k
+     * 100000 -> 100k
+     * 1000000 -> 1m
+     *
+     * @param number the health to format
+     * @return the formatted health string.
+     */
+    public String formatHealth(final int number) {
         if (number >= MILLION) {
             return number / MILLION + "m";
         } else if (number >= THOUSAND) {
@@ -83,17 +95,18 @@ public class CustomNameUpdater implements NameUpdater {
         }
     }
 
+    @Override
     public String buildName(final LivingEntity entity) {
         return buildName(entity, entity.getHealth());
     }
 
     @Override
-    public void updateName(LivingEntity entity) {
+    public void updateName(final LivingEntity entity) {
         updateName(entity, entity.getHealth());
     }
 
     @Override
-    public void updateName(LivingEntity entity, double currentHealth) {
+    public void updateName(final LivingEntity entity, final double currentHealth) {
         entity.setCustomName(buildName(entity, currentHealth));
     }
 }

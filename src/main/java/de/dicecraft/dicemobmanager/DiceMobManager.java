@@ -1,17 +1,16 @@
 package de.dicecraft.dicemobmanager;
 
 import de.dicecraft.dicemobmanager.command.CommandUtils;
-
 import de.dicecraft.dicemobmanager.configuration.ConfigBuilder;
 import de.dicecraft.dicemobmanager.configuration.ConfigEventListener;
 import de.dicecraft.dicemobmanager.configuration.Configuration;
 import de.dicecraft.dicemobmanager.configuration.CustomConfigBuilder;
-import de.dicecraft.dicemobmanager.entity.TickScheduler;
-import de.dicecraft.dicemobmanager.entity.EntityManager;
 import de.dicecraft.dicemobmanager.entity.CustomType;
-import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
+import de.dicecraft.dicemobmanager.entity.EntityManager;
+import de.dicecraft.dicemobmanager.entity.TickScheduler;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoBuilder;
 import de.dicecraft.dicemobmanager.entity.builder.ProtoEntityBuilder;
+import de.dicecraft.dicemobmanager.entity.event.EntityEventListener;
 import de.dicecraft.dicemobmanager.entity.factory.EntitySpawnFactory;
 import de.dicecraft.dicemobmanager.entity.factory.SpawnFactory;
 import org.bukkit.Bukkit;
@@ -35,7 +34,7 @@ public class DiceMobManager extends JavaPlugin {
     private static TickScheduler scheduler;
 
     public DiceMobManager(final JavaPluginLoader loader, final PluginDescriptionFile description,
-                           final File dataFolder, final File file) {
+                          final File dataFolder, final File file) {
         super(loader, description, dataFolder, file);
     }
 
@@ -60,7 +59,7 @@ public class DiceMobManager extends JavaPlugin {
         scheduler.cancel();
         ENTITY_MANAGER.destroyAll();
     }
-    
+
     public static DiceMobManager getInstance() {
         return instance;
     }

@@ -48,7 +48,7 @@ class PositionUtilsTest {
                 world.spawnEntity(new Location(world, 0, 0, 0), EntityType.ZOMBIE))).isEqualTo(0);
         assertThat(PositionUtils.distanceSquared(zeroEntity, zeroEntity)).isEqualTo(0);
     }
-    
+
     @Test
     void testLocationDistanceIsOne() {
         final Location zero = new Location(world, 0, 0, 0);

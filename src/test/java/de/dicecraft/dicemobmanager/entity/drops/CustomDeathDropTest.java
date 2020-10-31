@@ -34,10 +34,7 @@ class CustomDeathDropTest {
         assertThat(itemStack == deathDrop.getItemStack()).isFalse();
 
         // ensure the ItemStack has still the same properties
-        assertThat(itemStack.getItemMeta()).isEqualTo(deathDrop.getItemStack().getItemMeta());
-        assertThat(itemStack.getAmount()).isEqualTo(deathDrop.getItemStack().getAmount());
-        assertThat(itemStack.getType()).isEqualTo(deathDrop.getItemStack().getType());
-        assertThat(itemStack.getMaxStackSize()).isEqualTo(deathDrop.getItemStack().getMaxStackSize());
+        assertThat(itemStack).isEqualTo(deathDrop.getItemStack());
 
         // setting ItemStack by using the setter
         itemStack = new ItemStack(Material.EMERALD);
@@ -47,10 +44,7 @@ class CustomDeathDropTest {
         assertThat(itemStack == deathDrop.getItemStack()).isFalse();
 
         // ensure the ItemStack has still the same properties
-        assertThat(itemStack.getItemMeta()).isEqualTo(deathDrop.getItemStack().getItemMeta());
-        assertThat(itemStack.getAmount()).isEqualTo(deathDrop.getItemStack().getAmount());
-        assertThat(itemStack.getType()).isEqualTo(deathDrop.getItemStack().getType());
-        assertThat(itemStack.getMaxStackSize()).isEqualTo(deathDrop.getItemStack().getMaxStackSize());
+        assertThat(itemStack).isEqualTo(deathDrop.getItemStack());
     }
 
     @Test
@@ -117,7 +111,6 @@ class CustomDeathDropTest {
     void testToString() {
         final ItemStack itemStack = new ItemStack(Material.DIAMOND);
         final DeathDrop deathDrop = new CustomDeathDrop(itemStack, 1, DeathDrop.Rarity.RARE);
-
         assertThat(deathDrop.toString().isEmpty()).isFalse();
     }
 }

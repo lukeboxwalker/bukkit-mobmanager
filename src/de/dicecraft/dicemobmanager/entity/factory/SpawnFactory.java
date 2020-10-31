@@ -17,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -30,7 +29,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -53,18 +51,12 @@ public class SpawnFactory implements EntitySpawnFactory {
     }
 
     @Override
-    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location spawnLocation) {
-        return spawnEntity(protoEntity, spawnLocation, (entity) -> {
-        });
-    }
-
-    @Override
-    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location spawnLocation, Consumer<Entity> consumer) {
+    public <T extends Mob> LivingEntity spawnEntity(ProtoEntity<T> protoEntity, Location location) {
         final Map<Attribute, Double> attributes = protoEntity.getAttributeMap();
         attributes.putIfAbsent(Attribute.GENERIC_MAX_HEALTH, DEFAULT_MAX_HEALTH);
         final EntityType type = protoEntity.getCustomType().getEntityType();
         if (Mob.class.isAssignableFrom(Objects.requireNonNull(type.getEntityClass()))) {
-            return (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, type, SPAWN_REASON, entity -> {
+            return (LivingEntity) location.getWorld().spawnEntity(location, type, SPAWN_REASON, entity -> {
                 Mob mob = (Mob) entity;
                 this.prepareAttributes(mob, protoEntity, attributes);
                 this.prepareCustomName(mob, protoEntity);

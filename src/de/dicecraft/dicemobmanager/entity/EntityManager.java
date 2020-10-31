@@ -56,8 +56,10 @@ public class EntityManager {
     public Map<Entity, ProtoEntity<?>> getAllEntities(Entity... entities) {
         Map<Entity, ProtoEntity<?>> result = new HashMap<>();
         if (entities.length == 0) {
-            activeEntities.forEach((entity, managedEntity) -> result.put(entity, managedEntity.protoEntity));
-            tickedEntities.forEach((entity, tickedEntity) -> result.put(entity, tickedEntity.tickEvent.getProtoEntity()));
+            activeEntities.forEach((entity, managedEntity) ->
+                    result.put(entity, managedEntity.protoEntity));
+            tickedEntities.forEach((entity, tickedEntity) ->
+                    result.put(entity, tickedEntity.tickEvent.getProtoEntity()));
         } else {
             Arrays.stream(entities).forEach(entity -> {
                 if (activeEntities.containsKey(entity)) {

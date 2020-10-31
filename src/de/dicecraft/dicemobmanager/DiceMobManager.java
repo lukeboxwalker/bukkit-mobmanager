@@ -27,27 +27,22 @@ public class DiceMobManager extends JavaPlugin {
     private static final Random RANDOM = new Random();
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
     private static final EntityManager ENTITY_MANAGER = new EntityManager();
-    private static final int DEFAULT_TICK_SPEED = 1;
 
     private static DiceMobManager instance;
-
     private static TickScheduler scheduler;
 
     @Override
     public void onEnable() {
         super.onEnable();
-        instance = this;
-
         // register events
-        Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), instance);
-        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), instance);
+        Bukkit.getPluginManager().registerEvents(new EntityEventListener(ENTITY_MANAGER), getInstance());
+        Bukkit.getPluginManager().registerEvents(new ConfigEventListener(ENTITY_MANAGER), getInstance());
 
         // register commands
-        CommandUtils.registerCommands(instance, ENTITY_MANAGER);
+        CommandUtils.registerCommands(getInstance(), ENTITY_MANAGER);
 
         // starting tick scheduler
-        scheduler = new TickScheduler(ENTITY_MANAGER, instance);
-        scheduler.restart(DEFAULT_TICK_SPEED);
+        restartScheduler(1);
     }
 
     @Override
@@ -57,11 +52,27 @@ public class DiceMobManager extends JavaPlugin {
         ENTITY_MANAGER.destroyAll();
     }
 
+    /**
+     * Gets the singleton instance of this plugin.
+     *
+     * @return the singleton instance
+     */
     public static DiceMobManager getInstance() {
+        if (instance == null) {
+            instance = JavaPlugin.getPlugin(DiceMobManager.class);
+        }
         return instance;
     }
 
+    /**
+     * Restarting the scheduler with given tick period.
+     *
+     * @param ticks the tick period the scheduler will run on.
+     */
     public static void restartScheduler(final int ticks) {
+        if (scheduler == null) {
+            scheduler = new TickScheduler(ENTITY_MANAGER, getInstance());
+        }
         scheduler.restart(ticks);
     }
 
@@ -82,7 +93,7 @@ public class DiceMobManager extends JavaPlugin {
     }
 
     public static NamespacedKey createNameSpacedKey(final String key) {
-        return new NamespacedKey(instance, key);
+        return new NamespacedKey(getInstance(), key);
     }
 
     public static Logger logging() {

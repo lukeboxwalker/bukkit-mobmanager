@@ -65,13 +65,9 @@ class CustomDeathDropTest {
     void dropChanceNotHigherThanOne() {
         final ItemStack itemStack = new ItemStack(Material.DIAMOND);
         final DeathDrop deathDrop = new CustomDeathDrop(itemStack, 2, DeathDrop.Rarity.RARE);
-
-        // ensure the rarity is the one set during construction
         assertThat(deathDrop.getDropChance()).isLessThanOrEqualTo(1);
 
         deathDrop.setDropChance(2);
-
-        // ensure the rarity is the one set by using the setter
         assertThat(deathDrop.getDropChance()).isLessThanOrEqualTo(1);
     }
 
@@ -79,13 +75,9 @@ class CustomDeathDropTest {
     void dropChanceNotLowerThanZero() {
         final ItemStack itemStack = new ItemStack(Material.DIAMOND);
         final DeathDrop deathDrop = new CustomDeathDrop(itemStack, -1, DeathDrop.Rarity.RARE);
-
-        // ensure the rarity is the one set during construction
         assertThat(deathDrop.getDropChance()).isGreaterThanOrEqualTo(0);
 
         deathDrop.setDropChance(-1);
-
-        // ensure the rarity is the one set by using the setter
         assertThat(deathDrop.getDropChance()).isGreaterThanOrEqualTo(0);
     }
 

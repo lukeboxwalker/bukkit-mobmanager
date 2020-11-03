@@ -20,7 +20,7 @@ test:
     - master
 
 deploy:
-  stage: delpoy
+  stage: deploy
   script:
      - mvn verify
   artifacts:

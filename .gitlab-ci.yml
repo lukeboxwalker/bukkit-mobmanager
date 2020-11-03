@@ -2,14 +2,25 @@ image: maven:3.5.3-jdk-8
 
 cache:
   paths:
-    - .m2/repository
+    - .m2/repository/
     - target/
 
-stages:
-- build
-
-DiceMobManager:
+build:
   stage: build
+  script:
+    - mvn compile
+  only:
+    - master    
+
+test:
+  stage: test
+  script:
+    - mvn test
+  only:
+    - master
+
+deploy:
+  stage: delpoy
   script:
      - mvn verify
   artifacts:
@@ -17,4 +28,3 @@ DiceMobManager:
      - target/DiceMobManager.jar
   only:
     - master
-

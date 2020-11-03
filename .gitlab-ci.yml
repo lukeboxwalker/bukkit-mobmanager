@@ -5,20 +5,6 @@ cache:
     - .m2/repository/
     - target/
 
-build:
-  stage: build
-  script:
-    - mvn compile
-  only:
-    - master    
-
-test:
-  stage: test
-  script:
-    - mvn test
-  only:
-    - master
-
 deploy:
   stage: deploy
   script:

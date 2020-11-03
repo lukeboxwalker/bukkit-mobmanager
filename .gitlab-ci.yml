@@ -1,0 +1,20 @@
+image: maven:3-jdk-10
+
+cache:
+  paths:
+    - .m2/repository
+    - target/
+
+stages:
+- build
+
+DiceMobManager:
+  stage: build
+  script:
+     - mvn clean install
+  artifacts:
+     paths:
+     - target/DiceMobManager.jar
+  only:
+    - master
+

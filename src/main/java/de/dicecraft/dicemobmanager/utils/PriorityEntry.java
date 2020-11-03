@@ -9,15 +9,15 @@ package de.dicecraft.dicemobmanager.utils;
  */
 public class PriorityEntry<T> {
 
+    private final T entry;
     // priority of the entry
     private int priority;
-    private final T entry;
 
     /**
      * Creates a new PriorityEntry.
      *
      * @param priority of entry
-     * @param entry to priorities
+     * @param entry    to priorities
      */
     public PriorityEntry(final int priority, final T entry) {
         this.priority = priority;

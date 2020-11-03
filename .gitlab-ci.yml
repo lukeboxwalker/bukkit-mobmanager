@@ -11,7 +11,7 @@ stages:
 DiceMobManager:
   stage: build
   script:
-     - mvn clean install
+     - mvn verify
   artifacts:
      paths:
      - target/DiceMobManager.jar

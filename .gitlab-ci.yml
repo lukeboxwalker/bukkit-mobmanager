@@ -5,7 +5,7 @@ cache:
     - .m2/repository/
     - target/
 
-deploy:
+DiceMobManager:
   stage: deploy
   script:
      - mvn verify

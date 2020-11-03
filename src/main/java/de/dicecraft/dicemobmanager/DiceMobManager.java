@@ -33,6 +33,10 @@ public class DiceMobManager extends JavaPlugin {
     private static DiceMobManager instance;
     private static TickScheduler scheduler;
 
+    public DiceMobManager() {
+        super();
+    }
+
     public DiceMobManager(final JavaPluginLoader loader, final PluginDescriptionFile description,
                           final File dataFolder, final File file) {
         super(loader, description, dataFolder, file);

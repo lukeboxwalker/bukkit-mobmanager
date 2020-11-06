@@ -21,7 +21,7 @@ public final class EntitySelector {
     public static final Predicate<Entity> IS_PROJECTILE = (entity) -> {
         switch (entity.getType()) {
             case FIREBALL:
-            case WITHER_SKELETON:
+            case WITHER_SKULL:
                 return true;
             default:
                 return false;

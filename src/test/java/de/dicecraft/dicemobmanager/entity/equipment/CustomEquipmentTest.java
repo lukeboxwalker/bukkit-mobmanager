@@ -50,7 +50,7 @@ class CustomEquipmentTest {
         equipment.setBoots(boots);
 
         final LivingEntity livingEntity = new ZombieMock(server, UUID.randomUUID());
-        //TODO test equip() properly, mock entity not support equipment
+        //TODO test equip() properly, mock entity dont support equipment
         equipment.equip(livingEntity);
 
         final EntityEquipment entityEquipment = livingEntity.getEquipment();
@@ -77,7 +77,7 @@ class CustomEquipmentTest {
     void dropChanceShouldBeZero() {
         final Equipment equipment = new CustomEquipment();
         final LivingEntity livingEntity = new ZombieMock(server, UUID.randomUUID());
-        //TODO test equip() properly, mock entity not support equipment
+        //TODO test equip() properly, mock entity dont support equipment
         equipment.equip(livingEntity);
 
         final EntityEquipment entityEquipment = livingEntity.getEquipment();

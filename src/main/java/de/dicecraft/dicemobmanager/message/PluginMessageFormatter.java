@@ -88,6 +88,6 @@ public class PluginMessageFormatter implements MessageFormatter {
     }
 
     private interface Function<T> {
-        int apply(String msg, int index, List<BaseComponent> components, T[] params);
+        int apply(String msg, int index, List<BaseComponent> components, T... params);
     }
 }

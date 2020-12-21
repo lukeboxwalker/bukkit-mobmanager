@@ -29,9 +29,11 @@ public class DiceMobManager extends JavaPlugin {
     private static final Random RANDOM = new Random();
     private static final Logger LOGGER = Logger.getLogger("DiceMobManager");
     private static final EntityManager ENTITY_MANAGER = new EntityManager();
+    private static final Object LOCK = new Object();
 
     private static DiceMobManager instance;
     private static TickScheduler scheduler;
+
 
     public DiceMobManager() {
         super();
@@ -74,10 +76,12 @@ public class DiceMobManager extends JavaPlugin {
      * @param ticks the tick period the scheduler will run on.
      */
     public static void restartScheduler(final int ticks) {
-        if (scheduler == null) {
-            scheduler = new TickScheduler(ENTITY_MANAGER, getInstance());
+        synchronized (LOCK) {
+            if (scheduler == null) {
+                scheduler = new TickScheduler(ENTITY_MANAGER, getInstance());
+            }
+            scheduler.restart(ticks);
         }
-        scheduler.restart(ticks);
     }
 
     public static ConfigBuilder configBuilder() {
